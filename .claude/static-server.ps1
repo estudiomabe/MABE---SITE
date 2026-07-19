@@ -20,7 +20,7 @@ while ($listener.IsListening) {
   $response = $context.Response
   try {
     $path = $request.Url.LocalPath
-    if ($path -eq "/") { $path = "/index_2.html" }
+    if ($path -eq "/") { $path = "/index.html" }
     $filePath = Join-Path $Root ($path.TrimStart("/"))
     if (Test-Path $filePath -PathType Leaf) {
       $ext = [System.IO.Path]::GetExtension($filePath)
