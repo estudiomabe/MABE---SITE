@@ -2353,7 +2353,7 @@ let cart = [], activeFilter = 'todos';
 function renderHeroMarquee() {
   const track = document.getElementById('heroMarqueeTrack');
   if (!track) return;
-  const withPhoto = products.filter(p => p.img);
+  const withPhoto = products.filter(p => fotosDe(p).length);
   if (withPhoto.length === 0) {
     track.parentElement.innerHTML = `
       <div class="hero-img-placeholder">
@@ -2370,7 +2370,7 @@ function renderHeroMarquee() {
   const loopItems = [...withPhoto, ...withPhoto];
   track.innerHTML = loopItems.map(p => `
     <div class="hero-marquee-item">
-      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      <img src="${fotosDe(p)[0]}" alt="${p.name}" loading="lazy">
       <div class="hero-marquee-caption"><span>${p.name}</span></div>
     </div>`).join('');
 }
