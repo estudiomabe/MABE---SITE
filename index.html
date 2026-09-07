@@ -550,6 +550,65 @@
     }
     .product-quote:hover .product-quote-arrow { transform: translateX(4px); }
 
+
+    /* ── PÁGINA DE PEÇA (detalhe do produto) ── */
+    .peca-page { background: var(--bg); padding: 4rem 8vw 7rem; min-height: calc(100vh - 78px); }
+    .peca-voltar {
+      display: inline-block; margin-bottom: 3rem;
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; cursor: pointer; transition: color 0.2s;
+    }
+    .peca-voltar:hover { color: var(--ink); }
+    .peca-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 5rem; align-items: start; }
+    .peca-foto {
+      width: 100%; aspect-ratio: 4/3; overflow: hidden;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .peca-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .peca-info { padding-top: 0.5rem; }
+    .peca-categoria {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+    }
+    .peca-nome {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(2.2rem, 3.6vw, 3.4rem); line-height: 1.1;
+      letter-spacing: -0.01em; margin-bottom: 1.5rem;
+    }
+    .peca-divider { width: 48px; height: 1px; background: var(--border); margin-bottom: 1.75rem; }
+    .peca-desc {
+      font-size: 0.92rem; font-weight: 300; line-height: 1.95;
+      color: var(--ink-soft); margin-bottom: 2.5rem;
+    }
+    .peca-specs { border-top: 1px solid var(--border); margin-bottom: 2.5rem; }
+    .peca-spec {
+      display: flex; justify-content: space-between; gap: 2rem;
+      padding: 0.95rem 0; border-bottom: 1px solid var(--border);
+    }
+    .peca-spec dt {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+    }
+    .peca-spec dd { font-size: 0.86rem; font-weight: 300; color: var(--ink-soft); text-align: right; }
+    .peca-preco {
+      font-family: 'Cormorant Garamond', serif; font-size: 2.1rem;
+      font-weight: 400; margin-bottom: 0.4rem;
+    }
+    .peca-preco-nota {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 0.9rem; color: var(--muted); margin-bottom: 2.25rem;
+    }
+    .peca-acoes { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .peca-relacionadas { margin-top: 7rem; border-top: 1px solid var(--border); padding-top: 3rem; }
+    .peca-relacionadas .section-overline { margin-bottom: 2.5rem; }
+    @media (max-width: 900px) {
+      .peca-page { padding: 2.5rem 8vw 5rem; }
+      .peca-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .peca-voltar { margin-bottom: 1.75rem; }
+    }
+
     /* ── DECOR GRID ── */
     .decor-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
@@ -2027,6 +2086,13 @@
 <!-- ══════════════════════════════
      PAGE: POLÍTICA DE PRIVACIDADE
 ══════════════════════════════ -->
+<!-- ══════════════════════════════
+     PAGE: PEÇA (detalhe do produto)
+══════════════════════════════ -->
+<div id="page-peca" class="page">
+  <div class="peca-page" id="pecaConteudo"></div>
+</div>
+
 <div id="page-privacidade" class="page">
   <div class="catalog-page" style="max-width:820px;margin:0 auto">
     <p class="section-overline">Institucional</p>
@@ -2205,11 +2271,11 @@ function renderHeroMarquee() {
 function renderProducts() {
   const list = activeFilter==='todos' ? products : products.filter(p=>p.category===activeFilter);
   document.getElementById('productsGrid').innerHTML = list.map(p=>`
-    <div class="product-card">
+    <div class="product-card" onclick="abrirPeca(slugify('${p.name}'))">
       <div class="product-img-placeholder" style="background:${p.bg}">
         ${productThumb(p)}
         <div class="product-img-overlay">
-          <button class="product-quick" onclick="addToCart(${p.id},'product')">Adicionar à seleção</button>
+          <button class="product-quick" onclick="event.stopPropagation();addToCart(${p.id},'product')">Adicionar à seleção</button>
         </div>
       </div>
       <div class="product-info">
@@ -2218,41 +2284,41 @@ function renderProducts() {
         <p class="product-material">${p.mat}</p>
         <div class="product-footer">
           <span class="product-price">${fmt(p.price)}</span>
-          <button class="add-to-cart" onclick="addToCart(${p.id},'product')">+ Selecionar</button>
+          <button class="add-to-cart" onclick="event.stopPropagation();addToCart(${p.id},'product')">+ Selecionar</button>
         </div>
-        <a class="product-quote" href="https://wa.me/5521999021331?text=${encodeURIComponent('Olá! Tenho interesse na peça ' + p.name + ' e gostaria de solicitar um orçamento.')}" target="_blank" rel="noopener">Solicitar orçamento via WhatsApp <span class="product-quote-arrow">→</span></a>
+        <a class="product-quote" onclick="event.stopPropagation()" href="https://wa.me/5521999021331?text=${encodeURIComponent('Olá! Tenho interesse na peça ' + p.name + ' e gostaria de solicitar um orçamento.')}" target="_blank" rel="noopener">Solicitar orçamento via WhatsApp <span class="product-quote-arrow">→</span></a>
       </div>
     </div>`).join('');
 }
 
 function renderDecors() {
   document.getElementById('decorGrid').innerHTML = decors.map(d=>`
-    <div class="decor-card">
+    <div class="decor-card" onclick="abrirPeca(slugify('${d.name}'))">
       <div class="decor-img" style="background:${d.bg}">${decorThumb(d)}</div>
       <div class="decor-info">
         <h3 class="decor-name">${d.name}</h3>
         <p class="decor-desc">${d.desc}</p>
         <div class="decor-footer">
           <span class="decor-price">${fmt(d.price)}</span>
-          <button class="add-to-cart" onclick="addToCart(${d.id},'decor')">+ Selecionar</button>
+          <button class="add-to-cart" onclick="event.stopPropagation();addToCart(${d.id},'decor')">+ Selecionar</button>
         </div>
-        <a class="product-quote" href="https://wa.me/5521999021331?text=${encodeURIComponent('Olá! Tenho interesse na peça ' + d.name + ' e gostaria de solicitar um orçamento.')}" target="_blank" rel="noopener">Solicitar orçamento <span class="product-quote-arrow">→</span></a>
+        <a class="product-quote" onclick="event.stopPropagation()" href="https://wa.me/5521999021331?text=${encodeURIComponent('Olá! Tenho interesse na peça ' + d.name + ' e gostaria de solicitar um orçamento.')}" target="_blank" rel="noopener">Solicitar orçamento <span class="product-quote-arrow">→</span></a>
       </div>
     </div>`).join('');
 }
 
 function renderPetProducts() {
   document.getElementById('petGrid').innerHTML = petProducts.map(d=>`
-    <div class="decor-card">
+    <div class="decor-card" onclick="abrirPeca(slugify('${d.name}'))">
       <div class="decor-img" style="background:${d.bg}">${decorThumb(d)}</div>
       <div class="decor-info">
         <h3 class="decor-name">${d.name}</h3>
         <p class="decor-desc">${d.desc}</p>
         <div class="decor-footer">
           <span class="decor-price">${fmt(d.price)}</span>
-          <button class="add-to-cart" onclick="addToCart(${d.id},'pet')">+ Selecionar</button>
+          <button class="add-to-cart" onclick="event.stopPropagation();addToCart(${d.id},'pet')">+ Selecionar</button>
         </div>
-        <a class="product-quote" href="https://wa.me/5521999021331?text=${encodeURIComponent('Olá! Tenho interesse na peça ' + d.name + ' (Linha Pet) e gostaria de solicitar um orçamento.')}" target="_blank" rel="noopener">Solicitar orçamento <span class="product-quote-arrow">→</span></a>
+        <a class="product-quote" onclick="event.stopPropagation()" href="https://wa.me/5521999021331?text=${encodeURIComponent('Olá! Tenho interesse na peça ' + d.name + ' (Linha Pet) e gostaria de solicitar um orçamento.')}" target="_blank" rel="noopener">Solicitar orçamento <span class="product-quote-arrow">→</span></a>
       </div>
     </div>`).join('');
 }
@@ -2509,6 +2575,89 @@ renderProducts = function() {
 };
 
 
+
+/* ══ PÁGINA DE PEÇA — detalhe individual de cada produto ══ */
+
+/* Converte o nome em endereço: "Criado Botafogo" -> "criado-botafogo" */
+function slugify(nome) {
+  return nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+             .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+/* Catálogo unificado, com a origem de cada peça */
+function catalogo() {
+  const rotulo = { sala:'Sala', quarto:'Quarto', escritorio:'Escritório', cozinha:'Cozinha' };
+  return [
+    ...products.map(p => ({ ...p, tipo:'product', origem:'mobiliario',  secao:'Mobiliário',        subcategoria: rotulo[p.category] || '' })),
+    ...decors.map(d => ({ ...d, tipo:'decor',     origem:'decorativos', secao:'Itens Decorativos', subcategoria:'' })),
+    ...petProducts.map(d => ({ ...d, tipo:'pet',  origem:'pet',         secao:'Linha Pet',         subcategoria:'' }))
+  ].map(p => ({ ...p, slug: slugify(p.name) }));
+}
+
+function acharPeca(slug) { return catalogo().find(p => p.slug === slug); }
+
+function renderPeca(p) {
+  const foto = p.img
+    ? `<img src="${p.img}" alt="${p.name}" />`
+    : (p.tipo === 'product' ? pSVG(p) : dSVG(p));
+  const detalhe = p.mat || p.desc || '';
+  /* o campo de material vem como "Tauari maciço · Medidas: 50×40×60 cm · ..." */
+  const partes = detalhe.split('·').map(s => s.trim()).filter(Boolean);
+  const specs = partes.map(parte => {
+    const medida = parte.match(/^Medidas?:\s*(.+)$/i);
+    if (medida) return { rotulo: 'Medidas', valor: medida[1] };
+    return null;
+  }).filter(Boolean);
+  const descricao = partes.filter(parte => !/^Medidas?:/i.test(parte)).join(' · ');
+
+  const msg = encodeURIComponent(`Olá! Tenho interesse na peça ${p.name}${p.tipo === 'pet' ? ' (Linha Pet)' : ''} e gostaria de solicitar um orçamento.`);
+
+  document.getElementById('pecaConteudo').innerHTML = `
+    <a class="peca-voltar" onclick="showPage('${p.origem}')">← Voltar para ${p.secao}</a>
+    <div class="peca-grid">
+      <div class="peca-foto" style="background:${p.bg}">${foto}</div>
+      <div class="peca-info">
+        <p class="peca-categoria">${p.secao}${p.subcategoria ? ' · ' + p.subcategoria : ''}</p>
+        <h1 class="peca-nome">${p.name}</h1>
+        <div class="peca-divider"></div>
+        <p class="peca-desc">${descricao}</p>
+        <dl class="peca-specs">
+          ${specs.map(s => `<div class="peca-spec"><dt>${s.rotulo}</dt><dd>${s.valor}</dd></div>`).join('')}
+          <div class="peca-spec"><dt>Feito sob encomenda</dt><dd>Prazo estimado na conversa</dd></div>
+          <div class="peca-spec"><dt>Madeira</dt><dd>Certificada, origem rastreável</dd></div>
+        </dl>
+        <p class="peca-preco">${fmt(p.price)}</p>
+        <p class="peca-preco-nota">Valor de referência — cada peça é ajustada ao seu espaço</p>
+        <div class="peca-acoes">
+          <a class="btn-primary" href="https://wa.me/5521999021331?text=${msg}" target="_blank" rel="noopener">Solicitar orçamento</a>
+          <button class="btn-ghost" onclick="addToCart(${p.id},'${p.tipo}')">+ Adicionar à seleção</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* Abre a peça, muda a URL e atualiza os metadados para busca */
+function abrirPeca(slug, semHistorico) {
+  const p = acharPeca(slug);
+  if (!p) { showPage('home'); return; }
+  renderPeca(p);
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-peca').classList.add('active');
+  document.querySelectorAll('.nav-menu a.nav-menu-link').forEach(a => a.classList.remove('active'));
+  closeMobileNav();
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => applyReveal());
+
+  const url = '/peca/' + slug;
+  document.title = `${p.name} — ${p.secao} em madeira maciça — Estúdio MABE`;
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) desc.setAttribute('content', `${p.name}: ${(p.mat || p.desc || '')}. Peça autoral do Estúdio MABE, feita sob encomenda em madeira maciça certificada. ${fmt(p.price)}.`);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
+
+  if (!semHistorico && location.pathname !== url) history.pushState({ peca: slug }, '', url);
+}
+
 /* ══ ROTEAMENTO — cada página tem sua própria URL ══
    Permite compartilhar link direto (ex: /linha-pet), usar o botão
    voltar do navegador e o Google indexar cada página separadamente.
@@ -2559,12 +2708,21 @@ showPage = function(id, semHistorico) {
 
 /* Botão voltar/avançar do navegador */
 window.addEventListener('popstate', e => {
+  if (e.state && e.state.peca) { abrirPeca(e.state.peca, true); return; }
+  const slugUrl = location.pathname.match(/^\/peca\/([a-z0-9-]+)$/);
+  if (slugUrl) { abrirPeca(slugUrl[1], true); return; }
   const id = (e.state && e.state.pagina) || URL_PARA_PAGINA[location.pathname] || 'home';
   showPage(id, true);
 });
 
 /* Ao abrir o site direto numa URL interna (ex: link compartilhado) */
 (function rotaInicial() {
+  const slugUrl = location.pathname.match(/^\/peca\/([a-z0-9-]+)$/);
+  if (slugUrl) {
+    abrirPeca(slugUrl[1], true);
+    history.replaceState({ peca: slugUrl[1] }, '', location.pathname);
+    return;
+  }
   const id = URL_PARA_PAGINA[location.pathname];
   if (id && id !== 'home') {
     showPage(id, true);
