@@ -175,6 +175,13 @@
     }
 
     /* ── FAIXA DO MARQUEE (largura total, abaixo do hero) ── */
+    .strip-heading {
+      text-align: center;
+      font-size: 0.62rem; font-weight: 500;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--muted); padding: 0 0 1.75rem;
+      background: var(--bg);
+    }
     .hero-strip {
       position: relative;
       height: clamp(280px, 42vh, 430px);
@@ -1204,6 +1211,7 @@
   </section>
 
   <!-- FAIXA DO MARQUEE — fotos dos produtos em largura total -->
+  <p class="strip-heading">Últimas entregas</p>
   <section class="hero-strip" aria-label="Peças do estúdio">
     <div class="hero-marquee" id="heroMarquee">
       <div class="hero-marquee-track" id="heroMarqueeTrack"></div>
