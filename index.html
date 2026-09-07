@@ -507,6 +507,33 @@
     .product-img-placeholder img { transition: transform 0.7s cubic-bezier(0.16,1,0.3,1); }
     .product-card:hover .product-img-placeholder svg,
     .product-card:hover .product-img-placeholder img { transform: scale(1.045); }
+    /* setas de foto dentro dos cards do catálogo */
+    .card-seta {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+      width: 32px; height: 32px; padding: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(232,230,225,0.9); color: var(--ink);
+      border: 1px solid var(--border);
+      opacity: 0; transition: opacity 0.25s ease, background 0.2s ease;
+    }
+    .product-card:hover .card-seta,
+    .decor-card:hover .card-seta { opacity: 1; }
+    .card-seta:hover { background: var(--bg); }
+    .card-seta-ant  { left: 0.7rem; }
+    .card-seta-prox { right: 0.7rem; }
+    .card-contador {
+      position: absolute; left: 0.7rem; bottom: 0.7rem; z-index: 3;
+      background: rgba(17,17,16,0.72); color: var(--bg);
+      font-size: 0.56rem; font-weight: 500; letter-spacing: 0.1em;
+      padding: 0.28rem 0.55rem;
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .product-card:hover .card-contador,
+    .decor-card:hover .card-contador { opacity: 1; }
+    .decor-img { position: relative; }
+    @media (hover: none) {
+      .card-seta, .card-contador { opacity: 1; }
+    }
     .product-img-overlay {
       position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 1rem;
       opacity: 0; transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1);
@@ -2270,6 +2297,32 @@ function pSVG(p) {
     <rect x="55" y="62" width="8" height="12" rx="1" fill="${p.accent}" opacity="0.28"/>
   </svg>`;
 }
+/* Setas dentro do card do catálogo, para folhear sem abrir a peça */
+function setasCard(p) {
+  const fotos = fotosDe(p);
+  if (fotos.length < 2) return '';
+  return `<button class="card-seta card-seta-ant" onclick="event.stopPropagation();navegarCard(this,-1)" aria-label="Foto anterior">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <button class="card-seta card-seta-prox" onclick="event.stopPropagation();navegarCard(this,1)" aria-label="Próxima foto">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <span class="card-contador">1 / ${fotos.length}</span>`;
+}
+
+/* Troca a foto dentro do card; o estado fica no próprio elemento */
+function navegarCard(botao, passo) {
+  const box = botao.parentElement;
+  const fotos = JSON.parse(box.dataset.fotos || '[]');
+  if (fotos.length < 2) return;
+  const i = ((parseInt(box.dataset.i || '0', 10) + passo) % fotos.length + fotos.length) % fotos.length;
+  box.dataset.i = i;
+  const img = box.querySelector('img');
+  if (img) img.src = fotos[i];
+  const cont = box.querySelector('.card-contador');
+  if (cont) cont.textContent = `${i + 1} / ${fotos.length}`;
+}
+
 /* Fotos de uma peça: aceita imgs:[...] e o formato antigo img:'...' */
 function fotosDe(p) {
   if (Array.isArray(p.imgs) && p.imgs.length) return p.imgs;
@@ -2326,8 +2379,9 @@ function renderProducts() {
   const list = activeFilter==='todos' ? products : products.filter(p=>p.category===activeFilter);
   document.getElementById('productsGrid').innerHTML = list.map(p=>`
     <div class="product-card" onclick="abrirPeca(slugify('${p.name}'))">
-      <div class="product-img-placeholder" style="background:${p.bg}">
+      <div class="product-img-placeholder" style="background:${p.bg}" data-fotos='${JSON.stringify(fotosDe(p))}' data-i="0">
         ${productThumb(p)}
+        ${setasCard(p)}
         <div class="product-img-overlay">
           <button class="product-quick" onclick="event.stopPropagation();addToCart(${p.id},'product')">Adicionar à seleção</button>
         </div>
@@ -2348,7 +2402,7 @@ function renderProducts() {
 function renderDecors() {
   document.getElementById('decorGrid').innerHTML = decors.map(d=>`
     <div class="decor-card" onclick="abrirPeca(slugify('${d.name}'))">
-      <div class="decor-img" style="background:${d.bg}">${decorThumb(d)}</div>
+      <div class="decor-img" style="background:${d.bg}" data-fotos='${JSON.stringify(fotosDe(d))}' data-i="0">${decorThumb(d)}${setasCard(d)}</div>
       <div class="decor-info">
         <h3 class="decor-name">${d.name}</h3>
         <p class="decor-desc">${d.desc}</p>
@@ -2364,7 +2418,7 @@ function renderDecors() {
 function renderPetProducts() {
   document.getElementById('petGrid').innerHTML = petProducts.map(d=>`
     <div class="decor-card" onclick="abrirPeca(slugify('${d.name}'))">
-      <div class="decor-img" style="background:${d.bg}">${decorThumb(d)}</div>
+      <div class="decor-img" style="background:${d.bg}" data-fotos='${JSON.stringify(fotosDe(d))}' data-i="0">${decorThumb(d)}${setasCard(d)}</div>
       <div class="decor-info">
         <h3 class="decor-name">${d.name}</h3>
         <p class="decor-desc">${d.desc}</p>
