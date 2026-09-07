@@ -879,17 +879,27 @@
     #preloader.done { transform: translateY(-100%); }
     .preloader-inner { text-align: center; }
     .preloader-logo {
-      display: block; font-family: 'Cormorant Garamond', serif; font-style: italic;
-      font-weight: 300; font-size: clamp(1.8rem, 4vw, 3rem);
-      color: rgba(232,230,225,0.9); margin-bottom: 1.25rem;
-      animation: preloaderPulse 1.6s ease-in-out infinite;
+      display: block; width: clamp(150px, 20vw, 210px); height: auto;
+      margin: 0 auto 2.25rem;
+      filter: invert(1) brightness(1.35) contrast(1.15);
+      animation: preloaderPulse 2s ease-in-out infinite;
+    }
+    /* linha fina de progresso — mesmo vocabulário dos divisores do site */
+    .preloader-barra {
+      width: clamp(150px, 20vw, 210px); height: 1px;
+      background: rgba(232,230,225,0.15);
+      margin: 0 auto 1.1rem; overflow: hidden;
+    }
+    .preloader-barra span {
+      display: block; height: 100%; width: 0%;
+      background: var(--gold); transition: width 0.25s ease;
     }
     .preloader-count {
-      font-family: 'Inter', sans-serif; font-size: 0.62rem; font-weight: 500;
-      letter-spacing: 0.3em; color: var(--gold);
+      font-family: 'Inter', sans-serif; font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.32em; color: rgba(232,230,225,0.45);
     }
     @keyframes preloaderPulse {
-      0%, 100% { opacity: 0.9; } 50% { opacity: 0.45; }
+      0%, 100% { opacity: 0.92; } 50% { opacity: 0.62; }
     }
 
     /* ── CURSOR CUSTOMIZADO (somente ponteiro fino/desktop) ── */
@@ -1325,7 +1335,8 @@
 <!-- ══ PRELOADER ══ -->
 <div id="preloader">
   <div class="preloader-inner">
-    <span class="preloader-logo">estúdio mabe.</span>
+    <img class="preloader-logo" src="/images/logo-nav.png" alt="Estúdio MABE" />
+    <div class="preloader-barra"><span id="preBarra"></span></div>
     <span class="preloader-count" id="preCount">0%</span>
   </div>
 </div>
@@ -2498,10 +2509,12 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
   if (reducedMotion) { pre.remove(); return; }
   document.body.classList.add('nav-lock');
   const counter = document.getElementById('preCount');
+  const barra = document.getElementById('preBarra');
   let n = 0;
   const tick = setInterval(() => {
     n = Math.min(100, n + Math.ceil(Math.random() * 14));
     counter.textContent = n + '%';
+    if (barra) barra.style.width = n + '%';
     if (n >= 100) {
       clearInterval(tick);
       setTimeout(() => {
