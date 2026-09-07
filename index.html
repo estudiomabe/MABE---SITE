@@ -567,6 +567,31 @@
       display: flex; align-items: center; justify-content: center;
     }
     .peca-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .peca-foto { position: relative; }
+    .peca-seta {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 44px; height: 44px; padding: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(232,230,225,0.88); color: var(--ink);
+      border: 1px solid var(--border);
+      opacity: 0; transition: opacity 0.25s ease, background 0.2s ease;
+    }
+    .peca-foto:hover .peca-seta { opacity: 1; }
+    .peca-seta:hover { background: var(--bg); }
+    .peca-seta-ant  { left: 1rem; }
+    .peca-seta-prox { right: 1rem; }
+    .peca-contador {
+      position: absolute; right: 1rem; bottom: 1rem;
+      background: rgba(17,17,16,0.7); color: var(--bg);
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.12em;
+      padding: 0.35rem 0.7rem;
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .peca-foto:hover .peca-contador { opacity: 1; }
+    /* em telas de toque não há hover: setas sempre visíveis */
+    @media (hover: none) {
+      .peca-seta, .peca-contador { opacity: 1; }
+    }
     .peca-miniaturas { display: flex; gap: 0.75rem; margin-top: 0.75rem; flex-wrap: wrap; }
     .peca-mini {
       width: 84px; height: 84px; padding: 0; overflow: hidden; cursor: pointer;
@@ -2616,12 +2641,21 @@ function acharPeca(slug) { return catalogo().find(p => p.slug === slug); }
 
 function renderPeca(p) {
   const fotos = fotosDe(p);
+  const setas = fotos.length > 1
+    ? `<button class="peca-seta peca-seta-ant" onclick="navegarFoto(-1)" aria-label="Foto anterior">
+         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+       </button>
+       <button class="peca-seta peca-seta-prox" onclick="navegarFoto(1)" aria-label="Próxima foto">
+         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+       </button>
+       <span class="peca-contador" id="pecaContador">1 / ${fotos.length}</span>` : '';
   const galeria = fotos.length
     ? `<div class="peca-foto" style="background:${p.bg}">
          <img id="pecaFotoPrincipal" src="${fotos[0]}" alt="${p.name}" />
+         ${setas}
        </div>
        ${fotos.length > 1 ? `<div class="peca-miniaturas">${fotos.map((src, i) =>
-            `<button class="peca-mini${i === 0 ? ' ativa' : ''}" onclick="trocarFoto(this, '${src}')" aria-label="Foto ${i + 1} de ${fotos.length}">
+            `<button class="peca-mini${i === 0 ? ' ativa' : ''}" onclick="irParaFoto(${i})" aria-label="Foto ${i + 1} de ${fotos.length}">
                <img src="${src}" alt="" loading="lazy" />
              </button>`).join('')}</div>` : ''}`
     : `<div class="peca-foto" style="background:${p.bg}">${p.tipo === 'product' ? pSVG(p) : dSVG(p)}</div>`;
@@ -2637,6 +2671,7 @@ function renderPeca(p) {
 
   const msg = encodeURIComponent(`Olá! Tenho interesse na peça ${p.name}${p.tipo === 'pet' ? ' (Linha Pet)' : ''} e gostaria de solicitar um orçamento.`);
 
+  fotosAtuais = fotos; fotoAtual = 0;
   document.getElementById('pecaConteudo').innerHTML = `
     <a class="peca-voltar" onclick="showPage('${p.origem}')">← Voltar para ${p.secao}</a>
     <div class="peca-grid">
@@ -2662,12 +2697,28 @@ function renderPeca(p) {
 }
 
 /* Troca a foto principal ao clicar numa miniatura */
-function trocarFoto(botao, src) {
+/* Galeria: fotos da peça aberta e posição atual */
+let fotosAtuais = [], fotoAtual = 0;
+
+function irParaFoto(i) {
+  if (!fotosAtuais.length) return;
+  fotoAtual = (i + fotosAtuais.length) % fotosAtuais.length;   /* circula nas pontas */
   const principal = document.getElementById('pecaFotoPrincipal');
-  if (principal) principal.src = src;
-  botao.parentElement.querySelectorAll('.peca-mini').forEach(b => b.classList.remove('ativa'));
-  botao.classList.add('ativa');
+  if (principal) principal.src = fotosAtuais[fotoAtual];
+  document.querySelectorAll('.peca-mini').forEach((b, idx) => b.classList.toggle('ativa', idx === fotoAtual));
+  const contador = document.getElementById('pecaContador');
+  if (contador) contador.textContent = `${fotoAtual + 1} / ${fotosAtuais.length}`;
 }
+
+function navegarFoto(passo) { irParaFoto(fotoAtual + passo); }
+
+/* Setas do teclado também navegam quando a página de peça está aberta */
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('page-peca').classList.contains('active')) return;
+  if (fotosAtuais.length < 2) return;
+  if (e.key === 'ArrowLeft')  { navegarFoto(-1); }
+  if (e.key === 'ArrowRight') { navegarFoto(1); }
+});
 
 /* Abre a peça, muda a URL e atualiza os metadados para busca */
 function abrirPeca(slug, semHistorico) {
