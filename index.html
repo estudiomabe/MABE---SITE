@@ -2422,6 +2422,72 @@ renderProducts = function() {
   requestAnimationFrame(() => applyReveal());
 };
 
+
+/* ══ ROTEAMENTO — cada página tem sua própria URL ══
+   Permite compartilhar link direto (ex: /linha-pet), usar o botão
+   voltar do navegador e o Google indexar cada página separadamente.
+   Depende do rewrite em vercel.json, que serve index.html em qualquer rota. */
+const ROTAS = {
+  home:        { url: '/',                 titulo: 'Estúdio MABE — Design Autoral Brasileiro · Marcenaria em Madeira Maciça',
+                 desc: 'Móveis e itens decorativos sob medida criados com madeira certificada, técnicas artesanais e design autoral. Rio de Janeiro.' },
+  mobiliario:  { url: '/mobiliario',       titulo: 'Mobiliário sob encomenda — Estúdio MABE',
+                 desc: 'Móveis em madeira maciça feitos à mão sob encomenda: criados, racks, mesas e peças para sala, quarto, escritório e cozinha. Rio de Janeiro.' },
+  decorativos: { url: '/itens-decorativos', titulo: 'Itens Decorativos em madeira maciça — Estúdio MABE',
+                 desc: 'Vasos, bandejas, luminárias e objetos decorativos torneados à mão em madeira maciça certificada. Peças autorais do Estúdio MABE.' },
+  pet:         { url: '/linha-pet',        titulo: 'Linha Pet — móveis de madeira para cães e gatos — Estúdio MABE',
+                 desc: 'Camas, casinhas, comedouros e arranhadores em madeira maciça, com o mesmo acabamento do restante da casa. Estúdio MABE, Rio de Janeiro.' },
+  sobre:       { url: '/sobre',            titulo: 'Sobre o Estúdio MABE — marcenaria autoral no Rio de Janeiro',
+                 desc: 'A história do Estúdio MABE: dois marceneiros, madeira certificada e a convicção de que permanência é um ato de respeito.' },
+  eventos:     { url: '/eventos',          titulo: 'Eventos e feiras — Estúdio MABE',
+                 desc: 'Onde o Estúdio MABE esteve presente: Rio Design Week, CASACOR São Paulo e fóruns de arquitetura e interiores.' },
+  arquitetos:  { url: '/para-arquitetos',  titulo: 'Para Arquitetos e Designers — Estúdio MABE',
+                 desc: 'Parceria com arquitetos e designers de interiores: execução sob medida, biblioteca de blocos 3D em SketchUp e suporte técnico.' },
+  contato:     { url: '/contato',          titulo: 'Contato — Estúdio MABE',
+                 desc: 'Conte-nos sobre seu espaço. Orçamento sob medida para móveis em madeira maciça. WhatsApp +55 (21) 99902-1331.' },
+  privacidade: { url: '/privacidade',      titulo: 'Política de Privacidade — Estúdio MABE',
+                 desc: 'Como o Estúdio MABE trata seus dados pessoais, em conformidade com a LGPD.' }
+};
+
+const URL_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS).map(([id, r]) => [r.url, id]));
+
+function atualizarMeta(id) {
+  const rota = ROTAS[id];
+  if (!rota) return;
+  document.title = rota.titulo;
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) desc.setAttribute('content', rota.desc);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + (rota.url === '/' ? '/' : rota.url));
+}
+
+/* Envolve o showPage já decorado: troca a página, a URL e os metadados */
+const showPageSemRota = showPage;
+showPage = function(id, semHistorico) {
+  showPageSemRota(id);
+  atualizarMeta(id);
+  const rota = ROTAS[id];
+  if (rota && !semHistorico && location.pathname !== rota.url) {
+    history.pushState({ pagina: id }, '', rota.url);
+  }
+};
+
+/* Botão voltar/avançar do navegador */
+window.addEventListener('popstate', e => {
+  const id = (e.state && e.state.pagina) || URL_PARA_PAGINA[location.pathname] || 'home';
+  showPage(id, true);
+});
+
+/* Ao abrir o site direto numa URL interna (ex: link compartilhado) */
+(function rotaInicial() {
+  const id = URL_PARA_PAGINA[location.pathname];
+  if (id && id !== 'home') {
+    showPage(id, true);
+    history.replaceState({ pagina: id }, '', location.pathname);
+  } else {
+    atualizarMeta('home');
+    history.replaceState({ pagina: 'home' }, '', location.pathname);
+  }
+})();
 </script>
 </body>
 </html>

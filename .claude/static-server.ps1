@@ -20,7 +20,8 @@ while ($listener.IsListening) {
   $response = $context.Response
   try {
     $path = $request.Url.LocalPath
-    if ($path -eq "/") { $path = "/index.html" }
+    # Rotas do SPA: qualquer caminho sem extensao serve o index.html (espelha o vercel.json)
+    if ($path -eq "/" -or -not [System.IO.Path]::HasExtension($path)) { $path = "/index.html" }
     $filePath = Join-Path $Root ($path.TrimStart("/"))
     if (Test-Path $filePath -PathType Leaf) {
       $ext = [System.IO.Path]::GetExtension($filePath)
