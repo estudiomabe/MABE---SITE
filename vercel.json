@@ -8,6 +8,7 @@
     { "source": "/para-arquitetos", "destination": "/index.html" },
     { "source": "/contato", "destination": "/index.html" },
     { "source": "/privacidade", "destination": "/index.html" },
-    { "source": "/peca/:slug", "destination": "/index.html" }
+    { "source": "/peca/:slug", "destination": "/index.html" },
+    { "source": "/:caminho*", "destination": "/index.html" }
   ]
 }
