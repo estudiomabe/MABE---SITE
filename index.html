@@ -162,6 +162,7 @@
       --muted:    #7a7874;
       --border:   #c8c5be;
       --gold:     #b89a58;
+      --erro:     #9a3f2b;
       --gold-lt:  #ddd0b0;
     }
 
@@ -1443,6 +1444,55 @@
     @media (max-width: 600px) {
       .aviso-cookies { left: 1rem; right: 1rem; bottom: 1rem; padding: 1.25rem; }
     }
+
+    /* Foco de teclado: antes havia uma regra so no site inteiro, entao
+       quem navega por tab nao enxergava onde estava */
+    :focus-visible,
+    .form-group input:focus-visible,
+    .form-group select:focus-visible,
+    .form-group textarea:focus-visible {
+      /* os campos declaram outline:none na regra base, que tem
+         especificidade maior; por isso vao nomeados aqui */
+      outline: 2px solid var(--gold); outline-offset: 3px;
+    }
+    /* O botao sobre a foto do card so aparecia no hover; sem isto o foco
+       de teclado pousava num controle invisivel */
+    .product-card:focus-within .product-img-overlay { opacity: 1; }
+
+    /* Erros do formulario */
+    .form-group.erro input,
+    .form-group.erro select,
+    .form-group.erro textarea { border-color: var(--erro); }
+    .form-erro {
+      display: block; margin-top: 0.45rem;
+      font-size: 0.72rem; font-weight: 400; line-height: 1.5; color: var(--erro);
+    }
+
+    /* Veja tambem, no pe da pagina da peca */
+    .peca-relacionadas { margin-top: 5rem; border-top: 1px solid var(--border); padding-top: 2.75rem; }
+    .peca-relacionadas h2 {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 400;
+      margin-bottom: 0.4rem;
+    }
+    .peca-relacionadas .sub {
+      font-size: 0.78rem; color: var(--muted); font-weight: 300; margin-bottom: 2rem;
+    }
+    .relacionadas-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 1.75rem 1.5rem;
+    }
+    .relacionada { display: block; }
+    .relacionada-img {
+      width: 100%; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); overflow: hidden; margin-bottom: 0.8rem;
+      transition: border-color 0.35s ease;
+    }
+    .relacionada:hover .relacionada-img { border-color: var(--muted); }
+    .relacionada-secao {
+      font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.3rem;
+    }
+    .relacionada-nome { font-family: 'Cormorant Garamond', serif; font-size: 1.12rem; font-weight: 400; margin-bottom: 0.15rem; }
+    .relacionada-preco { font-family: 'Cormorant Garamond', serif; font-size: 0.98rem; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -2202,21 +2252,21 @@
         <div class="form-grid" id="quoteForm">
           <div class="form-row">
             <div class="form-group">
-              <label>Nome</label>
-              <input type="text" id="fName" placeholder="Seu nome completo" />
+              <label for="fName">Nome</label>
+              <input type="text" id="fName" name="nome" autocomplete="name" autocapitalize="words" placeholder="Seu nome completo" />
             </div>
             <div class="form-group">
-              <label>WhatsApp</label>
-              <input type="tel" id="fPhone" placeholder="(21) 9 0000-0000" />
+              <label for="fPhone">WhatsApp</label>
+              <input type="tel" id="fPhone" name="telefone" autocomplete="tel" inputmode="tel" placeholder="(21) 9 0000-0000" />
             </div>
           </div>
           <div class="form-group">
-            <label>E-mail</label>
-            <input type="email" id="fEmail" placeholder="seu@email.com" />
+            <label for="fEmail">E-mail</label>
+            <input type="email" id="fEmail" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="seu@email.com" />
           </div>
           <div class="form-group">
-            <label>Tipo de ambiente</label>
-            <select id="fType">
+            <label for="fType">Tipo de ambiente</label>
+            <select id="fType" name="ambiente">
               <option value="">Selecione o ambiente...</option>
               <option>Sala de estar</option>
               <option>Quarto</option>
@@ -2228,8 +2278,8 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Descreva seu projeto</label>
-            <textarea id="fMsg" placeholder="Fale sobre o ambiente, o que você sente falta no espaço hoje, referências de estilo, materiais preferidos..."></textarea>
+            <label for="fMsg">Descreva seu projeto</label>
+            <textarea id="fMsg" name="mensagem" placeholder="Fale sobre o ambiente, o que você sente falta no espaço hoje, referências de estilo, materiais preferidos..."></textarea>
           </div>
           <button class="btn-primary" style="width:100%;padding:1rem 2rem;margin-top:0.25rem" onclick="submitQuote()">Solicitar conversa inicial</button>
           <p class="form-note">Sem compromisso. Apenas uma boa conversa sobre o seu espaço.</p>
@@ -2715,13 +2765,69 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
+/* Validacao do formulario
+   Antes so verificava se o campo estava vazio: o e-mail "abc" e o
+   telefone "1" passavam. Agora cada problema aparece embaixo do campo
+   que o causou, dizendo o que fazer, e o foco vai para o primeiro. */
+function emailValido(v) { return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v); }
+
+function telefoneValido(v) {
+  const digitos = v.replace(/\D/g, '');
+  return digitos.length === 10 || digitos.length === 11;   /* fixo ou celular, com DDD */
+}
+
+function limparErros() {
+  document.querySelectorAll('#quoteForm .form-group.erro').forEach(grupo => {
+    grupo.classList.remove('erro');
+    const campo = grupo.querySelector('input, select, textarea');
+    if (campo) campo.removeAttribute('aria-invalid');
+    const aviso = grupo.querySelector('.form-erro');
+    if (aviso) aviso.remove();
+  });
+}
+
+function marcarErro(id, mensagem) {
+  const campo = document.getElementById(id);
+  const grupo = campo.closest('.form-group');
+  grupo.classList.add('erro');
+  campo.setAttribute('aria-invalid', 'true');
+  const aviso = document.createElement('span');
+  aviso.className = 'form-erro';
+  aviso.textContent = mensagem;
+  grupo.appendChild(aviso);
+  return campo;
+}
+
+/* O aviso some assim que a pessoa comeca a corrigir aquele campo */
+document.addEventListener('input', e => {
+  const grupo = e.target.closest ? e.target.closest('#quoteForm .form-group.erro') : null;
+  if (!grupo) return;
+  grupo.classList.remove('erro');
+  e.target.removeAttribute('aria-invalid');
+  const aviso = grupo.querySelector('.form-erro');
+  if (aviso) aviso.remove();
+});
+
 function submitQuote() {
   const name = document.getElementById('fName').value.trim();
   const phone = document.getElementById('fPhone').value.trim();
   const email = document.getElementById('fEmail').value.trim();
   const type = document.getElementById('fType').value;
   const msg = document.getElementById('fMsg').value.trim();
-  if(!name||!phone||!email||!type){ showToast('Preencha todos os campos para continuarmos'); return; }
+  limparErros();
+  const problemas = [];
+  if (!name)                    problemas.push(['fName', 'Diga como podemos te chamar.']);
+  if (!phone)                   problemas.push(['fPhone', 'Precisamos de um número para responder.']);
+  else if (!telefoneValido(phone)) problemas.push(['fPhone', 'Telefone incompleto. Inclua o DDD, como (21) 99902-1331.']);
+  if (!email)                   problemas.push(['fEmail', 'Precisamos de um e-mail de contato.']);
+  else if (!emailValido(email)) problemas.push(['fEmail', 'Este endereço parece incompleto. Confira antes de enviar.']);
+  if (!type)                    problemas.push(['fType', 'Escolha o ambiente do projeto.']);
+  if (problemas.length) {
+    const primeiro = problemas.map(([id, texto]) => marcarErro(id, texto))[0];
+    primeiro.focus();
+    primeiro.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    return;
+  }
   const wa = `Olá! Me chamo ${name}.%0ATelefone: ${phone}%0AE-mail: ${email}%0AAmbiente: ${type}%0A%0A${msg||'Gostaria de iniciar um projeto.'}`;
   mabeLead('formulario', { item_name: type });
   window.open(`https://wa.me/5521999021331?text=${wa}`,'_blank');
@@ -2892,6 +2998,34 @@ function catalogo() {
 
 function acharPeca(slug) { return catalogo().find(p => p.slug === slug); }
 
+
+/* Veja tambem: sem isto, quem chegava numa peca pelo Google via aquela
+   peca e mais nada do estudio. Prioriza a mesma secao e, dentro dela,
+   as pecas que ja tem foto. */
+function relacionadas(p) {
+  const outras = catalogo().filter(x => x.slug !== p.slug);
+  const porFoto = lista => [...lista].sort((a, b) => fotosDe(b).length - fotosDe(a).length);
+  const escolhidas = [
+    ...porFoto(outras.filter(x => x.origem === p.origem)),
+    ...porFoto(outras.filter(x => x.origem !== p.origem))
+  ].slice(0, 4);
+  if (!escolhidas.length) return '';
+
+  return `
+    <div class="peca-relacionadas">
+      <h2>Veja também</h2>
+      <p class="sub">Outras peças que saíram da mesma bancada.</p>
+      <div class="relacionadas-grid">
+        ${escolhidas.map(x => `
+          <a class="relacionada" href="/peca/${x.slug}">
+            <div class="relacionada-img" style="background:${x.bg}">${x.tipo === 'product' ? productThumb(x) : decorThumb(x)}</div>
+            <p class="relacionada-secao">${x.secao}</p>
+            <p class="relacionada-nome">${x.name}</p>
+            <p class="relacionada-preco">${fmt(x.price)}</p>
+          </a>`).join('')}
+      </div>
+    </div>`;
+}
 function renderPeca(p) {
   const fotos = fotosDe(p);
   const setas = fotos.length > 1
@@ -2946,7 +3080,8 @@ function renderPeca(p) {
           <button class="btn-ghost" onclick="addToCart(${p.id},'${p.tipo}')">+ Adicionar à seleção</button>
         </div>
       </div>
-    </div>`;
+    </div>
+    ${relacionadas(p)}`;
 }
 
 /* Troca a foto principal ao clicar numa miniatura */
