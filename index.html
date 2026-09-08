@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Estúdio MABE — Design Autoral Brasileiro · Marcenaria em Madeira Maciça</title>
+  <title>Estúdio MABE — Móveis em Madeira Maciça · Rio de Janeiro</title>
   <meta name="description" content="Móveis e itens decorativos sob medida criados com madeira certificada, técnicas artesanais e design autoral. Rio de Janeiro." />
 
 
@@ -116,6 +116,9 @@
   }
   </script>
 
+  <!-- Dados estruturados da página aberta (trilha e produto) — preenchido pelo site -->
+  <script type="application/ld+json" id="ldDinamico"></script>
+
   <!-- Favicon / ícones do site -->
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
@@ -146,6 +149,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Os links de navegação usam href de verdade (para o Google e para
+       abrir em nova aba); o estilo vem das classes, não do padrão azul */
+    a { color: inherit; text-decoration: none; }
 
     :root {
       --bg:       #e8e6e1;
@@ -1447,28 +1453,28 @@
 <!-- ══ NAV ══ -->
 <nav>
     <div class="nav-inner">
-    <a class="nav-logo" onclick="showPage('home')">
+    <a class="nav-logo" href="/">
     <img class="nav-logo-img" src="data:image/png;base64,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" alt="Estúdio MABE" />
     </a>
     <div class="nav-menu" id="navMenu">
-      <a onclick="showPage('home')" class="nav-menu-link active">Home</a>
+      <a href="/" class="nav-menu-link active">Home</a>
       <div class="nav-drop">
-        <a onclick="showPage('mobiliario')" class="nav-menu-link">Mobiliário</a>
+        <a href="/mobiliario" class="nav-menu-link">Mobiliário</a>
         <div class="nav-drop-panel">
           <div class="nav-drop-panel-inner">
-            <a onclick="goToCategory('sala')">Sala</a>
-            <a onclick="goToCategory('quarto')">Quarto</a>
-            <a onclick="goToCategory('escritorio')">Escritório</a>
-            <a onclick="goToCategory('cozinha')">Cozinha</a>
+            <a href="/mobiliario" onclick="event.preventDefault();goToCategory('sala')">Sala</a>
+            <a href="/mobiliario" onclick="event.preventDefault();goToCategory('quarto')">Quarto</a>
+            <a href="/mobiliario" onclick="event.preventDefault();goToCategory('escritorio')">Escritório</a>
+            <a href="/mobiliario" onclick="event.preventDefault();goToCategory('cozinha')">Cozinha</a>
           </div>
         </div>
       </div>
-      <a onclick="showPage('decorativos')" class="nav-menu-link">Itens Decorativos</a>
-      <a onclick="showPage('pet')" class="nav-menu-link">Linha Pet</a>
-      <a onclick="showPage('sobre')" class="nav-menu-link">Sobre Nós</a>
-      <a onclick="showPage('eventos')" class="nav-menu-link">Eventos</a>
-      <a onclick="showPage('arquitetos')" class="nav-menu-link">Para Arquitetos</a>
-      <a onclick="showPage('contato')" class="nav-menu-link">Contato</a>
+      <a href="/itens-decorativos" class="nav-menu-link">Itens Decorativos</a>
+      <a href="/linha-pet" class="nav-menu-link">Linha Pet</a>
+      <a href="/sobre" class="nav-menu-link">Sobre Nós</a>
+      <a href="/eventos" class="nav-menu-link">Eventos</a>
+      <a href="/para-arquitetos" class="nav-menu-link">Para Arquitetos</a>
+      <a href="/contato" class="nav-menu-link">Contato</a>
     </div>
     <div class="nav-actions">
       <button class="nav-cart-btn" onclick="toggleCart()">
@@ -1502,8 +1508,8 @@
       <p class="hero-subtitle">Cada peça nasce de uma conversa entre o artesão e a madeira. O resultado não é um móvel — é uma decisão sobre como você quer viver.</p>
       <p class="hero-sub2">Madeira certificada · Trabalhos manuais · Design autoral</p>
       <div class="hero-actions">
-        <a onclick="showPage('mobiliario')" class="btn-primary" style="cursor:pointer">Explorar mobiliário</a>
-        <a onclick="showPage('contato')" class="btn-ghost" style="cursor:pointer">Iniciar projeto</a>
+        <a href="/mobiliario" class="btn-primary" style="cursor:pointer">Explorar mobiliário</a>
+        <a href="/contato" class="btn-ghost" style="cursor:pointer">Iniciar projeto</a>
       </div>
     </div>
 
@@ -1536,7 +1542,7 @@
       <p class="cinema-overline"><span class="section-num">(02)</span>O ateliê em movimento</p>
       <h2 class="cinema-title">A madeira,<br>em seu tempo.</h2>
       <p class="cinema-sub">Do corte à última demão de óleo — cada gesto tem um porquê.</p>
-      <a onclick="showPage('sobre')" class="btn-ghost" style="cursor:pointer">Conheça o estúdio</a>
+      <a href="/sobre" class="btn-ghost" style="cursor:pointer">Conheça o estúdio</a>
     </div>
   </section>
 
@@ -1694,7 +1700,7 @@
 
     <div class="depoimentos-rodape">
       <p class="depoimentos-nota">Depoimentos reais de clientes que vivem com peças MABE.</p>
-      <a onclick="showPage('contato')" class="btn-ghost" style="border-color:rgba(232,230,225,0.2);color:rgba(232,230,225,0.6);cursor:pointer">Iniciar meu projeto</a>
+      <a href="/contato" class="btn-ghost" style="border-color:rgba(232,230,225,0.2);color:rgba(232,230,225,0.6);cursor:pointer">Iniciar meu projeto</a>
     </div>
   </section>
 
@@ -1703,7 +1709,7 @@
     <p class="section-overline"><span class="section-num">(05)</span>O próximo capítulo</p>
     <h2 class="cta-final-title">Vamos começar<br><em>pela madeira.</em></h2>
     <p class="cta-final-aside">(toda peça começa com uma conversa honesta)</p>
-    <a onclick="showPage('contato')" class="btn-primary" style="cursor:pointer">Iniciar projeto</a>
+    <a href="/contato" class="btn-primary" style="cursor:pointer">Iniciar projeto</a>
   </section>
 
   <!-- FOOTER HOME -->
@@ -1716,13 +1722,13 @@
       <div>
         <h4>Navegação</h4>
         <ul>
-          <li><a onclick="showPage('home')">Home</a></li>
-          <li><a onclick="showPage('mobiliario')">Mobiliário</a></li>
-          <li><a onclick="showPage('decorativos')">Itens Decorativos</a></li>
-          <li><a onclick="showPage('pet')">Linha Pet</a></li>
-          <li><a onclick="showPage('sobre')">Sobre Nós</a></li>
-          <li><a onclick="showPage('arquitetos')">Para Arquitetos</a></li>
-          <li><a onclick="showPage('contato')">Contato</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/mobiliario">Mobiliário</a></li>
+          <li><a href="/itens-decorativos">Itens Decorativos</a></li>
+          <li><a href="/linha-pet">Linha Pet</a></li>
+          <li><a href="/sobre">Sobre Nós</a></li>
+          <li><a href="/para-arquitetos">Para Arquitetos</a></li>
+          <li><a href="/contato">Contato</a></li>
         </ul>
       </div>
       <div>
@@ -1740,7 +1746,7 @@
     <div class="footer-bottom">
       <p>© 2026 Estúdio MABE · Design Autoral Brasileiro · Marcenaria especializada em madeira maciça</p>
       <p>CNPJ: 63.307.833/0001-10 · Rio de Janeiro — RJ</p>
-      <p><a onclick="showPage('privacidade')" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Política de Privacidade</a></p>
+      <p><a href="/privacidade" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Política de Privacidade</a></p>
     </div>
   </footer>
 </div>
@@ -1874,7 +1880,7 @@
         <p class="section-overline">Parceria profissional</p>
         <h1>Para<br><em>arquitetos</em><br>e designers.</h1>
         <p class="arq-hero-sub" style="max-width:600px">Sabemos que o seu nome está em cada projeto que você assina. Por isso tratamos cada parceria como uma extensão do seu próprio estúdio — com a mesma exigência, o mesmo cuidado e o mesmo compromisso com o resultado final.</p>
-        <a onclick="showPage('contato')" class="btn-primary" style="cursor:pointer">Falar com o estúdio</a>
+        <a href="/contato" class="btn-primary" style="cursor:pointer">Falar com o estúdio</a>
       </div>
       <div class="arq-visual">
         <div class="armchair-stage">
@@ -2271,7 +2277,7 @@
 
 <!-- ══ AVISO DE COOKIES (LGPD) ══ -->
 <div class="aviso-cookies" id="avisoCookies" role="dialog" aria-live="polite" aria-label="Aviso sobre cookies">
-  <p>Usamos cookies para entender como o site é usado e medir o resultado dos nossos anúncios. Você pode recusar — o site continua funcionando igual. Detalhes na <a href="/privacidade" onclick="event.preventDefault();showPage('privacidade')">Política de Privacidade</a>.</p>
+  <p>Usamos cookies para entender como o site é usado e medir o resultado dos nossos anúncios. Você pode recusar — o site continua funcionando igual. Detalhes na <a href="/privacidade">Política de Privacidade</a>.</p>
   <div class="aviso-cookies-acoes">
     <button class="principal" onclick="responderCookies('aceito')">Aceitar</button>
     <button onclick="responderCookies('recusado')">Recusar</button>
@@ -2512,7 +2518,7 @@ function renderHeroMarquee() {
 function renderProducts() {
   const list = activeFilter==='todos' ? products : products.filter(p=>p.category===activeFilter);
   document.getElementById('productsGrid').innerHTML = list.map(p=>`
-    <div class="product-card" onclick="abrirPeca(slugify('${p.name}'))">
+    <div class="product-card" data-rota="/peca/${slugify(p.name)}">
       <div class="product-img-placeholder" style="background:${p.bg}" data-fotos='${JSON.stringify(fotosDe(p))}' data-i="0">
         ${productThumb(p)}
         ${setasCard(p)}
@@ -2522,7 +2528,7 @@ function renderProducts() {
       </div>
       <div class="product-info">
         <p class="product-category">${p.category}</p>
-        <h3 class="product-name">${p.name}</h3>
+        <h3 class="product-name"><a href="/peca/${slugify(p.name)}">${p.name}</a></h3>
         <p class="product-material">${p.mat}</p>
         <div class="product-footer">
           <span class="product-price">${fmt(p.price)}</span>
@@ -2535,10 +2541,10 @@ function renderProducts() {
 
 function renderDecors() {
   document.getElementById('decorGrid').innerHTML = decors.map(d=>`
-    <div class="decor-card" onclick="abrirPeca(slugify('${d.name}'))">
+    <div class="decor-card" data-rota="/peca/${slugify(d.name)}">
       <div class="decor-img" style="background:${d.bg}" data-fotos='${JSON.stringify(fotosDe(d))}' data-i="0">${decorThumb(d)}${setasCard(d)}</div>
       <div class="decor-info">
-        <h3 class="decor-name">${d.name}</h3>
+        <h3 class="decor-name"><a href="/peca/${slugify(d.name)}">${d.name}</a></h3>
         <p class="decor-desc">${d.desc}</p>
         <div class="decor-footer">
           <span class="decor-price">${fmt(d.price)}</span>
@@ -2551,10 +2557,10 @@ function renderDecors() {
 
 function renderPetProducts() {
   document.getElementById('petGrid').innerHTML = petProducts.map(d=>`
-    <div class="decor-card" onclick="abrirPeca(slugify('${d.name}'))">
+    <div class="decor-card" data-rota="/peca/${slugify(d.name)}">
       <div class="decor-img" style="background:${d.bg}" data-fotos='${JSON.stringify(fotosDe(d))}' data-i="0">${decorThumb(d)}${setasCard(d)}</div>
       <div class="decor-info">
-        <h3 class="decor-name">${d.name}</h3>
+        <h3 class="decor-name"><a href="/peca/${slugify(d.name)}">${d.name}</a></h3>
         <p class="decor-desc">${d.desc}</p>
         <div class="decor-footer">
           <span class="decor-price">${fmt(d.price)}</span>
@@ -2876,7 +2882,7 @@ function renderPeca(p) {
 
   fotosAtuais = fotos; fotoAtual = 0;
   document.getElementById('pecaConteudo').innerHTML = `
-    <a class="peca-voltar" onclick="showPage('${p.origem}')">← Voltar para ${p.secao}</a>
+    <a class="peca-voltar" href="${ROTAS[p.origem].url}">← Voltar para ${p.secao}</a>
     <div class="peca-grid">
       <div>${galeria}</div>
       <div class="peca-info">
@@ -2941,6 +2947,7 @@ function abrirPeca(slug, semHistorico) {
   if (desc) desc.setAttribute('content', `${p.name}: ${(p.mat || p.desc || '')}. Peça autoral do Estúdio MABE, feita sob encomenda em madeira maciça certificada. ${fmt(p.price)}.`);
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
+  dadosDaPeca(p, url);
 
   if (!semHistorico && location.pathname !== url) history.pushState({ peca: slug }, '', url);
 }
@@ -2950,7 +2957,7 @@ function abrirPeca(slug, semHistorico) {
    voltar do navegador e o Google indexar cada página separadamente.
    Depende do rewrite em vercel.json, que serve index.html em qualquer rota. */
 const ROTAS = {
-  home:        { url: '/',                 titulo: 'Estúdio MABE — Design Autoral Brasileiro · Marcenaria em Madeira Maciça',
+  home:        { url: '/',                 titulo: 'Estúdio MABE — Móveis em Madeira Maciça · Rio de Janeiro',
                  desc: 'Móveis e itens decorativos sob medida criados com madeira certificada, técnicas artesanais e design autoral. Rio de Janeiro.' },
   mobiliario:  { url: '/mobiliario',       titulo: 'Mobiliário sob encomenda — Estúdio MABE',
                  desc: 'Móveis em madeira maciça feitos à mão sob encomenda: criados, racks, mesas e peças para sala, quarto, escritório e cozinha. Rio de Janeiro.' },
@@ -2972,6 +2979,84 @@ const ROTAS = {
 
 const URL_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS).map(([id, r]) => [r.url, id]));
 
+
+/* ══════════════════════════════════════════════════════════════
+   DADOS ESTRUTURADOS POR PÁGINA
+   Alimentam o resumo que o Google mostra na pesquisa:
+   · trilha  → exibe "estudiomabe.com.br › Linha Pet › Casa Dada"
+               no lugar do endereço cru
+   · produto → permite exibir preço e foto da peça no resultado
+   O bloco fixo do negócio continua no <head>; este aqui é reescrito
+   a cada troca de página.
+   ══════════════════════════════════════════════════════════════ */
+const SITE = 'https://www.estudiomabe.com.br';
+
+const NOMES_TRILHA = {
+  mobiliario: 'Mobiliário', decorativos: 'Itens Decorativos', pet: 'Linha Pet',
+  sobre: 'Sobre', eventos: 'Eventos', arquitetos: 'Para Arquitetos',
+  contato: 'Contato', privacidade: 'Política de Privacidade'
+};
+
+function escreverDadosEstruturados(objeto) {
+  const tag = document.getElementById('ldDinamico');
+  if (tag) tag.textContent = objeto ? JSON.stringify(objeto) : '';
+}
+
+function degrau(posicao, nome, caminho) {
+  return { '@type': 'ListItem', position: posicao, name: nome, item: SITE + caminho };
+}
+
+function trilhaDaPagina(id) {
+  const rota = ROTAS[id];
+  if (!rota || id === 'home') { escreverDadosEstruturados(null); return; }
+  escreverDadosEstruturados({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [degrau(1, 'Início', '/'), degrau(2, NOMES_TRILHA[id] || rota.titulo, rota.url)]
+  });
+}
+
+function dadosDaPeca(p, url) {
+  const secao = ROTAS[p.origem];
+  const fotos = fotosDe(p).map(f => SITE + f);
+
+  const produto = {
+    '@type': 'Product',
+    name: p.name,
+    description: p.desc || p.mat || `${p.name} em madeira maciça, feita à mão pelo Estúdio MABE.`,
+    url: SITE + url,
+    category: p.secao,
+    material: 'Madeira maciça certificada',
+    brand: { '@type': 'Brand', name: 'Estúdio MABE' },
+    offers: {
+      '@type': 'Offer',
+      url: SITE + url,
+      price: p.price,
+      priceCurrency: 'BRL',
+      itemCondition: 'https://schema.org/NewCondition',
+      /* Feito sob encomenda — não é estoque; declarar InStock seria impreciso */
+      availability: 'https://schema.org/MadeToOrder',
+      seller: { '@id': SITE + '/#negocio' }
+    }
+  };
+  /* Sem foto real não declaramos imagem: o Google exige que ela seja da peça */
+  if (fotos.length) produto.image = fotos;
+
+  escreverDadosEstruturados({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          degrau(1, 'Início', '/'),
+          degrau(2, NOMES_TRILHA[p.origem] || p.secao, secao ? secao.url : '/'),
+          degrau(3, p.name, url)
+        ]
+      },
+      produto
+    ]
+  });
+}
 function atualizarMeta(id) {
   const rota = ROTAS[id];
   if (!rota) return;
@@ -2980,6 +3065,7 @@ function atualizarMeta(id) {
   if (desc) desc.setAttribute('content', rota.desc);
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + (rota.url === '/' ? '/' : rota.url));
+  trilhaDaPagina(id);
 }
 
 /* Envolve o showPage já decorado: troca a página, a URL e os metadados */
@@ -3020,6 +3106,31 @@ window.addEventListener('popstate', e => {
   }
 })();
 
+
+/* ══════════════════════════════════════════════════════════════
+   LINKS INTERNOS
+   Menus, rodapé e cards agora usam href de verdade — é assim que o
+   Google descobre as páginas, e é o que permite ao cliente abrir uma
+   peça em nova aba ou ver o endereço ao passar o mouse.
+   Este ouvinte intercepta o clique comum e mantém a troca de página
+   sem recarregar. Ctrl/Cmd/Shift e o clique do meio passam direto
+   para o navegador, que aí abre em nova aba normalmente.
+   ══════════════════════════════════════════════════════════════ */
+document.addEventListener('click', function (e) {
+  if (e.defaultPrevented || e.button !== 0) return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+  const alvo = e.target.closest ? e.target.closest('a[href^="/"], [data-rota]') : null;
+  if (!alvo) return;
+  if (alvo.tagName === 'A' && (alvo.target === '_blank' || alvo.hasAttribute('download'))) return;
+
+  const destino = alvo.getAttribute('href') || alvo.getAttribute('data-rota');
+  const peca = destino.match(/^\/peca\/([a-z0-9-]+)$/);
+  if (peca) { e.preventDefault(); abrirPeca(peca[1]); return; }
+
+  const id = URL_PARA_PAGINA[destino];
+  if (id) { e.preventDefault(); showPage(id); }
+});
 /* ══════════════════════════════════════════════════════════════
    MEDIÇÃO — visitas, peças vistas e seleção
    O site troca de página sem recarregar, então cada troca precisa
