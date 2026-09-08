@@ -238,7 +238,7 @@
       transition: all 0.2s; display: flex; align-items: center; gap: 0.6rem;
     }
     .nav-cart-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-    .cart-icon { font-size: 1rem; line-height: 1; }
+    .cart-icon { width: 17px; height: 17px; display: block; flex-shrink: 0; }
     .cart-count {
       background: var(--gold); color: var(--bg);
       font-size: 0.58rem; font-weight: 700;
@@ -701,6 +701,11 @@
       text-transform: uppercase; color: var(--muted); flex-shrink: 0;
     }
     .peca-spec dd { font-size: 0.86rem; font-weight: 300; color: var(--ink-soft); text-align: right; }
+    @media (max-width: 600px) {
+      /* Rotulo e valor lado a lado espremem em telas estreitas: empilha */
+      .peca-spec { flex-direction: column; gap: 0.3rem; }
+      .peca-spec dd { text-align: left; }
+    }
     .peca-preco {
       font-family: 'Cormorant Garamond', serif; font-size: 2.1rem;
       font-weight: 400; margin-bottom: 0.4rem;
@@ -877,6 +882,10 @@
     .contato-item-value { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 400; }
     .contato-item-value a { color: var(--ink); text-decoration: none; transition: color 0.2s; }
     .contato-item-value a:hover { color: var(--gold); }
+    @media (max-width: 700px) {
+      /* Alvo de toque de 44px: o link inline tinha so 21px de altura */
+      .contato-item-value a { display: flex; align-items: center; min-height: 44px; }
+    }
 
     .form-grid { display: grid; gap: 1rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -1479,7 +1488,7 @@
     </div>
     <div class="nav-actions">
       <button class="nav-cart-btn" onclick="toggleCart()">
-        <span class="cart-icon">🛒</span>
+        <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3.5h2.2l2.4 10.6a1.6 1.6 0 0 0 1.6 1.2h8.1a1.6 1.6 0 0 0 1.6-1.2l1.6-7.1H5.6"/><circle cx="9.8" cy="19.8" r="1.2"/><circle cx="17.2" cy="19.8" r="1.2"/></svg>
         <span class="cart-label">Carrinho</span>
         <span class="cart-count" id="cartCount">0</span>
       </button>
