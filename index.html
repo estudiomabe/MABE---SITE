@@ -3034,8 +3034,10 @@ function dadosDaPeca(p, url) {
       price: p.price,
       priceCurrency: 'BRL',
       itemCondition: 'https://schema.org/NewCondition',
-      /* Feito sob encomenda — não é estoque; declarar InStock seria impreciso */
-      availability: 'https://schema.org/MadeToOrder',
+      /* O Google só aceita a lista dele: MadeToOrder é recusado como enum
+         inválido. InStock, no vocabulário dele, significa "disponível para
+         compra" — que é o caso: toda peça pode ser encomendada. */
+      availability: 'https://schema.org/InStock',
       seller: { '@id': SITE + '/#negocio' }
     }
   };
