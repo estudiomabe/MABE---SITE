@@ -1509,6 +1509,16 @@
       .catalog-filters { flex-wrap: wrap; align-self: stretch; border-right: none; border-bottom: none; }
       .filter-btn,
       .filter-btn:last-child { flex: 1 1 30%; min-height: 44px; padding: 0.75rem 1rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+      /* "Solicitar orcamento" era um link de 20px com fonte de 9,9px, a
+         acao principal do card. No celular vira uma faixa de 44px, com
+         a seta encostada na direita */
+      .product-quote {
+        display: flex; align-items: center; justify-content: space-between;
+        min-height: 44px; padding: 0 1rem; margin-top: 1rem;
+        font-size: 0.7rem; border: 1px solid var(--border);
+      }
+      .product-quote-arrow { margin-left: 0.75rem; }
     }
   </style>
 </head>
