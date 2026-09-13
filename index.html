@@ -1526,6 +1526,13 @@
 
       /* A faixa do atelie, mais curta ainda no celular */
       .cinema-content { padding: 2.75rem 1.5rem; }
+
+      /* No celular o menu lateral sai do fluxo e nada empurrava os botoes para a
+         direita. O grupo passa a ocupar a largura toda: tres tracos logo depois do
+         logo, carrinho encostado na ponta direita */
+      .nav-actions { flex: 1 1 auto; gap: 1.25rem; }
+      .nav-burger { order: -1; }
+      .nav-cart-btn { margin-left: auto; }
     }
   </style>
 </head>
