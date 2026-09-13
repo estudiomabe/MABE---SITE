@@ -1093,6 +1093,12 @@
         padding: 1.1rem 8vw; text-align: left; border-bottom: 1px solid var(--border);
       }
       .nav-menu a.nav-menu-link::after { display: none; }
+      /* "Mobiliário" fica um nivel mais fundo, dentro de .nav-drop, entao
+         nao e filho direto do flex .nav-menu e nao herda o esticamento
+         automatico para 100% que os outros links tem. Sem isso, a borda
+         inferior media so a largura do texto (138px), nao a tela toda,
+         e aparece como uma linha curta cruzando "Mobiliário" */
+      .nav-drop > a.nav-menu-link { display: block; width: 100%; }
       .nav-drop { width: 100%; }
       .nav-drop-panel {
         position: static; transform: none; opacity: 1; visibility: visible; pointer-events: auto;
