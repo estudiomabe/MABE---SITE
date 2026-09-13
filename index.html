@@ -1546,6 +1546,21 @@
     @media (max-width: 600px) {
       .peca-condicoes-lista { grid-template-columns: 1fr; gap: 0.8rem; }
     }
+
+    /* Nas paginas de texto, no celular, o botao do WhatsApp encolhe e vai
+       para o cantinho, para cobrir menos o fim das linhas; o rodape da
+       pagina ganha respiro para o ultimo paragrafo nao ficar escondido */
+    @media (max-width: 600px) {
+      body:has(#page-comprar.active) .whatsapp-fab,
+      body:has(#page-privacidade.active) .whatsapp-fab {
+        width: 44px; height: 44px; bottom: 0.75rem; right: 0.75rem;
+        box-shadow: 0 4px 16px rgba(37,211,102,0.25);
+      }
+      body:has(#page-comprar.active) .whatsapp-fab svg,
+      body:has(#page-privacidade.active) .whatsapp-fab svg { width: 22px; height: 22px; }
+      #page-comprar .catalog-page,
+      #page-privacidade .catalog-page { padding-bottom: 5rem; }
+    }
   </style>
 </head>
 <body>
