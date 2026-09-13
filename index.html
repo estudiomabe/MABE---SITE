@@ -1527,11 +1527,11 @@
       /* A faixa do atelie, mais curta ainda no celular */
       .cinema-content { padding: 2.75rem 1.5rem; }
 
-      /* No celular o menu lateral sai do fluxo e nada empurrava os botoes para a
-         direita. O grupo passa a ocupar a largura toda: tres tracos logo depois do
-         logo, carrinho encostado na ponta direita */
-      .nav-actions { flex: 1 1 auto; gap: 1.25rem; }
-      .nav-burger { order: -1; }
+      /* No celular: tres tracos a esquerda do logo (o botao fica antes dele na
+         marcacao) e carrinho encostado na ponta direita. O menu lateral sai do
+         fluxo, entao o grupo de acoes ocupa a largura toda para empurrar o carrinho */
+      .nav-inner { gap: 1rem; }
+      .nav-actions { flex: 1 1 auto; }
       .nav-cart-btn { margin-left: auto; }
     }
   </style>
@@ -1554,6 +1554,9 @@
 <!-- NAV -->
 <nav>
     <div class="nav-inner">
+    <button class="nav-burger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <a class="nav-logo" href="/">
     <img class="nav-logo-img" src="/images/logo-nav.png" alt="Estúdio MABE" width="400" height="111" />
     </a>
@@ -1582,11 +1585,7 @@
         <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3.5h2.2l2.4 10.6a1.6 1.6 0 0 0 1.6 1.2h8.1a1.6 1.6 0 0 0 1.6-1.2l1.6-7.1H5.6"/><circle cx="9.8" cy="19.8" r="1.2"/><circle cx="17.2" cy="19.8" r="1.2"/></svg>
         <span class="cart-label">Carrinho</span>
         <span class="cart-count" id="cartCount">0</span>
-      </button>
-      <button class="nav-burger" onclick="toggleMobileNav()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+      </button>    </div>
   </div>
 </nav>
 <div class="nav-spacer"></div>
