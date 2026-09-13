@@ -1535,6 +1535,17 @@
       .nav-logo { justify-self: center; }
       .nav-actions { justify-self: end; }
     }
+
+    /* Faixa de condicoes comerciais na pagina da peca */
+    .peca-condicoes { border: 1px solid var(--border); background: var(--bg-dark); padding: 1.25rem 1.4rem 1.1rem; margin: 0 0 2rem; }
+    .peca-condicoes-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 2rem; }
+    .peca-condicao dt { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.25rem; }
+    .peca-condicao dd { font-size: 0.84rem; font-weight: 300; color: var(--ink-soft); line-height: 1.55; }
+    .peca-condicoes-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 0.6rem; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--border); transition: border-color 0.2s; }
+    .peca-condicoes-link:hover { border-color: var(--ink); }
+    @media (max-width: 600px) {
+      .peca-condicoes-lista { grid-template-columns: 1fr; gap: 0.8rem; }
+    }
   </style>
 </head>
 <body>
@@ -1851,7 +1862,7 @@
     <div class="footer-bottom">
       <p>© 2026 Estúdio MABE · Design Autoral Brasileiro · Marcenaria especializada em madeira maciça</p>
       <p>CNPJ: 63.307.833/0001-10 · Rio de Janeiro, RJ</p>
-      <p><a href="/privacidade" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Política de Privacidade</a></p>
+      <p><a href="/como-comprar" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Como comprar</a> · <a href="/privacidade" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Política de Privacidade</a></p>
     </div>
   </footer>
 </div>
@@ -2377,6 +2388,34 @@
   </div>
 </div>
 
+
+<!-- COMO COMPRAR (as condicoes abaixo sao EXEMPLOS provisorios: substituir pelas reais) -->
+<div id="page-comprar" class="page">
+  <div class="catalog-page" style="max-width:820px;margin:0 auto">
+    <p class="section-overline">Institucional</p>
+    <h1 class="section-title" style="margin-bottom:0.75rem">Como comprar</h1>
+    <p class="section-sub" style="margin-bottom:3.5rem">O que acontece entre o primeiro contato e a peça montada na sua casa</p>
+
+    <div style="font-size:0.9rem;color:var(--ink-soft);font-weight:300;line-height:1.75;max-width:68ch">
+      <p style="margin-bottom:1.5rem">Toda peça do <strong>Estúdio MABE</strong> é feita sob encomenda. Isso muda o ritmo da compra: não há estoque, há uma conversa, um projeto aprovado e um prazo de produção. Esta página explica cada etapa e as condições que valem para todas as peças do catálogo.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">1. Pagamento</h3>
+      <p style="margin-bottom:1.5rem">Aceitamos Pix, transferência bancária e cartão de crédito em até 6 vezes. O pedido entra em produção com o pagamento de um sinal de 50%; o restante é pago na entrega. Os valores do catálogo são de referência: peças ajustadas em medida, madeira ou acabamento recebem orçamento próprio antes de qualquer cobrança.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">2. Prazo de produção</h3>
+      <p style="margin-bottom:1.5rem">De 30 a 45 dias úteis, contados a partir da aprovação do projeto e da confirmação do sinal. Peças com medida sob encomenda ou madeiras especiais podem pedir mais tempo, e isso é combinado antes do início. Você recebe fotos do andamento pelo WhatsApp durante a produção.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">3. Entrega e montagem</h3>
+      <p style="margin-bottom:1.5rem">Entregamos e montamos na cidade do Rio de Janeiro e na Grande Rio sem custo adicional. Para outras regiões, orçamos o frete no momento da proposta. A data de entrega é agendada com você, e a peça sai do ateliê protegida para o transporte.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Troca, devolução e arrependimento</h3>
+      <p style="margin-bottom:1.5rem">Compras feitas a distância têm direito de arrependimento em até 7 dias após o recebimento, conforme o artigo 49 do Código de Defesa do Consumidor, com devolução do valor pago. Defeitos de fabricação são cobertos pela garantia legal e resolvidos pelo próprio ateliê, com reparo ou substituição. Como cada peça é feita para um espaço, ajustes de medida ou acabamento depois da aprovação do projeto são orçados à parte.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. Dúvidas</h3>
+      <p style="margin-bottom:1.5rem">Qualquer condição pode ser conversada antes do pedido pelo WhatsApp <a href="https://wa.me/5521999021331?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20as%20condi%C3%A7%C3%B5es%20de%20compra." target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline">+55 (21) 99902-1331</a> ou pelo e-mail <a href="mailto:contato.estudiomabe@gmail.com" style="color:var(--ink);text-decoration:underline">contato.estudiomabe@gmail.com</a>.</p>
+    </div>
+  </div>
+</div>
 <div id="page-404" class="page">
   <div class="catalog-page" style="max-width:620px;margin:0 auto;text-align:center">
     <p class="section-overline">Erro 404</p>
@@ -3043,6 +3082,27 @@ function acharPeca(slug) { return catalogo().find(p => p.slug === slug); }
 /* Veja tambem: sem isto, quem chegava numa peca pelo Google via aquela
    peca e mais nada do estudio. Prioriza a mesma secao e, dentro dela,
    as pecas que ja tem foto. */
+
+/* CONDICOES COMERCIAIS
+   ATENCAO: os valores abaixo sao EXEMPLOS provisorios, a trocar pelas
+   condicoes reais do estudio. Alimentam a faixa da pagina de cada peca
+   e a pagina /como-comprar, entao basta mudar aqui. */
+const CONDICOES = [
+  { rotulo: 'Pagamento', resumo: 'Pix, transferência ou cartão em até 6×' },
+  { rotulo: 'Prazo',     resumo: '30 a 45 dias úteis após a aprovação do projeto' },
+  { rotulo: 'Entrega',   resumo: 'Rio de Janeiro e Grande Rio, com montagem incluída' },
+  { rotulo: 'Troca',     resumo: '7 dias para arrependimento, conforme o CDC' }
+];
+
+function faixaCondicoes() {
+  return `
+    <div class="peca-condicoes">
+      <dl class="peca-condicoes-lista">
+        ${CONDICOES.map(c => `<div class="peca-condicao"><dt>${c.rotulo}</dt><dd>${c.resumo}</dd></div>`).join('')}
+      </dl>
+      <a class="peca-condicoes-link" href="/como-comprar">Ver todas as condições →</a>
+    </div>`;
+}
 function relacionadas(p) {
   const outras = catalogo().filter(x => x.slug !== p.slug);
   const porFoto = lista => [...lista].sort((a, b) => fotosDe(b).length - fotosDe(a).length);
@@ -3116,6 +3176,7 @@ function renderPeca(p) {
         </dl>
         <p class="peca-preco">${fmt(p.price)}</p>
         <p class="peca-preco-nota">Valor de referência. Cada peça é ajustada ao seu espaço</p>
+        ${faixaCondicoes()}
         <div class="peca-acoes">
           <a class="btn-primary" data-evento="peca_pagina" data-peca="${p.name}" data-valor="${p.price}" href="https://wa.me/5521999021331?text=${msg}" target="_blank" rel="noopener">Solicitar orçamento</a>
           <button class="btn-ghost" onclick="addToCart(${p.id},'${p.tipo}')">+ Adicionar à seleção</button>
@@ -3195,7 +3256,9 @@ const ROTAS = {
   contato:     { url: '/contato',          titulo: 'Contato | Estúdio MABE',
                  desc: 'Conte-nos sobre seu espaço. Orçamento sob medida para móveis em madeira maciça. WhatsApp +55 (21) 99902-1331.' },
   privacidade: { url: '/privacidade',      titulo: 'Política de Privacidade | Estúdio MABE',
-                 desc: 'Como o Estúdio MABE trata seus dados pessoais, em conformidade com a LGPD.' }
+                 desc: 'Como o Estúdio MABE trata seus dados pessoais, em conformidade com a LGPD.' },
+  comprar:     { url: '/como-comprar',     titulo: 'Como comprar | Estúdio MABE',
+                 desc: 'Pagamento, prazo de produção, entrega, montagem e política de troca das peças sob encomenda do Estúdio MABE.' },
 };
 
 const URL_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS).map(([id, r]) => [r.url, id]));
@@ -3215,7 +3278,7 @@ const SITE = 'https://www.estudiomabe.com.br';
 const NOMES_TRILHA = {
   mobiliario: 'Mobiliário', decorativos: 'Itens Decorativos', pet: 'Linha Pet',
   sobre: 'Sobre', eventos: 'Eventos', arquitetos: 'Para Arquitetos',
-  contato: 'Contato', privacidade: 'Política de Privacidade'
+  contato: 'Contato', privacidade: 'Política de Privacidade', comprar: 'Como comprar'
 };
 
 function escreverDadosEstruturados(objeto) {
