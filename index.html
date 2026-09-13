@@ -389,7 +389,7 @@
 
     /* SEÇÃO CINEMATOGRÁFICA (ateliê) */
     .cinema {
-      position: relative; min-height: 72vh;
+      position: relative;   /* sem min-height: era o palco de um video que saiu; agora e uma faixa */
       background: var(--ink); color: var(--bg);
       display: flex; align-items: center; justify-content: center;
       overflow: hidden; text-align: center;
@@ -398,7 +398,7 @@
       position: absolute; inset: 0; pointer-events: none;
       background: rgba(17,17,16,0.45);
     }
-    .cinema-content { position: relative; z-index: 1; padding: 6rem 8vw; max-width: 760px; }
+    .cinema-content { position: relative; z-index: 1; padding: 4rem 8vw; max-width: 760px; }
     .cinema-overline {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.24em;
       text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
@@ -1524,6 +1524,9 @@
       .add-to-cart { min-height: 44px; padding: 0.6rem 1.1rem; font-size: 0.68rem; }
       .peca-voltar { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 1.5rem; font-size: 0.7rem; }
       .sketchup-dl { min-height: 44px; padding: 0.6rem 1.1rem; font-size: 0.68rem; }
+
+      /* A faixa do atelie, mais curta ainda no celular */
+      .cinema-content { padding: 2.75rem 1.5rem; }
     }
   </style>
 </head>
