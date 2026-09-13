@@ -1527,12 +1527,13 @@
       /* A faixa do atelie, mais curta ainda no celular */
       .cinema-content { padding: 2.75rem 1.5rem; }
 
-      /* No celular: tres tracos a esquerda do logo (o botao fica antes dele na
-         marcacao) e carrinho encostado na ponta direita. O menu lateral sai do
-         fluxo, entao o grupo de acoes ocupa a largura toda para empurrar o carrinho */
-      .nav-inner { gap: 1rem; }
-      .nav-actions { flex: 1 1 auto; }
-      .nav-cart-btn { margin-left: auto; }
+      /* No celular a barra vira tres colunas: tracos na esquerda, logo no centro
+         exato (as colunas laterais tem a mesma largura, 1fr cada) e carrinho na
+         direita. O menu lateral sai do fluxo e nao entra na conta */
+      .nav-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0.75rem; }
+      .nav-burger { justify-self: start; }
+      .nav-logo { justify-self: center; }
+      .nav-actions { justify-self: end; }
     }
   </style>
 </head>
