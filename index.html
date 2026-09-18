@@ -1493,8 +1493,25 @@
       font-size: 1.2rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem;
     }
 
+    /* Garante que "hidden" vença regras de display (ex.: links do menu no celular) */
+    [hidden] { display: none !important; }
+
+    /* Secao na home: os 3 mais recentes. Fica escondida (hidden) enquanto
+       a lista estiver vazia, para a home nunca mostrar um "em breve". */
+    .projetos-home {
+      background: var(--bg); padding: 7rem 8vw;
+      border-top: 1px solid var(--border);
+    }
+    .projetos-home .projetos-home-lista { margin-top: 4rem; }
+    .projetos-home-rodape { margin-top: 3rem; text-align: center; }
+
     @media (max-width: 900px) {
       .projeto-item, .projeto-item.reverse { grid-template-columns: 1fr; direction: ltr; }
+    }
+    @media (max-width: 600px) {
+      .projetos-home { padding: 4.5rem 6vw; }
+      .projetos-home .projetos-home-lista { margin-top: 2.5rem; }
+      .projeto-info { padding: 2rem 1.5rem; }
     }
 
 
@@ -1688,7 +1705,7 @@
       <a href="/itens-decorativos" class="nav-menu-link">Itens Decorativos</a>
       <a href="/linha-pet" class="nav-menu-link">Linha Pet</a>
       <a href="/sobre" class="nav-menu-link">Sobre Nós</a>
-      <a href="/projetos-realizados" class="nav-menu-link">Projetos Realizados</a>
+      <a href="/projetos-realizados" class="nav-menu-link link-projetos" hidden>Projetos Realizados</a>
       <a href="/eventos" class="nav-menu-link">Eventos</a>
       <a href="/para-arquitetos" class="nav-menu-link">Para Arquitetos</a>
       <a href="/contato" class="nav-menu-link">Contato</a>
@@ -1788,6 +1805,17 @@
     </div>
   </section>
 
+  <!-- PROJETOS REALIZADOS (preenchida por renderTrabalhos; some se a lista estiver vazia) -->
+  <section class="projetos-home" id="projetosHome" hidden>
+    <p class="section-overline"><span class="section-num">(04)</span>Projetos Realizados</p>
+    <h2 class="section-title">Trabalhos que já saíram do ateliê</h2>
+    <p class="section-sub">Cada um feito para uma casa, uma rotina e uma pessoa</p>
+    <div class="projetos-home-lista" id="projetosHomeLista"></div>
+    <div class="projetos-home-rodape" id="projetosHomeRodape" hidden>
+      <a href="/projetos-realizados" class="btn-ghost">Ver todos os projetos</a>
+    </div>
+  </section>
+
   <!-- FAIXA TIPOGRÁFICA -->
   <section class="text-marquee" aria-hidden="true">
     <div class="text-marquee-track" id="textMarqueeTrack">
@@ -1798,7 +1826,7 @@
   <!-- DEPOIMENTOS -->
   <!-- DEPOIMENTOS: guardados ate haver depoimentos reais de clientes.
        Para reativar: apague esta linha e a linha "FIM DOS DEPOIMENTOS" abaixo,
-       e volte a numeracao do CTA final de (04) para (05).
+       e ajuste a numeracao da secao e do CTA final (definida em renderTrabalhos).
   <section class="depoimentos">
     <div class="depoimentos-header">
       <div>
@@ -1923,7 +1951,7 @@
 
   <!-- CTA FINAL (ref. noth.in) -->
   <section class="cta-final">
-    <p class="section-overline"><span class="section-num">(04)</span>O próximo capítulo</p>
+    <p class="section-overline"><span class="section-num" id="numCtaFinal">(04)</span>O próximo capítulo</p>
     <h2 class="cta-final-title">Vamos começar<br><em>pela madeira.</em></h2>
     <p class="cta-final-aside">(toda peça começa com uma conversa honesta)</p>
     <a href="/contato" class="btn-primary" style="cursor:pointer">Iniciar projeto</a>
@@ -1944,7 +1972,7 @@
           <li><a href="/itens-decorativos">Itens Decorativos</a></li>
           <li><a href="/linha-pet">Linha Pet</a></li>
           <li><a href="/sobre">Sobre Nós</a></li>
-          <li><a href="/projetos-realizados">Projetos Realizados</a></li>
+          <li class="link-projetos" hidden><a href="/projetos-realizados">Projetos Realizados</a></li>
           <li><a href="/para-arquitetos">Para Arquitetos</a></li>
           <li><a href="/contato">Contato</a></li>
         </ul>
@@ -2719,19 +2747,10 @@ function formatarMesAno(aaaaMm) {
   return `${meses[mes - 1]} de ${ano}`;
 }
 
-function renderTrabalhos() {
-  const cont = document.getElementById('projetosLista');
-  if (!cont) return;
-  if (!trabalhos.length) {
-    cont.innerHTML = `
-      <div class="projetos-vazio">
-        <p>Os primeiros projetos realizados estão a caminho. Enquanto isso, conheça as peças do catálogo.</p>
-        <a class="btn-primary" href="/mobiliario">Ver mobiliário</a>
-      </div>`;
-    return;
-  }
-  const ordenados = [...trabalhos].sort((a, b) => b.data.localeCompare(a.data));
-  cont.innerHTML = ordenados.map((t, i) => {
+const TRABALHOS_NA_HOME = 3;
+
+function htmlTrabalhos(lista, tagTitulo) {
+  return lista.map((t, i) => {
     const fotos = fotosDe(t);
     return `
     <div class="projeto-item${i % 2 === 1 ? ' reverse' : ''}">
@@ -2741,12 +2760,40 @@ function renderTrabalhos() {
       </div>
       <div class="projeto-info">
         <p class="projeto-data">${formatarMesAno(t.data)}</p>
-        <h2 class="projeto-titulo">${t.titulo}</h2>
+        <${tagTitulo} class="projeto-titulo">${t.titulo}</${tagTitulo}>
         <p class="projeto-servico">${t.servico}</p>
         <p class="projeto-descricao">${t.descricao}</p>
       </div>
     </div>`;
   }).join('');
+}
+
+/* Preenche a secao da home (3 mais recentes) e a pagina de arquivo.
+   Com a lista vazia: a secao da home e os links do menu/rodape somem,
+   e o CTA final da home volta a ser (04). */
+function renderTrabalhos() {
+  const ordenados = [...trabalhos].sort((a, b) => b.data.localeCompare(a.data));
+  const temTrabalhos = ordenados.length > 0;
+
+  document.querySelectorAll('.link-projetos').forEach(el => { el.hidden = !temTrabalhos; });
+
+  const secaoHome = document.getElementById('projetosHome');
+  if (secaoHome) {
+    secaoHome.hidden = !temTrabalhos;
+    document.getElementById('projetosHomeLista').innerHTML =
+      htmlTrabalhos(ordenados.slice(0, TRABALHOS_NA_HOME), 'h3');
+    document.getElementById('projetosHomeRodape').hidden = ordenados.length <= TRABALHOS_NA_HOME;
+  }
+  const numCta = document.getElementById('numCtaFinal');
+  if (numCta) numCta.textContent = temTrabalhos ? '(05)' : '(04)';
+
+  const cont = document.getElementById('projetosLista');
+  if (!cont) return;
+  cont.innerHTML = temTrabalhos ? htmlTrabalhos(ordenados, 'h2') : `
+      <div class="projetos-vazio">
+        <p>Os primeiros projetos realizados estão a caminho. Enquanto isso, conheça as peças do catálogo.</p>
+        <a class="btn-primary" href="/mobiliario">Ver mobiliário</a>
+      </div>`;
 }
 
 const fmt = v => 'R$\u00a0' + v.toLocaleString('pt-BR');
