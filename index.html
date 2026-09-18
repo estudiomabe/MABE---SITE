@@ -1418,6 +1418,85 @@
     /* Seção de Eventos usa Cormorant em títulos escuros */
     .eventos-hero-title, .evento-nome { font-family: 'Cormorant Garamond', serif; }
 
+    /* PROJETOS REALIZADOS */
+    .projetos-page { background: var(--bg); min-height: calc(100vh - 78px); }
+
+    .projetos-hero {
+      background: var(--ink); color: var(--bg);
+      padding: 7rem 8vw; text-align: center;
+    }
+    .projetos-hero-label {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
+    }
+    .projetos-hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 300; line-height: 1; letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .projetos-hero-sub {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.1rem; color: rgba(232,230,225,0.5); max-width: 560px; margin: 0 auto;
+    }
+
+    .projetos-lista { padding: 5rem 8vw; }
+
+    .projeto-item {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; border: 1px solid var(--border); margin-bottom: 2px;
+      transition: background 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .projeto-item:hover { background: var(--bg-dark); }
+    .projeto-item.reverse { direction: rtl; }
+    .projeto-item.reverse > * { direction: ltr; }
+
+    .projeto-foto {
+      position: relative; aspect-ratio: 4/3; overflow: hidden; background: var(--bg-dark);
+    }
+    .projeto-foto img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .projeto-item:hover .projeto-foto img { transform: scale(1.03); }
+    /* setasCard()/navegarCard() sao as mesmas funcoes do catalogo; aqui o
+       hover fica no proprio quadro da foto, ja que ela ocupa a coluna toda */
+    .projeto-foto:hover .card-seta,
+    .projeto-foto:hover .card-contador { opacity: 1; }
+
+    .projeto-info {
+      padding: 3rem; display: flex; flex-direction: column;
+      justify-content: center; gap: 1.1rem;
+    }
+    .projeto-data {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .projeto-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+      font-weight: 300; line-height: 1.15; letter-spacing: -0.01em;
+    }
+    .projeto-servico {
+      font-size: 0.8rem; font-weight: 500; color: var(--ink-soft); letter-spacing: 0.01em;
+    }
+    .projeto-descricao {
+      font-size: 0.83rem; color: var(--muted); font-weight: 300;
+      line-height: 1.7; max-width: 440px;
+    }
+
+    .projetos-vazio {
+      padding: 5rem 8vw 6rem; text-align: center; max-width: 520px; margin: 0 auto;
+    }
+    .projetos-vazio p {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.2rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .projeto-item, .projeto-item.reverse { grid-template-columns: 1fr; direction: ltr; }
+    }
+
 
     /* Aviso de cookies (LGPD) */
     .aviso-cookies {
@@ -1609,6 +1688,7 @@
       <a href="/itens-decorativos" class="nav-menu-link">Itens Decorativos</a>
       <a href="/linha-pet" class="nav-menu-link">Linha Pet</a>
       <a href="/sobre" class="nav-menu-link">Sobre Nós</a>
+      <a href="/projetos-realizados" class="nav-menu-link">Projetos Realizados</a>
       <a href="/eventos" class="nav-menu-link">Eventos</a>
       <a href="/para-arquitetos" class="nav-menu-link">Para Arquitetos</a>
       <a href="/contato" class="nav-menu-link">Contato</a>
@@ -1864,6 +1944,7 @@
           <li><a href="/itens-decorativos">Itens Decorativos</a></li>
           <li><a href="/linha-pet">Linha Pet</a></li>
           <li><a href="/sobre">Sobre Nós</a></li>
+          <li><a href="/projetos-realizados">Projetos Realizados</a></li>
           <li><a href="/para-arquitetos">Para Arquitetos</a></li>
           <li><a href="/contato">Contato</a></li>
         </ul>
@@ -2123,6 +2204,20 @@
 <!--
      PAGE: EVENTOS
  -->
+<div id="page-projetos" class="page">
+  <div class="projetos-page">
+
+    <div class="projetos-hero">
+      <p class="projetos-hero-label">Portfólio</p>
+      <h1 class="projetos-hero-title">Projetos Realizados</h1>
+      <p class="projetos-hero-sub">Da primeira conversa à peça pronta: trabalhos que já saíram do ateliê e hoje fazem parte da casa de alguém.</p>
+    </div>
+
+    <div class="projetos-lista" id="projetosLista"></div>
+
+  </div>
+</div>
+
 <div id="page-eventos" class="page">
   <div class="eventos-page">
 
@@ -2541,7 +2636,7 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   document.querySelectorAll('.nav-menu a.nav-menu-link').forEach(a => a.classList.remove('active'));
-  const map = {home:0,mobiliario:1,decorativos:2,pet:3,sobre:4,eventos:5,arquitetos:6,contato:7};
+  const map = {home:0,mobiliario:1,decorativos:2,pet:3,sobre:4,projetos:5,eventos:6,arquitetos:7,contato:8};
   const links = document.querySelectorAll('.nav-menu a.nav-menu-link');
   if (links[map[id]]) links[map[id]].classList.add('active');
   closeMobileNav();
@@ -2600,6 +2695,59 @@ const petProducts = [
   { id:204, name:'Arranhador Vértice', price:620,  bg:'#2a2620', accent:'#c9b99a', desc:'Estrutura em pinus certificado, sisal natural' },
   { id:205, name:'Casa Dada',          price:1520, bg:'#2a2018', accent:'#c9a876', desc:'Madeira maciça, abertura circular ampla, acabamento natural em óleo', imgs:['/images/casa-dada-1.jpg','/images/casa-dada-2.jpg'] },
 ];
+
+/* PROJETOS REALIZADOS
+   Cada trabalho concluido entra aqui, sempre no topo (mais recente
+   primeiro nao importa a ordem de digitacao: a lista e reordenada por
+   "data" na hora de renderizar). imgs aceita uma ou varias fotos; com
+   2 ou mais, a galeria ganha setas e contador sozinha, reaproveitando
+   setasCard()/navegarCard() do catalogo. */
+const trabalhos = [
+  // Exemplo do formato esperado (apague o comentario ao adicionar o primeiro):
+  // {
+  //   titulo: 'Reforma completa, apartamento na Barra da Tijuca',
+  //   servico: 'Marcenaria planejada para sala, quarto e home office',
+  //   descricao: 'Duas ou tres frases contando o que foi feito.',
+  //   data: '2026-09',
+  //   imgs: ['/images/trabalho-01-1.jpg', '/images/trabalho-01-2.jpg']
+  // },
+];
+
+function formatarMesAno(aaaaMm) {
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const [ano, mes] = aaaaMm.split('-').map(Number);
+  return `${meses[mes - 1]} de ${ano}`;
+}
+
+function renderTrabalhos() {
+  const cont = document.getElementById('projetosLista');
+  if (!cont) return;
+  if (!trabalhos.length) {
+    cont.innerHTML = `
+      <div class="projetos-vazio">
+        <p>Os primeiros projetos realizados estão a caminho. Enquanto isso, conheça as peças do catálogo.</p>
+        <a class="btn-primary" href="/mobiliario">Ver mobiliário</a>
+      </div>`;
+    return;
+  }
+  const ordenados = [...trabalhos].sort((a, b) => b.data.localeCompare(a.data));
+  cont.innerHTML = ordenados.map((t, i) => {
+    const fotos = fotosDe(t);
+    return `
+    <div class="projeto-item${i % 2 === 1 ? ' reverse' : ''}">
+      <div class="projeto-foto" data-fotos='${JSON.stringify(fotos)}' data-i="0">
+        <img src="${fotos[0] || ''}" alt="${t.titulo}" loading="lazy">
+        ${setasCard(t)}
+      </div>
+      <div class="projeto-info">
+        <p class="projeto-data">${formatarMesAno(t.data)}</p>
+        <h2 class="projeto-titulo">${t.titulo}</h2>
+        <p class="projeto-servico">${t.servico}</p>
+        <p class="projeto-descricao">${t.descricao}</p>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 const fmt = v => 'R$\u00a0' + v.toLocaleString('pt-BR');
 
@@ -2945,6 +3093,7 @@ renderDecors();
 renderPetProducts();
 renderSketchupLibrary();
 renderHeroMarquee();
+renderTrabalhos();
 
 /* AWWWARDS LAYER */
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -3270,6 +3419,8 @@ const ROTAS = {
                  desc: 'Camas, casinhas, comedouros e arranhadores em madeira maciça, com o mesmo acabamento do restante da casa. Estúdio MABE, Rio de Janeiro.' },
   sobre:       { url: '/sobre',            titulo: 'Sobre o Estúdio MABE | Marcenaria autoral no Rio de Janeiro',
                  desc: 'A história do Estúdio MABE: dois marceneiros, madeira certificada e a convicção de que permanência é um ato de respeito.' },
+  projetos:    { url: '/projetos-realizados', titulo: 'Projetos Realizados | Estúdio MABE',
+                 desc: 'Projetos de marcenaria sob medida já entregues pelo Estúdio MABE, com fotos e histórico dos trabalhos realizados no Rio de Janeiro.' },
   eventos:     { url: '/eventos',          titulo: 'Eventos e feiras | Estúdio MABE',
                  desc: 'Onde o Estúdio MABE esteve presente: Rio Design Week, CASACOR São Paulo e fóruns de arquitetura e interiores.' },
   arquitetos:  { url: '/para-arquitetos',  titulo: 'Para Arquitetos e Designers | Estúdio MABE',
@@ -3298,7 +3449,7 @@ const SITE = 'https://www.estudiomabe.com.br';
 
 const NOMES_TRILHA = {
   mobiliario: 'Mobiliário', decorativos: 'Itens Decorativos', pet: 'Linha Pet',
-  sobre: 'Sobre', eventos: 'Eventos', arquitetos: 'Para Arquitetos',
+  sobre: 'Sobre', projetos: 'Projetos Realizados', eventos: 'Eventos', arquitetos: 'Para Arquitetos',
   contato: 'Contato', privacidade: 'Política de Privacidade', comprar: 'Como comprar'
 };
 

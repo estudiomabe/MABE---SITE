@@ -4,6 +4,7 @@
     { "source": "/itens-decorativos", "destination": "/index.html" },
     { "source": "/linha-pet", "destination": "/index.html" },
     { "source": "/sobre", "destination": "/index.html" },
+    { "source": "/projetos-realizados", "destination": "/index.html" },
     { "source": "/eventos", "destination": "/index.html" },
     { "source": "/para-arquitetos", "destination": "/index.html" },
     { "source": "/contato", "destination": "/index.html" },
