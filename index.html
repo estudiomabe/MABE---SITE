@@ -138,7 +138,7 @@
   <meta property="og:image" content="https://www.estudiomabe.com.br/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Criado Botafogo em tauari maciço, do Estúdio MABE" />
+  <meta property="og:image:alt" content="Mesa de cabeceira Botafogo em tauari maciço, do Estúdio MABE" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -2698,10 +2698,10 @@ window.addEventListener('scroll', () => {
 
 /* Products */
 const products = [
-  { id:14, name:'Criado Botafogo', category:'quarto', price:950,
+  { id:14, name:'Mesa de Cabeceira Botafogo', category:'quarto', price:950,
     bg:'#1a1612', accent:'#b8905a',
     mat:'Tauari maciço · Medidas: 50×40×60 cm · Puxadores esculpidos na própria madeira',
-    imgs:['/images/criado-botafogo-1.jpg'] },
+    imgs:['/images/mesa-de-cabeceira-botafogo-1.jpg'] },
   { id:13, name:'Rack Urca',           category:'sala',       price:3490,  bg:'#22201a', accent:'#a08060', mat:'Folhas de freijó · Puxadores em madeira maciça de ipê', imgs:['/images/rack-urca-1.jpg'] },
 ];
 
@@ -2737,7 +2737,7 @@ const trabalhos = [
     servico: 'Mesa de cabeceira com duas gavetas e prateleira ripada, em tauari maciço',
     descricao: 'Linhas retas e proporções enxutas, pensadas para acompanhar a cama sem pesar no quarto. As gavetas dispensam puxador: o recorte na própria frente faz esse papel. Embaixo, a prateleira ripada deixa a peça leve e mostra os encaixes da estrutura, com o veio claro e uniforme do tauari à vista.',
     data: '2026-09',
-    imgs: ['/images/trabalho-criado-tauari-1.jpg']
+    imgs: ['/images/trabalho-mesa-de-cabeceira-tauari-1.jpg']
   },
 ];
 
@@ -3277,7 +3277,7 @@ renderProducts = function() {
 
 /* PAGINA DE PECA: detalhe individual de cada produto */
 
-/* Converte o nome em endereço: "Criado Botafogo" -> "criado-botafogo" */
+/* Converte o nome em endereço: "Rack Urca" -> "rack-urca" */
 function slugify(nome) {
   return nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
              .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -3459,7 +3459,7 @@ const ROTAS = {
   home:        { url: '/',                 titulo: 'Estúdio MABE | Móveis em Madeira Maciça no Rio de Janeiro',
                  desc: 'Móveis e itens decorativos sob medida criados com madeira certificada, técnicas artesanais e design autoral. Rio de Janeiro.' },
   mobiliario:  { url: '/mobiliario',       titulo: 'Mobiliário sob encomenda | Estúdio MABE',
-                 desc: 'Móveis em madeira maciça feitos à mão sob encomenda: criados, racks, mesas e peças para sala, quarto, escritório e cozinha. Rio de Janeiro.' },
+                 desc: 'Móveis em madeira maciça feitos à mão sob encomenda: mesas de cabeceira, racks, mesas e peças para sala, quarto, escritório e cozinha. Rio de Janeiro.' },
   decorativos: { url: '/itens-decorativos', titulo: 'Itens Decorativos em madeira maciça | Estúdio MABE',
                  desc: 'Vasos, bandejas, luminárias e objetos decorativos torneados à mão em madeira maciça certificada. Peças autorais do Estúdio MABE.' },
   pet:         { url: '/linha-pet',        titulo: 'Linha Pet: móveis de madeira para cães e gatos | Estúdio MABE',

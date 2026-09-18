@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/peca/criado-botafogo", "destination": "/peca/mesa-de-cabeceira-botafogo", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/mobiliario", "destination": "/index.html" },
     { "source": "/itens-decorativos", "destination": "/index.html" },
