@@ -579,6 +579,9 @@
     .product-card:hover .card-contador,
     .decor-card:hover .card-contador { opacity: 1; }
     .decor-img { position: relative; }
+    /* Galerias aceitam deslize horizontal; o vertical continua rolando a página */
+    [data-fotos], .peca-foto { touch-action: pan-y; }
+    [data-fotos] img, .peca-foto img { -webkit-user-drag: none; user-select: none; }
     @media (hover: none) {
       .card-seta, .card-contador { opacity: 1; }
       /* Area de toque de 44px sem aumentar o botao visivel (32px) */
@@ -2836,8 +2839,10 @@ function setasCard(p) {
 }
 
 /* Troca a foto dentro do card; o estado fica no próprio elemento */
-function navegarCard(botao, passo) {
-  const box = botao.parentElement;
+function navegarCard(botao, passo) { trocarFotoCaixa(botao.parentElement, passo); }
+
+/* Usada pelas setas e pelo deslize do dedo (ver "Deslizar para trocar a foto") */
+function trocarFotoCaixa(box, passo) {
   const fotos = JSON.parse(box.dataset.fotos || '[]');
   if (fotos.length < 2) return;
   const i = ((parseInt(box.dataset.i || '0', 10) + passo) % fotos.length + fotos.length) % fotos.length;
@@ -3442,6 +3447,48 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  { navegarFoto(-1); }
   if (e.key === 'ArrowRight') { navegarFoto(1); }
 });
+
+/* Deslizar para trocar a foto: vale para as galerias dos cards (catálogo e
+   projetos, que guardam as fotos em data-fotos) e para a da página de peça.
+   Funciona com o dedo e com o mouse arrastando; o gesto vertical continua
+   rolando a página normalmente (touch-action: pan-y no CSS). */
+(function () {
+  let inicio = null, acabouDeDeslizar = false;
+  const caixaDe = el => el.closest('[data-fotos]') || el.closest('.peca-foto');
+  const totalDe = box => box.matches('[data-fotos]')
+    ? JSON.parse(box.dataset.fotos || '[]').length
+    : fotosAtuais.length;
+
+  document.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const box = caixaDe(e.target);
+    /* começar em cima da seta também vale: um toque curto continua sendo clique */
+    if (!box || totalDe(box) < 2) return;
+    inicio = { x: e.clientX, y: e.clientY, box };
+  });
+  document.addEventListener('pointercancel', () => { inicio = null; });
+  document.addEventListener('pointerup', e => {
+    if (!inicio) return;
+    const dx = e.clientX - inicio.x, dy = e.clientY - inicio.y, box = inicio.box;
+    inicio = null;
+    /* só conta como deslize se andou 40px e mais na horizontal que na vertical */
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const passo = dx < 0 ? 1 : -1;
+    if (box.matches('[data-fotos]')) trocarFotoCaixa(box, passo); else navegarFoto(passo);
+    acabouDeDeslizar = true;
+    setTimeout(() => { acabouDeDeslizar = false; }, 400);
+  });
+  /* O arraste com mouse termina num clique; sem isso o card abriria a peça */
+  document.addEventListener('click', e => {
+    if (!acabouDeDeslizar) return;
+    e.preventDefault(); e.stopPropagation();
+    acabouDeDeslizar = false;
+  }, true);
+  /* Impede o navegador de "pegar" a imagem ao arrastar com o mouse */
+  document.addEventListener('dragstart', e => {
+    if (caixaDe(e.target)) e.preventDefault();
+  });
+})();
 
 /* Abre a peça, muda a URL e atualiza os metadados para busca */
 function abrirPeca(slug, semHistorico) {
