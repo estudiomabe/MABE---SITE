@@ -581,6 +581,8 @@
     .decor-img { position: relative; }
     @media (hover: none) {
       .card-seta, .card-contador { opacity: 1; }
+      /* Area de toque de 44px sem aumentar o botao visivel (32px) */
+      .card-seta::after { content: ''; position: absolute; inset: -6px; }
     }
     .product-img-overlay {
       position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 1rem;
@@ -2737,7 +2739,10 @@ const trabalhos = [
     servico: 'Mesa de cabeceira com duas gavetas e prateleira ripada, em tauari maciço',
     descricao: 'Linhas retas e proporções enxutas, pensadas para acompanhar a cama sem pesar no quarto. As gavetas dispensam puxador: o recorte na própria frente faz esse papel. Embaixo, a prateleira ripada deixa a peça leve e mostra os encaixes da estrutura, com o veio claro e uniforme do tauari à vista.',
     data: '2026-09',
-    imgs: ['/images/trabalho-mesa-de-cabeceira-tauari-1.jpg']
+    imgs: ['/images/trabalho-mesa-de-cabeceira-tauari-1.jpg',
+           '/images/trabalho-mesa-de-cabeceira-tauari-2.jpg',
+           '/images/trabalho-mesa-de-cabeceira-tauari-4.jpg',
+           '/images/trabalho-mesa-de-cabeceira-tauari-3.jpg']
   },
 ];
 
