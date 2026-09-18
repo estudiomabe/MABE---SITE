@@ -1452,7 +1452,7 @@
     .projeto-item.reverse > * { direction: ltr; }
 
     .projeto-foto {
-      position: relative; aspect-ratio: 4/3; overflow: hidden; background: var(--bg-dark);
+      position: relative; aspect-ratio: 4/5; overflow: hidden; background: var(--bg-dark);
     }
     .projeto-foto img {
       width: 100%; height: 100%; object-fit: cover; display: block;
@@ -2730,15 +2730,15 @@ const petProducts = [
    "data" na hora de renderizar). imgs aceita uma ou varias fotos; com
    2 ou mais, a galeria ganha setas e contador sozinha, reaproveitando
    setasCard()/navegarCard() do catalogo. */
+/* Fotos em retrato 4:5 (o quadro da secao e 4:5; outras proporcoes sao cortadas). */
 const trabalhos = [
-  // Exemplo do formato esperado (apague o comentario ao adicionar o primeiro):
-  // {
-  //   titulo: 'Reforma completa, apartamento na Barra da Tijuca',
-  //   servico: 'Marcenaria planejada para sala, quarto e home office',
-  //   descricao: 'Duas ou tres frases contando o que foi feito.',
-  //   data: '2026-09',
-  //   imgs: ['/images/trabalho-01-1.jpg', '/images/trabalho-01-2.jpg']
-  // },
+  {
+    titulo: 'Criado-mudo em tauari, para Glória Dantas',
+    servico: 'Criado-mudo com duas gavetas e prateleira ripada, em tauari maciço',
+    descricao: 'Linhas retas e proporções enxutas, pensadas para acompanhar a cama sem pesar no quarto. As gavetas dispensam puxador: o recorte na própria frente faz esse papel. Embaixo, a prateleira ripada deixa a peça leve e mostra os encaixes da estrutura, com o veio claro e uniforme do tauari à vista.',
+    data: '2026-09',
+    imgs: ['/images/trabalho-criado-tauari-1.jpg']
+  },
 ];
 
 function formatarMesAno(aaaaMm) {
