@@ -1510,6 +1510,39 @@
     .projetos-home .projetos-home-lista { margin-top: 4rem; }
     .projetos-home-rodape { margin-top: 3rem; text-align: center; }
 
+    /* Carrossel: um projeto por vez, passando para o lado.
+       A rolagem lateral e a propria do navegador (scroll-snap), entao no
+       celular o dedo ja funciona; as setas e bolinhas servem ao computador. */
+    .projetos-home-lista.carrossel {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+      scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .projetos-home-lista.carrossel::-webkit-scrollbar { display: none; }
+    .projetos-home-lista.carrossel > .projeto-item {
+      flex: 0 0 100%; scroll-snap-align: start; margin-bottom: 0;
+    }
+    .projetos-nav {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem; margin-top: 2rem;
+    }
+    .projetos-seta {
+      width: 44px; height: 44px; padding: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: 1px solid var(--border); color: var(--ink);
+      transition: background 0.2s ease;
+    }
+    .projetos-seta:hover { background: var(--bg-dark); }
+    .projetos-pontos { display: flex; gap: 0.3rem; }
+    .projetos-ponto {
+      width: 30px; height: 30px; padding: 0; border: none; background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .projetos-ponto::after {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--border); transition: background 0.25s ease;
+    }
+    .projetos-ponto.ativo::after { background: var(--gold); }
+
     @media (max-width: 900px) {
       .projeto-item, .projeto-item.reverse { grid-template-columns: 1fr; direction: ltr; }
     }
@@ -1816,6 +1849,7 @@
     <h2 class="section-title">Trabalhos que já saíram do estúdio</h2>
     <p class="section-sub">Cada um feito para uma casa, uma rotina e uma pessoa</p>
     <div class="projetos-home-lista" id="projetosHomeLista"></div>
+    <div class="projetos-nav" id="projetosNav" hidden></div>
     <div class="projetos-home-rodape" id="projetosHomeRodape" hidden>
       <a href="/projetos-realizados" class="btn-ghost">Ver todos os projetos</a>
     </div>
@@ -2768,11 +2802,11 @@ function formatarMesAno(aaaaMm) {
 
 const TRABALHOS_NA_HOME = 3;
 
-function htmlTrabalhos(lista, tagTitulo) {
+function htmlTrabalhos(lista, tagTitulo, alternar) {
   return lista.map((t, i) => {
     const fotos = fotosDe(t);
     return `
-    <div class="projeto-item${i % 2 === 1 ? ' reverse' : ''}">
+    <div class="projeto-item${alternar && i % 2 === 1 ? ' reverse' : ''}">
       <div class="projeto-foto" data-fotos='${JSON.stringify(fotos)}' data-i="0">
         <img src="${fotos[0] || ''}" alt="${t.titulo}" loading="lazy">
         ${setasCard(t)}
@@ -2799,8 +2833,11 @@ function renderTrabalhos() {
   const secaoHome = document.getElementById('projetosHome');
   if (secaoHome) {
     secaoHome.hidden = !temTrabalhos;
-    document.getElementById('projetosHomeLista').innerHTML =
-      htmlTrabalhos(ordenados.slice(0, TRABALHOS_NA_HOME), 'h3');
+    const naHome = ordenados.slice(0, TRABALHOS_NA_HOME);
+    const lista = document.getElementById('projetosHomeLista');
+    lista.innerHTML = htmlTrabalhos(naHome, 'h3', false);
+    lista.classList.toggle('carrossel', naHome.length > 1);
+    montarNavProjetos(naHome.length);
     document.getElementById('projetosHomeRodape').hidden = ordenados.length <= TRABALHOS_NA_HOME;
   }
   const numCta = document.getElementById('numCtaFinal');
@@ -2808,7 +2845,7 @@ function renderTrabalhos() {
 
   const cont = document.getElementById('projetosLista');
   if (!cont) return;
-  cont.innerHTML = temTrabalhos ? htmlTrabalhos(ordenados, 'h2') : `
+  cont.innerHTML = temTrabalhos ? htmlTrabalhos(ordenados, 'h2', true) : `
       <div class="projetos-vazio">
         <p>Os primeiros projetos realizados estão a caminho. Enquanto isso, conheça as peças do catálogo.</p>
         <a class="btn-primary" href="/mobiliario">Ver mobiliário</a>
@@ -2816,6 +2853,52 @@ function renderTrabalhos() {
 }
 
 const fmt = v => 'R$\u00a0' + v.toLocaleString('pt-BR');
+
+/* Setas e bolinhas do carrossel de projetos da home */
+const SETA_ESQ = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+const SETA_DIR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+
+function montarNavProjetos(total) {
+  const nav = document.getElementById('projetosNav');
+  const lista = document.getElementById('projetosHomeLista');
+  if (!nav || !lista) return;
+  nav.hidden = total < 2;
+  if (total < 2) { nav.innerHTML = ''; return; }
+  const pontos = Array.from({ length: total }, (_, i) =>
+    `<button class="projetos-ponto${i === 0 ? ' ativo' : ''}" onclick="irParaProjeto(${i})" aria-label="Projeto ${i + 1} de ${total}"></button>`).join('');
+  nav.innerHTML =
+    `<button class="projetos-seta" onclick="moverProjetos(-1)" aria-label="Projeto anterior">${SETA_ESQ}</button>
+     <div class="projetos-pontos">${pontos}</div>
+     <button class="projetos-seta" onclick="moverProjetos(1)" aria-label="Próximo projeto">${SETA_DIR}</button>`;
+  if (!lista.dataset.ouvindo) {
+    lista.addEventListener('scroll', sincronizarPontos, { passive: true });
+    lista.dataset.ouvindo = '1';
+  }
+}
+
+function projetoAtual() {
+  const lista = document.getElementById('projetosHomeLista');
+  return Math.round(lista.scrollLeft / lista.clientWidth);
+}
+
+function irParaProjeto(i) {
+  const lista = document.getElementById('projetosHomeLista');
+  lista.scrollLeft = i * lista.clientWidth;   /* a suavidade vem do CSS */
+  sincronizarPontos(i);   /* marca na hora, sem esperar o evento de rolagem */
+}
+
+function moverProjetos(passo) {
+  const total = document.getElementById('projetosHomeLista').children.length;
+  const i = projetoAtual() + passo;
+  irParaProjeto(i < 0 ? total - 1 : (i > total - 1 ? 0 : i));   /* circula nas pontas */
+}
+
+function sincronizarPontos(indice) {
+  /* sem indice, descobre pela posicao (usado quando a pessoa desliza o dedo) */
+  const atual = typeof indice === 'number' ? indice : projetoAtual();
+  document.querySelectorAll('#projetosNav .projetos-ponto')
+    .forEach((p, i) => p.classList.toggle('ativo', i === atual));
+}
 
 function pSVG(p) {
   return `<svg width="80" height="80" viewBox="0 0 80 80" fill="none">
