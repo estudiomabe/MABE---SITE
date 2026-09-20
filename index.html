@@ -1850,8 +1850,8 @@
     <p class="section-sub">Cada um feito para uma casa, uma rotina e uma pessoa</p>
     <div class="projetos-home-lista" id="projetosHomeLista"></div>
     <div class="projetos-nav" id="projetosNav" hidden></div>
-    <div class="projetos-home-rodape" id="projetosHomeRodape" hidden>
-      <a href="/projetos-realizados" class="btn-ghost">Ver todos os projetos</a>
+    <div class="projetos-home-rodape" id="projetosHomeRodape">
+      <a href="/projetos-realizados" class="btn-ghost">Explorar mais projetos realizados</a>
     </div>
   </section>
 
@@ -2838,7 +2838,7 @@ function renderTrabalhos() {
     lista.innerHTML = htmlTrabalhos(naHome, 'h3', false);
     lista.classList.toggle('carrossel', naHome.length > 1);
     montarNavProjetos(naHome.length);
-    document.getElementById('projetosHomeRodape').hidden = ordenados.length <= TRABALHOS_NA_HOME;
+    document.getElementById('projetosHomeRodape').hidden = false;
   }
   const numCta = document.getElementById('numCtaFinal');
   if (numCta) numCta.textContent = temTrabalhos ? '(05)' : '(04)';
