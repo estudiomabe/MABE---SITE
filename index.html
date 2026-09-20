@@ -2792,12 +2792,21 @@ const trabalhos = [
            '/images/trabalho-mesa-de-cabeceira-tauari-4.jpg',
            '/images/trabalho-mesa-de-cabeceira-tauari-3.jpg']
   },
+  {
+    titulo: 'Bancada em cumaru com tampo de mármore, para Kamile Seiva',
+    servico: 'Móvel sob medida para estúdio musical em casa, em cumaru maciço com tampo de mármore',
+    descricao: 'Desenhado pelo Estúdio MABE em conversa com a arquiteta Kamile Seiva, o móvel foi pensado para o estúdio musical que o marido dela mantém em casa. O corpo é de cumaru maciço, madeira densa e de tom quente, e o tampo de mármore dá a superfície firme e fresca que os equipamentos pedem. As gavetas abrem por um furo redondo feito na própria frente, sem puxador aparente, e as faces ripadas seguem o mesmo desenho sóbrio da bancada, que fica de frente para o verde da janela.',
+    data: '2026-08-11',
+    imgs: ['/images/trabalho-bancada-cumaru-1.jpg']
+  },
 ];
 
-function formatarMesAno(aaaaMm) {
+/* aceita "2026-08" (agosto de 2026) e "2026-08-11" (11 de agosto de 2026) */
+function formatarMesAno(data) {
   const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-  const [ano, mes] = aaaaMm.split('-').map(Number);
-  return `${meses[mes - 1]} de ${ano}`;
+  const [ano, mes, dia] = data.split('-').map(Number);
+  const mesAno = `${meses[mes - 1]} de ${ano}`;
+  return dia ? `${dia} de ${mesAno}` : mesAno;
 }
 
 const TRABALHOS_NA_HOME = 3;
