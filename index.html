@@ -158,9 +158,11 @@
       --bg-dark:  #d8d6d0;
       --ink:      #111110;
       --ink-soft: #2a2926;
-      --muted:    #7a7874;
+      --muted:    #5e5b57;   /* escurecido: o tom antigo (#7a7874) ficava em 3,5:1 sobre o fundo claro */
+      --muted-claro: #a5a29b; /* mesma familia, para usar sobre fundo escuro */
       --border:   #c8c5be;
-      --gold:     #b89a58;
+      --gold:     #b89a58;   /* dourado da marca: fundos, linhas e texto sobre fundo escuro */
+      --gold-texto: #6f5320; /* dourado escuro, so para texto sobre fundo claro */
       --erro:     #9a3f2b;
       --gold-lt:  #ddd0b0;
     }
@@ -240,7 +242,7 @@
     .nav-cart-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
     .cart-icon { width: 17px; height: 17px; display: block; flex-shrink: 0; }
     .cart-count {
-      background: var(--gold); color: var(--bg);
+      background: var(--gold); color: var(--ink);
       font-size: 0.58rem; font-weight: 700;
       width: 16px; height: 16px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -400,7 +402,7 @@
     .cinema-content { position: relative; z-index: 1; padding: 4rem 8vw; max-width: 760px; }
     .cinema-overline {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.24em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 1.5rem;
     }
     .cinema-title {
       font-family: 'Cormorant Garamond', serif;
@@ -477,7 +479,7 @@
     }
     .manifesto-label {
       font-size: 0.62rem; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--gold);
+      text-transform: uppercase; color: var(--gold-texto);
       font-weight: 500; margin-bottom: 1.5rem; display: block;
     }
     .manifesto-num {
@@ -505,7 +507,7 @@
     .processo-step:last-child { border-right: none; }
     .processo-num {
       font-family: 'Cormorant Garamond', serif; font-size: 2.5rem;
-      font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 1.25rem;
+      font-weight: 300; color: var(--gold-texto); line-height: 1; margin-bottom: 1.25rem;
     }
     .processo-step h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; margin-bottom: 0.6rem; }
     .processo-step p { font-size: 0.78rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
@@ -520,7 +522,7 @@
     .section-overline {
       font-size: 0.62rem; font-weight: 500;
       letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 0.75rem;
+      color: var(--gold-texto); margin-bottom: 0.75rem;
     }
     .section-title {
       font-family: 'Cormorant Garamond', serif;
@@ -572,8 +574,8 @@
     .card-contador {
       position: absolute; left: 0.7rem; bottom: 0.7rem; z-index: 3;
       background: rgba(17,17,16,0.72); color: var(--bg);
-      font-size: 0.56rem; font-weight: 500; letter-spacing: 0.1em;
-      padding: 0.28rem 0.55rem;
+      font-size: 0.64rem; font-weight: 500; letter-spacing: 0.1em;
+      padding: 0.3rem 0.6rem;
       opacity: 0; transition: opacity 0.25s ease;
     }
     .product-card:hover .card-contador,
@@ -605,7 +607,7 @@
       text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem;
     }
     .product-name { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; margin-bottom: 0.35rem; }
-    .product-material { font-family: 'Cormorant Garamond', serif; font-size: 0.86rem; font-style: italic; color: var(--gold); margin-bottom: 1.5rem; }
+    .product-material { font-family: 'Cormorant Garamond', serif; font-size: 0.86rem; font-style: italic; color: var(--gold-texto); margin-bottom: 1.5rem; }
     .product-footer { display: flex; align-items: center; justify-content: space-between; }
     .product-price { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 400; }
     .add-to-cart {
@@ -684,7 +686,7 @@
     .peca-info { padding-top: 0.5rem; }
     .peca-categoria {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 1rem;
     }
     .peca-nome {
       font-family: 'Cormorant Garamond', serif; font-weight: 300;
@@ -752,7 +754,7 @@
     }
     .sobre-hero-label {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 1.5rem;
     }
     .sobre-hero-title {
       font-family: 'Cormorant Garamond', serif;
@@ -786,7 +788,7 @@
     }
     .fundador-role {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 0.5rem;
     }
     .fundador-name {
       font-family: 'Cormorant Garamond', serif; font-size: 2rem;
@@ -862,7 +864,7 @@
     .arq-benefits { padding: 6rem 8vw; }
     .arq-benefits-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--border); margin-top: 3rem; }
     .arq-benefit { background: var(--bg); padding: 2.5rem 2rem; }
-    .arq-benefit-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--gold); margin-bottom: 1rem; }
+    .arq-benefit-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--gold-texto); margin-bottom: 1rem; }
     .arq-benefit h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
     .arq-benefit p { font-size: 0.78rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
 
@@ -886,7 +888,7 @@
     .contato-item-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
     .contato-item-value { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 400; }
     .contato-item-value a { color: var(--ink); text-decoration: none; transition: color 0.2s; }
-    .contato-item-value a:hover { color: var(--gold); }
+    .contato-item-value a:hover { color: var(--gold-texto); }
     @media (max-width: 700px) {
       /* Alvo de toque de 44px: o link inline tinha so 21px de altura */
       .contato-item-value a { display: flex; align-items: center; min-height: 44px; }
@@ -912,7 +914,7 @@
     .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5rem; margin-bottom: 5rem; padding-bottom: 5rem; border-bottom: 1px solid rgba(232,230,225,0.07); }
     .footer-logo { height: 40px; width: auto; filter: invert(1) opacity(0.55); }
     .footer-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.98rem; color: rgba(232,230,225,0.3); margin-top: 1.25rem; line-height: 1.6; max-width: 240px; }
-    footer h4 { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.75rem; }
+    footer h4 { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-texto); margin-bottom: 1.75rem; }
     footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
     footer ul a { text-decoration: none; color: rgba(232,230,225,0.4); font-size: 0.82rem; font-weight: 300; transition: color 0.2s; cursor: pointer; }
     footer ul a:hover { color: rgba(232,230,225,0.85); }
@@ -1181,7 +1183,7 @@
       background: var(--bg-dark); color: var(--muted);
       padding: 0.25rem 0.55rem; border: 1px solid var(--border);
     }
-    .sketchup-badge--full { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+    .sketchup-badge--full { background: var(--gold); color: var(--ink); border-color: var(--gold-texto); }
 
     .sketchup-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 500; }
     .sketchup-card p { font-size: 0.76rem; color: var(--muted); font-weight: 300; line-height: 1.62; flex: 1; }
@@ -1195,9 +1197,9 @@
     }
     .sketchup-dl:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
     .sketchup-dl--full {
-      background: var(--gold); color: var(--bg); border-color: var(--gold); width: 100%; justify-content: center;
+      background: var(--gold); color: var(--ink); border-color: var(--gold-texto); width: 100%; justify-content: center;
     }
-    .sketchup-dl--full:hover { background: var(--ink); border-color: var(--ink); }
+    .sketchup-dl--full:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
     /* BIBLIOTECA 3D · SCROLL-REVEAL EM CASCATA */
     .sketchup-card.reveal {
@@ -1224,7 +1226,7 @@
     /* DEPOIMENTOS */
     .depoimentos { background: var(--ink); padding: 7rem 8vw; }
     .depoimentos-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4rem; }
-    .depoimentos-overline { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+    .depoimentos-overline { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-texto); margin-bottom: 0.75rem; }
     .depoimentos-title {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(2rem, 3.5vw, 3.5rem);
@@ -1252,7 +1254,7 @@
     .depoimento-aspas {
       font-family: 'Cormorant Garamond', serif;
       font-size: 4rem; font-weight: 300; line-height: 0.6;
-      color: var(--gold); opacity: 0.6;
+      color: var(--gold-texto); opacity: 0.6;
     }
     .depoimento-texto {
       font-family: 'Cormorant Garamond', serif;
@@ -1264,7 +1266,7 @@
       display: flex; gap: 3px;
     }
     .depoimento-star {
-      color: var(--gold); font-size: 0.85rem;
+      color: var(--gold-texto); font-size: 0.85rem;
     }
     .depoimento-autor { border-top: 1px solid rgba(232,230,225,0.08); padding-top: 1.25rem; }
     .depoimento-nome {
@@ -1279,7 +1281,7 @@
     .depoimento-projeto {
       display: inline-block; margin-top: 0.5rem;
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--gold);
+      text-transform: uppercase; color: var(--gold-texto);
       border: 1px solid rgba(200,169,110,0.3); padding: 0.2rem 0.6rem;
     }
     .depoimentos-rodape {
@@ -1305,7 +1307,7 @@
     }
     .eventos-hero-label {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 1.5rem;
     }
     .eventos-hero-title {
       font-family: 'Cormorant Garamond', serif;
@@ -1330,7 +1332,7 @@
     .eventos-lista { padding: 5rem 8vw; }
     .eventos-lista-label {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 4rem;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 4rem;
     }
 
     .evento-item {
@@ -1377,7 +1379,7 @@
     }
     .evento-ano {
       font-family: 'Cormorant Garamond', serif; font-size: 3rem;
-      font-weight: 300; color: var(--gold); line-height: 1;
+      font-weight: 300; color: var(--gold-texto); line-height: 1;
     }
     .evento-data-local {
       display: flex; flex-direction: column; gap: 0.2rem;
@@ -1410,7 +1412,7 @@
     .evento-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .evento-tag {
       font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--gold);
+      text-transform: uppercase; color: var(--gold-texto);
       border: 1px solid rgba(184,154,88,0.35);
       padding: 0.2rem 0.65rem;
     }
@@ -1432,7 +1434,7 @@
     }
     .projetos-hero-label {
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 1.5rem;
     }
     .projetos-hero-title {
       font-family: 'Cormorant Garamond', serif;
@@ -1474,8 +1476,8 @@
       justify-content: center; gap: 1.1rem;
     }
     .projeto-data {
-      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--gold);
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold-texto);
     }
     .projeto-titulo {
       font-family: 'Cormorant Garamond', serif;
@@ -1486,7 +1488,7 @@
       font-size: 0.8rem; font-weight: 500; color: var(--ink-soft); letter-spacing: 0.01em;
     }
     .projeto-descricao {
-      font-size: 0.83rem; color: var(--muted); font-weight: 300;
+      font-size: 0.9rem; color: var(--muted); font-weight: 300;
       line-height: 1.7; max-width: 440px;
     }
 
@@ -1496,6 +1498,14 @@
     .projetos-vazio p {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
       font-size: 1.2rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem;
+    }
+
+    /* Blocos de fundo escuro: o cinza clareia e o dourado volta ao tom da marca,
+       para o contraste continuar alto nos dois sentidos */
+    .manifesto, .cinema, .sobre-hero, .sobre-valores, .eventos-hero, .projetos-hero,
+    .arq-cta, .sketchup-card--highlight, .aviso-cookies, .depoimentos, footer {
+      --muted: var(--muted-claro);
+      --gold-texto: var(--gold);
     }
 
     /* Garante que "hidden" vença regras de display (ex.: links do menu no celular) */
@@ -1520,6 +1530,9 @@
     .projetos-home-lista.carrossel::-webkit-scrollbar { display: none; }
     .projetos-home-lista.carrossel > .projeto-item {
       flex: 0 0 100%; scroll-snap-align: start; margin-bottom: 0;
+    }
+    .projetos-home-lista:focus-visible {
+      outline: 2px solid var(--ink); outline-offset: 4px;
     }
     .projetos-nav {
       display: flex; align-items: center; justify-content: center;
@@ -1579,7 +1592,7 @@
     }
     .aviso-cookies button:hover { border-color: var(--bg); color: var(--bg); }
     .aviso-cookies button.principal { background: var(--bg); border-color: var(--bg); color: var(--ink); }
-    .aviso-cookies button.principal:hover { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+    .aviso-cookies button.principal:hover { background: var(--gold); border-color: var(--gold-texto); color: var(--ink); }
     @media (max-width: 600px) {
       .aviso-cookies { left: 1rem; right: 1rem; bottom: 1rem; padding: 1.25rem; }
     }
@@ -1848,7 +1861,10 @@
     <p class="section-overline"><span class="section-num">(04)</span>Projetos Realizados</p>
     <h2 class="section-title">Trabalhos que já saíram do estúdio</h2>
     <p class="section-sub">Cada um feito para uma casa, uma rotina e uma pessoa</p>
-    <div class="projetos-home-lista" id="projetosHomeLista"></div>
+    <div class="projetos-home-lista" id="projetosHomeLista" tabindex="0"
+         role="group" aria-roledescription="carrossel"
+         aria-label="Projetos realizados, use as setas do teclado para passar"
+         onkeydown="tecladoProjetos(event)"></div>
     <div class="projetos-nav" id="projetosNav" hidden></div>
     <div class="projetos-home-rodape" id="projetosHomeRodape">
       <a href="/projetos-realizados" class="btn-ghost">Explorar mais projetos realizados</a>
@@ -2044,7 +2060,7 @@
     <div class="catalog-header">
       <div>
         <p class="section-overline">Portifolio atual</p>
-        <h2 class="section-title">Mobiliário</h2>
+        <h1 class="section-title">Mobiliário</h1>
         <p class="section-sub">Cada móvel, uma intenção. Cada material, uma escolha.</p>
       </div>
       <div class="catalog-filters">
@@ -2067,7 +2083,7 @@
     <div class="catalog-header">
       <div>
         <p class="section-overline">Objetos que habitam</p>
-        <h2 class="section-title">Itens Decorativos</h2>
+        <h1 class="section-title">Itens Decorativos</h1>
         <p class="section-sub">Peças que completam o espaço sem disputar com ele</p>
       </div>
     </div>
@@ -2083,7 +2099,7 @@
     <div class="catalog-header">
       <div>
         <p class="section-overline">Para quem também faz parte da casa</p>
-        <h2 class="section-title">Linha Pet</h2>
+        <h1 class="section-title">Linha Pet</h1>
         <p class="section-sub">Peças pensadas para o conforto e a rotina dos animais, na mesma linguagem de madeira do restante da casa</p>
       </div>
     </div>
@@ -2110,7 +2126,7 @@
     <!-- Fundadores -->
     <div class="fundadores">
       <div class="fundador-card">
-        <div class="fundador-avatar" style="background:none;border:none;overflow:hidden;padding:0;width:100px;height:100px;border-radius:50%;flex-shrink:0;"><img src="/images/fundador-mateus.jpg" alt="Mateus" width="320" height="340" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;display:block;" /></div>
+        <div class="fundador-avatar" style="background:none;border:none;overflow:hidden;padding:0;width:100px;height:100px;border-radius:50%;flex-shrink:0;"><img src="/images/fundador-mateus.webp" alt="Mateus" width="320" height="340" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;display:block;" /></div>
         <p class="fundador-role">Co-fundador · Criação · Gestão</p>
         <h2 class="fundador-name">Mateus</h2>
         <p class="fundador-bio">Engenheiro de formação e designer por paixão, Mateus encontrou na marcenaria muito mais do que um hobbie. Morador da Barra da Tijuca, no Rio de Janeiro, ele se viu fascinado pela riqueza e abundância das madeiras brasileiras. O rigor técnico de sua bagagem nas ciências exatas se uniu perfeitamente ao universo do mobiliário: para quem lida com engenharia, saber que cada milímetro importa na precisão de um encaixe não é apenas um detalhe, é uma filosofia de trabalho.</p>
@@ -2118,7 +2134,7 @@
         <blockquote class="fundador-quote">"Design não é decoração. É a diferença entre um espaço que você habita e um espaço que habita você."</blockquote>
       </div>
       <div class="fundador-card" style="background:var(--bg-dark)">
-        <div class="fundador-avatar" style="background:none;border:none;overflow:hidden;padding:0;width:100px;height:100px;border-radius:50%;flex-shrink:0;"><img src="/images/fundador-bernardo.jpg" alt="Bernardo" width="322" height="320" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;" /></div>
+        <div class="fundador-avatar" style="background:none;border:none;overflow:hidden;padding:0;width:100px;height:100px;border-radius:50%;flex-shrink:0;"><img src="/images/fundador-bernardo.webp" alt="Bernardo" width="322" height="320" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;" /></div>
         <p class="fundador-role">Co-fundador · Designer · Criação</p>
         <h2 class="fundador-name">Bernardo</h2>
         <p class="fundador-bio">Bernardo cresceu entre ofícios. Como gerente de produção em uma empresa que abarcava vidro, acrílico, impressão 3D e máquinas automatizadas, aprendeu a falar a língua de cada material: a frieza do vidro, a obediência do acrílico, a precisão das máquinas. Mas foi na bancada de marcenaria que algo diferente aconteceu. A madeira não apenas obedecia. Ela respondia. Tinha memória, temperatura, vontade própria. E nessa conversa silenciosa entre o artesão e a fibra, Bernardo entendeu onde queria estar.</p>
@@ -2435,7 +2451,7 @@
     <div class="contato-inner">
       <div class="contato-info">
         <p class="section-overline">Fale com o estúdio</p>
-        <h2 class="section-title">Conte-nos<br>sobre seu espaço</h2>
+        <h1 class="section-title">Conte-nos<br>sobre seu espaço</h1>
         <p>Cada projeto começa por uma conversa. Não existe formulário padrão para uma casa com personalidade, por isso queremos ouvir você antes de propor qualquer coisa.</p>
 
         <div class="contato-items">
@@ -2740,8 +2756,8 @@ const products = [
   { id:14, name:'Mesa de Cabeceira Botafogo', category:'quarto', price:950,
     bg:'#1a1612', accent:'#b8905a',
     mat:'Tauari maciço · Medidas: 50×40×60 cm · Puxadores esculpidos na própria madeira',
-    imgs:['/images/mesa-de-cabeceira-botafogo-1.jpg'] },
-  { id:13, name:'Rack Urca',           category:'sala',       price:3490,  bg:'#22201a', accent:'#a08060', mat:'Folhas de freijó · Puxadores em madeira maciça de ipê', imgs:['/images/rack-urca-1.jpg'] },
+    imgs:['/images/mesa-de-cabeceira-botafogo-1.webp'] },
+  { id:13, name:'Rack Urca',           category:'sala',       price:3490,  bg:'#22201a', accent:'#a08060', mat:'Folhas de freijó · Puxadores em madeira maciça de ipê', imgs:['/images/rack-urca-1.webp'] },
 ];
 
 const decors = [
@@ -2760,7 +2776,7 @@ const petProducts = [
   { id:202, name:'Comedouro Duo',      price:340,  bg:'#221e1a', accent:'#8b7355', desc:'Madeira de imbuia, dois compartimentos em cerâmica' },
   { id:203, name:'Casinha Mooca',      price:1450, bg:'#24201a', accent:'#c8a96e', desc:'Carvalho maciço, telhado removível para limpeza' },
   { id:204, name:'Arranhador Vértice', price:620,  bg:'#2a2620', accent:'#c9b99a', desc:'Estrutura em pinus certificado, sisal natural' },
-  { id:205, name:'Casa Dada',          price:1520, bg:'#2a2018', accent:'#c9a876', desc:'Madeira maciça, abertura circular ampla, acabamento natural em óleo', imgs:['/images/casa-dada-1.jpg','/images/casa-dada-2.jpg'] },
+  { id:205, name:'Casa Dada',          price:1520, bg:'#2a2018', accent:'#c9a876', desc:'Madeira maciça, abertura circular ampla, acabamento natural em óleo', imgs:['/images/casa-dada-1.webp','/images/casa-dada-2.webp'] },
 ];
 
 /* PROJETOS REALIZADOS
@@ -2776,32 +2792,32 @@ const trabalhos = [
     servico: 'Rack suspenso e escrivaninha flutuante com baú, em folha natural de freijó',
     descricao: 'Para a casa de Clarissa, na Urca, desenhamos duas peças presas direto na parede, que flutuam acima do piso e deixam os ambientes mais leves. Na sala, o rack tem portas laterais para guardar o que não precisa ficar à vista, nicho central para os aparelhos e puxadores redondos em ipê maciço, que trazem o contraste escuro. A escrivaninha esconde um baú sob o tampo, que se abre sobre dobradiças, e tem passa-fios embutido para manter a mesa livre de cabos.',
     data: '2026-09',
-    imgs: ['/images/trabalho-rack-freijo-urca-1.jpg',
-           '/images/trabalho-rack-freijo-urca-2.jpg',
-           '/images/trabalho-escrivaninha-freijo-urca-1.jpg',
-           '/images/trabalho-escrivaninha-freijo-urca-2.jpg',
-           '/images/trabalho-escrivaninha-freijo-urca-3.jpg']
+    imgs: ['/images/trabalho-rack-freijo-urca-1.webp',
+           '/images/trabalho-rack-freijo-urca-2.webp',
+           '/images/trabalho-escrivaninha-freijo-urca-1.webp',
+           '/images/trabalho-escrivaninha-freijo-urca-2.webp',
+           '/images/trabalho-escrivaninha-freijo-urca-3.webp']
   },
   {
     titulo: 'Mesa de cabeceira em tauari, para Glória Dantas',
     servico: 'Mesa de cabeceira com duas gavetas e prateleira ripada, em tauari maciço',
     descricao: 'Linhas retas e proporções enxutas, pensadas para acompanhar a cama sem pesar no quarto. As gavetas dispensam puxador: o recorte na própria frente faz esse papel. Embaixo, a prateleira ripada deixa a peça leve e mostra os encaixes da estrutura, com o veio claro e uniforme do tauari à vista.',
     data: '2026-09',
-    imgs: ['/images/trabalho-mesa-de-cabeceira-tauari-1.jpg',
-           '/images/trabalho-mesa-de-cabeceira-tauari-2.jpg',
-           '/images/trabalho-mesa-de-cabeceira-tauari-4.jpg',
-           '/images/trabalho-mesa-de-cabeceira-tauari-3.jpg']
+    imgs: ['/images/trabalho-mesa-de-cabeceira-tauari-1.webp',
+           '/images/trabalho-mesa-de-cabeceira-tauari-2.webp',
+           '/images/trabalho-mesa-de-cabeceira-tauari-4.webp',
+           '/images/trabalho-mesa-de-cabeceira-tauari-3.webp']
   },
   {
     titulo: 'Mesa para estúdio musical feita em cumaru com tampo em mármore, cliente Kamile Seiva.',
     servico: 'Móvel sob medida para estúdio musical em casa, em cumaru maciço com tampo de mármore',
     descricao: 'Desenhado pelo Estúdio MABE em conversa com a arquiteta Kamile Seiva, o móvel foi pensado para o estúdio musical que o marido dela mantém em casa. O corpo é de cumaru maciço, madeira densa e de tom quente, e o tampo de mármore dá a superfície firme e fresca que os equipamentos pedem. As gavetas abrem por um furo redondo feito na própria frente, sem puxador aparente, e as faces ripadas seguem o mesmo desenho sóbrio da bancada, que fica de frente para o verde da janela.',
     data: '2026-08-11',
-    imgs: ['/images/trabalho-bancada-cumaru-3.jpg',
-           '/images/trabalho-bancada-cumaru-1.jpg',
-           '/images/trabalho-bancada-cumaru-4.jpg',
-           '/images/trabalho-bancada-cumaru-2.jpg',
-           '/images/trabalho-bancada-cumaru-5.jpg']
+    imgs: ['/images/trabalho-bancada-cumaru-3.webp',
+           '/images/trabalho-bancada-cumaru-1.webp',
+           '/images/trabalho-bancada-cumaru-4.webp',
+           '/images/trabalho-bancada-cumaru-2.webp',
+           '/images/trabalho-bancada-cumaru-5.webp']
   },
 ];
 
@@ -2904,6 +2920,12 @@ function moverProjetos(passo) {
   const total = document.getElementById('projetosHomeLista').children.length;
   const i = projetoAtual() + passo;
   irParaProjeto(i < 0 ? total - 1 : (i > total - 1 ? 0 : i));   /* circula nas pontas */
+}
+
+/* Setas do teclado quando o carrossel esta em foco */
+function tecladoProjetos(e) {
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); moverProjetos(-1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); moverProjetos(1); }
 }
 
 function sincronizarPontos(indice) {
