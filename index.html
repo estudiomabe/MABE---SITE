@@ -2809,6 +2809,15 @@ const trabalhos = [
            '/images/trabalho-mesa-de-cabeceira-tauari-3.webp']
   },
   {
+    titulo: 'Gaveteiro em cedrinho maciço, para Kamile Seiva',
+    servico: 'Gaveteiro embutido em cedrinho maciço, com frentes em meia-cana e corrediças ocultas',
+    descricao: 'Numa casa inteira forrada de madeira, qualquer peça nova corre o risco de soar como remendo. O gaveteiro foi desenhado para pertencer: as frentes em meia-cana de cedrinho maciço quebram a luz em listras verticais, conversam com os frisos das paredes e preenchem o nicho como se sempre tivessem estado ali, sob o tampo de pedra clara. As corrediças são ocultas, sem nenhuma ferragem à vista, para que a gaveta corra macia e a madeira apareça inteira. Os puxadores foram escolhidos com a arquiteta Kamile Seiva, para repetir o metal envelhecido que a casa já trazia.',
+    data: '2026-08',
+    imgs: ['/images/trabalho-gaveteiro-cedrinho-1.webp',
+           '/images/trabalho-gaveteiro-cedrinho-3.webp',
+           '/images/trabalho-gaveteiro-cedrinho-2.webp']
+  },
+  {
     titulo: 'Mesa para estúdio musical feita em cumaru com tampo em mármore, cliente Kamile Seiva.',
     servico: 'Móvel sob medida para estúdio musical em casa, em cumaru maciço com tampo de mármore',
     descricao: 'Desenhado pelo Estúdio MABE em conversa com a arquiteta Kamile Seiva, o móvel foi pensado para o estúdio musical que o marido dela mantém em casa. O corpo é de cumaru maciço, madeira densa e de tom quente, e o tampo de mármore dá a superfície firme e fresca que os equipamentos pedem. As gavetas abrem por um furo redondo feito na própria frente, sem puxador aparente, e as faces ripadas seguem o mesmo desenho sóbrio da bancada, que fica de frente para o verde da janela.',
@@ -2829,7 +2838,7 @@ function formatarMesAno(data) {
   return dia ? `${dia} de ${mesAno}` : mesAno;
 }
 
-const TRABALHOS_NA_HOME = 3;
+const TRABALHOS_NA_HOME = 4;   /* o carrossel mostra um por vez, entao cabe mais sem alongar a home */
 
 function htmlTrabalhos(lista, tagTitulo, alternar) {
   return lista.map((t, i) => {
