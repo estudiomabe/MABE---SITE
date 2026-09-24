@@ -2761,23 +2761,12 @@ const products = [
   { id:13, name:'Rack Urca',           category:'sala',       price:3490,  bg:'#22201a', accent:'#a08060', mat:'Folhas de freijó · Puxadores em madeira maciça de ipê', imgs:['/images/rack-urca-1.webp'] },
 ];
 
-const decors = [
-  { id:101, name:'Vaso Ripado',      price:680,  bg:'#2c2820', accent:'#c8a96e', desc:'Madeira freijó torneada à mão' },
-  { id:102, name:'Bowl Orgânico',    price:420,  bg:'#281e16', accent:'#b5956b', desc:'Imbuia maciça, acabamento natural' },
-  { id:103, name:'Porta-Retratos',   price:290,  bg:'#222018', accent:'#a08060', desc:'Carvalho com encaixe japonês' },
-  { id:104, name:'Bandeja Nobre',    price:550,  bg:'#261e18', accent:'#c9b99a', desc:'Teca e metal escovado' },
-  { id:105, name:'Suporte Livros',   price:380,  bg:'#201c18', accent:'#8b7355', desc:'Nogal americano, base em ferro' },
-  { id:106, name:'Luminária Mesa',   price:890,  bg:'#2a2218', accent:'#b88b5a', desc:'Madeira torneada e cúpula em linho' },
-  { id:107, name:'Espelho Caju',     price:1200, bg:'#1e1c18', accent:'#7d6a56', desc:'Moldura em freijó, 80 × 60 cm' },
-  { id:108, name:'Prateleira Float', price:460,  bg:'#242018', accent:'#a09080', desc:'Carvalho maciço, fixação oculta' },
-];
+/* Vazia ate existirem itens decorativos de verdade. As pecas antigas, que eram
+   exemplos, estao guardadas em _arquivo/itens-decorativos.txt */
+const decors = [];
 
 const petProducts = [
-  { id:201, name:'Cama Tobi',          price:780,  bg:'#26221c', accent:'#b5956b', desc:'Freijó maciço, almofada removível em linho' },
-  { id:202, name:'Comedouro Duo',      price:340,  bg:'#221e1a', accent:'#8b7355', desc:'Madeira de imbuia, dois compartimentos em cerâmica' },
-  { id:203, name:'Casinha Mooca',      price:1450, bg:'#24201a', accent:'#c8a96e', desc:'Carvalho maciço, telhado removível para limpeza' },
-  { id:204, name:'Arranhador Vértice', price:620,  bg:'#2a2620', accent:'#c9b99a', desc:'Estrutura em pinus certificado, sisal natural' },
-  { id:205, name:'Casa Dada',          price:1520, bg:'#2a2018', accent:'#c9a876', desc:'Madeira maciça, abertura circular ampla, acabamento natural em óleo', imgs:['/images/casa-dada-1.webp','/images/casa-dada-2.webp'] },
+  { id:205, name:'Casa Dada',          price:1520, bg:'#2a2018', accent:'#c9a876', desc:'Madeira maciça, abertura circular ampla, acabamento natural em óleo', imgs:['/images/casa-dada-1.webp','/images/casa-dada-2.webp'] }
 ];
 
 /* PROJETOS REALIZADOS
@@ -3089,7 +3078,16 @@ function renderProducts() {
 }
 
 function renderDecors() {
-  document.getElementById('decorGrid').innerHTML = decors.map(d=>`
+  const grade = document.getElementById('decorGrid');
+  if (!decors.length) {
+    grade.innerHTML = `
+      <div class="projetos-vazio">
+        <p>A primeira leva de itens decorativos está sendo feita no estúdio. São peças pequenas, de bancada, que pedem o mesmo cuidado das grandes e por isso levam o seu tempo. Em breve elas aparecem aqui.</p>
+        <a class="btn-primary" href="/mobiliario">Ver mobiliário</a>
+      </div>`;
+    return;
+  }
+  grade.innerHTML = decors.map(d=>`
     <div class="decor-card" data-rota="/peca/${slugify(d.name)}">
       <div class="decor-img" style="background:${d.bg}" data-fotos='${JSON.stringify(fotosDe(d))}' data-i="0">${decorThumb(d)}${setasCard(d)}</div>
       <div class="decor-info">
