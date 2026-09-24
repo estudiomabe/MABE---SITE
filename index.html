@@ -2078,6 +2078,7 @@
         <button class="filter-btn" data-cat="cozinha" onclick="filterProducts('cozinha',this)">Cozinha</button>
       </div>
     </div>
+    <p class="aviso-novidades">Este catálogo reúne peças que já saíram do estúdio e podem ser refeitas para a sua casa. Novos móveis estão em desenvolvimento e a maior parte do que fazemos nasce sob medida: se a peça que você procura ainda não está aqui, conte o que precisa que a gente desenha.</p>
     <div class="products-grid" id="productsGrid"></div>
   </div>
 </div>
@@ -3061,7 +3062,17 @@ function renderHeroMarquee() {
     </div>`).join('');
 }
 
+/* Esconde os filtros de ambientes que ainda nao tem nenhuma peca,
+   para ninguem clicar e cair numa pagina em branco */
+function ajustarFiltros() {
+  document.querySelectorAll('#page-mobiliario .filter-btn').forEach(b => {
+    const cat = b.dataset.cat;
+    b.hidden = cat !== 'todos' && !products.some(p => p.category === cat);
+  });
+}
+
 function renderProducts() {
+  ajustarFiltros();
   const list = activeFilter==='todos' ? products : products.filter(p=>p.category===activeFilter);
   document.getElementById('productsGrid').innerHTML = list.map(p=>`
     <div class="product-card" data-rota="/peca/${slugify(p.name)}">
