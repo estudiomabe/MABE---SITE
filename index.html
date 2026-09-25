@@ -269,6 +269,7 @@
     /* PAGES (SPA) */
     .page { display: none; }
     .page.active { display: block; animation: pageFadeIn 0.45s ease both; }
+    html.com-transicao .page.active { animation: none; }
 
     @keyframes pageFadeIn {
       from { opacity: 0; transform: translateY(8px); }
@@ -1513,6 +1514,20 @@
     .arq-cta, .sketchup-card--highlight, .aviso-cookies, .depoimentos, footer {
       --muted: var(--muted-claro);
       --gold-texto: var(--gold);
+    }
+
+    /* TRANSICAO ENTRE PAGINAS
+       O navegador congela a tela atual, troca o conteudo e cruza as duas
+       imagens. Quem tem "menos movimento" ligado no sistema nao ve nada disso. */
+    ::view-transition-old(root) { animation: paginaSai 0.22s cubic-bezier(0.4,0,1,1) both; }
+    ::view-transition-new(root) { animation: paginaEntra 0.42s cubic-bezier(0.16,1,0.3,1) both; }
+    @keyframes paginaSai  { to   { opacity: 0; transform: translateY(-10px); } }
+    @keyframes paginaEntra{ from { opacity: 0; transform: translateY(14px); } }
+    /* A foto clicada no card vira a foto grande da peca */
+    ::view-transition-old(fotoPeca),
+    ::view-transition-new(fotoPeca) { animation-duration: 0.5s; }
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
     }
 
     /* Garante que "hidden" vença regras de display (ex.: links do menu no celular) */
@@ -3797,11 +3812,55 @@ function atualizarMeta(id) {
   marcarIndexacao(true);
 }
 
+/* Executa a troca de pagina dentro de uma transicao, quando o navegador
+   souber fazer e a pessoa nao tiver pedido menos movimento no sistema */
+if (typeof document.startViewTransition === 'function' &&
+    !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.documentElement.classList.add('com-transicao');
+}
+
+/* A foto clicada no card e a foto grande da peca recebem o mesmo nome,
+   e o navegador entende que sao a mesma coisa mudando de lugar */
+function marcarFotoCompartilhada(el) {
+  document.querySelectorAll('.foto-em-transicao').forEach(e => {
+    e.classList.remove('foto-em-transicao');
+    e.style.viewTransitionName = '';
+  });
+  if (el) { el.classList.add('foto-em-transicao'); el.style.viewTransitionName = 'fotoPeca'; }
+}
+
+/* Duas fotos nao podem carregar o mesmo nome ao mesmo tempo: o navegador
+   cancela a transicao. A foto de origem entrega o nome para a foto de
+   destino depois que a tela antiga ja foi capturada. */
+function passarNomeParaFotoGrande() {
+  const tinhaOrigem = !!document.querySelector('.foto-em-transicao');
+  marcarFotoCompartilhada(null);
+  const grande = document.getElementById('pecaFotoPrincipal');
+  if (tinhaOrigem && grande) marcarFotoCompartilhada(grande);
+}
+
+let transicaoEmCurso = false;
+function comTransicao(troca) {
+  const podeAnimar = typeof document.startViewTransition === 'function' &&
+                     !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+                     !transicaoEmCurso &&        /* uma de cada vez, senao o navegador cancela */
+                     !document.hidden;          /* aba escondida cancela a transicao */
+  if (!podeAnimar) { troca(); marcarFotoCompartilhada(null); return; }   /* sem animacao, limpa na hora */
+  transicaoEmCurso = true;
+  const t = document.startViewTransition(troca);
+  /* o navegador cancela a transicao em alguns casos (aba escondida, por exemplo);
+     sem estes catch o cancelamento vira erro no console */
+  ['ready','updateCallbackDone','finished'].forEach(k => t[k] && t[k].catch(() => {}));
+  t.finished.catch(() => {}).finally(() => {
+    transicaoEmCurso = false;
+    marcarFotoCompartilhada(null);
+  });
+}
+
 /* Envolve o showPage já decorado: troca a página, a URL e os metadados */
 const showPageSemRota = showPage;
 showPage = function(id, semHistorico) {
-  showPageSemRota(id);
-  atualizarMeta(id);
+  comTransicao(() => { showPageSemRota(id); atualizarMeta(id); });
   const rota = ROTAS[id];
   if (rota && !semHistorico && location.pathname !== rota.url) {
     history.pushState({ pagina: id }, '', rota.url);
@@ -3878,7 +3937,14 @@ document.addEventListener('click', function (e) {
 
   const destino = alvo.getAttribute('href') || alvo.getAttribute('data-rota');
   const peca = destino.match(/^\/peca\/([a-z0-9-]+)$/);
-  if (peca) { e.preventDefault(); abrirPeca(peca[1]); return; }
+  if (peca) {
+    e.preventDefault();
+    const card = alvo.closest('.product-card, .decor-card, .relacionada');
+    const img = (card || alvo).querySelector('img');
+    if (img) marcarFotoCompartilhada(img);
+    abrirPeca(peca[1]);
+    return;
+  }
 
   const id = URL_PARA_PAGINA[destino];
   if (id) { e.preventDefault(); showPage(id); }
@@ -3899,7 +3965,10 @@ showPage = function (id, semHistorico) {
 
 const abrirPecaSemMedicao = abrirPeca;
 abrirPeca = function (slug, semHistorico) {
-  abrirPecaSemMedicao(slug, semHistorico);
+  comTransicao(() => {
+    abrirPecaSemMedicao(slug, semHistorico);
+    passarNomeParaFotoGrande();
+  });
   const p = acharPeca(slug);
   if (!p) return;                 /* peça inexistente já caiu na home acima */
   mabeVisualizacao();
