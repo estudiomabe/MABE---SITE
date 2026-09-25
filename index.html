@@ -127,6 +127,9 @@
   <meta name="theme-color" content="#111110" />
 
   <link rel="canonical" href="https://www.estudiomabe.com.br/" />
+  <link rel="alternate" hreflang="pt-BR" id="altPt" href="https://www.estudiomabe.com.br/" />
+  <link rel="alternate" hreflang="en" id="altEn" href="https://www.estudiomabe.com.br/en" />
+  <link rel="alternate" hreflang="x-default" href="https://www.estudiomabe.com.br/" />
 
   <!-- Open Graph: preview ao compartilhar (WhatsApp, Instagram, Facebook, LinkedIn) -->
   <meta property="og:type" content="website" />
@@ -240,6 +243,16 @@
       transition: all 0.2s; display: flex; align-items: center; gap: 0.6rem;
     }
     .nav-cart-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .nav-idioma {
+      background: none; border: none; cursor: pointer; padding: 0.5rem 0.4rem;
+      font-family: 'Inter', sans-serif; font-size: 0.62rem; font-weight: 500;
+      letter-spacing: 0.14em; color: var(--muted); white-space: nowrap;
+      display: flex; align-items: center; min-height: 44px;
+    }
+    .nav-idioma span { color: var(--muted); }
+    .nav-idioma b { color: var(--ink); font-weight: 500; }
+    @media (max-width: 600px) { .nav-idioma { font-size: 0.58rem; padding: 0.5rem 0.2rem; } }
+
     .cart-icon { width: 17px; height: 17px; display: block; flex-shrink: 0; }
     .cart-count {
       background: var(--gold); color: var(--ink);
@@ -1784,6 +1797,7 @@
       <a href="/contato" class="nav-menu-link">Contato</a>
     </div>
     <div class="nav-actions">
+      <button class="nav-idioma" onclick="alternarIdioma()" id="btnIdioma" aria-label="Mudar idioma">PT | <span>EN</span></button>
       <button class="nav-cart-btn" onclick="toggleCart()">
         <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3.5h2.2l2.4 10.6a1.6 1.6 0 0 0 1.6 1.2h8.1a1.6 1.6 0 0 0 1.6-1.2l1.6-7.1H5.6"/><circle cx="9.8" cy="19.8" r="1.2"/><circle cx="17.2" cy="19.8" r="1.2"/></svg>
         <span class="cart-label">Carrinho</span>
@@ -2799,6 +2813,10 @@ const petProducts = [
    "data" na hora de renderizar). imgs aceita uma ou varias fotos; com
    2 ou mais, a galeria ganha setas e contador sozinha, reaproveitando
    setasCard()/navegarCard() do catalogo. */
+/* Idioma da visita: definido cedo porque datas e textos dependem dele */
+const IDIOMA = /^\/en(\/|$)/.test(location.pathname) ? 'en' : 'pt';
+let DICIONARIO = null;
+
 /* Fotos em retrato 4:5 (o quadro da secao e 4:5; outras proporcoes sao cortadas). */
 const trabalhos = [
   {
@@ -2862,7 +2880,11 @@ const trabalhos = [
 /* aceita "2026-08" (agosto de 2026) e "2026-08-11" (11 de agosto de 2026) */
 function formatarMesAno(data) {
   const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const mesesEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const [ano, mes, dia] = data.split('-').map(Number);
+  if (typeof IDIOMA !== 'undefined' && IDIOMA === 'en') {
+    return dia ? `${mesesEn[mes - 1]} ${dia}, ${ano}` : `${mesesEn[mes - 1]} ${ano}`;
+  }
   const mesAno = `${meses[mes - 1]} de ${ano}`;
   return dia ? `${dia} de ${mesAno}` : mesAno;
 }
@@ -3574,7 +3596,7 @@ function renderPeca(p) {
 
   fotosAtuais = fotos; fotoAtual = 0;
   document.getElementById('pecaConteudo').innerHTML = `
-    <a class="peca-voltar" href="${ROTAS[p.origem].url}">← Voltar para ${p.secao}</a>
+    <a class="peca-voltar" href="${urlDaRota(p.origem)}">← Voltar para ${p.secao}</a>
     <div class="peca-grid">
       <div>${galeria}</div>
       <div class="peca-info">
@@ -3677,8 +3699,12 @@ function abrirPeca(slug, semHistorico) {
   window.scrollTo(0, 0);
   requestAnimationFrame(() => applyReveal());
 
-  const url = '/peca/' + slug;
-  document.title = `${p.name}: ${p.secao} em madeira maciça | Estúdio MABE`;
+  const url = urlDaPeca(slug);
+  const nomeEn = (typeof DICIONARIO !== 'undefined' && DICIONARIO) ? DICIONARIO.textos[p.name] : null;
+  const secaoEn = (typeof DICIONARIO !== 'undefined' && DICIONARIO) ? DICIONARIO.textos[p.secao] : null;
+  document.title = (typeof IDIOMA !== 'undefined' && IDIOMA === 'en')
+    ? `${nomeEn || p.name}: ${secaoEn || p.secao} in solid wood | Estúdio MABE`
+    : `${p.name}: ${p.secao} em madeira maciça | Estúdio MABE`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.setAttribute('content', `${p.name}: ${(p.mat || p.desc || '')}. Peça autoral do Estúdio MABE, feita sob encomenda em madeira maciça certificada. ${fmt(p.price)}.`);
   const canonical = document.querySelector('link[rel="canonical"]');
@@ -3719,6 +3745,143 @@ const ROTAS = {
 };
 
 const URL_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS).map(([id, r]) => [r.url, id]));
+
+/*
+   IDIOMA
+   O site nasce em portugues. Os enderecos que comecam com /en abrem a
+   versao em ingles: o dicionario en.json e baixado e aplicado ao HTML,
+   inclusive ao conteudo que aparece depois (projetos, pecas, carrinho).
+   Se o arquivo falhar, tudo continua em portugues, sem quebrar nada.
+    */
+const ROTAS_EN = {
+  home: '/en', mobiliario: '/en/furniture', decorativos: '/en/decorative-objects',
+  pet: '/en/pet-line', sobre: '/en/about', projetos: '/en/completed-projects',
+  eventos: '/en/events', arquitetos: '/en/for-architects', contato: '/en/contact',
+  privacidade: '/en/privacy', comprar: '/en/how-to-order'
+};
+const URL_EN_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS_EN).map(([id, u]) => [u, id]));
+
+
+/* Endereco de uma pagina no idioma atual */
+function urlDaRota(id) {
+  return IDIOMA === 'en' ? (ROTAS_EN[id] || '/en') : (ROTAS[id] ? ROTAS[id].url : '/');
+}
+
+/* Qual pagina um endereco abre, nos dois idiomas */
+function paginaPorUrl(u) {
+  return URL_PARA_PAGINA[u] || URL_EN_PARA_PAGINA[u] ||
+         URL_PARA_PAGINA[u.replace(/^\/en/, '') || '/'];
+}
+
+/* Endereco de uma peca no idioma atual */
+function urlDaPeca(slug) {
+  return (IDIOMA === 'en' ? '/en' : '') + '/peca/' + slug;
+}
+
+/* Frases montadas no codigo, com numero no meio */
+const PADROES_EN = [
+  [/^Todos os (\d+) produtos em um único arquivo organizado por camadas e componentes, ideal para projetos de múltiplos ambientes\.$/,
+   'All {n} products in a single file organised by layers and components, ideal for projects with several rooms.'],
+  [/^Blocos 3D de (\d+) peças$/, '3D blocks for {n} pieces']
+];
+
+function traduzir(texto) {
+  if (!DICIONARIO) return null;
+  const chave = texto.trim();
+  const pronto = DICIONARIO.textos[chave];
+  if (pronto) return texto.replace(chave, pronto);
+
+  /* "← Voltar para Mobiliário" e afins */
+  const voltar = chave.match(/^←\s*Voltar para (.+)$/);
+  if (voltar) {
+    const destino = DICIONARIO.textos[voltar[1]] || voltar[1];
+    return texto.replace(chave, '← Back to ' + destino);
+  }
+
+  /* listas separadas por ponto medio: traduz o que conhecer e mantem o resto */
+  if (chave.includes(' · ')) {
+    const partes = chave.split(' · ');
+    const prontas = partes.map(p => DICIONARIO.textos[p.trim()]);
+    if (prontas.some(Boolean)) {
+      return texto.replace(chave, partes.map((p, i) => prontas[i] || p).join(' · '));
+    }
+  }
+
+  for (const [padrao, modelo] of PADROES_EN) {
+    const achou = chave.match(padrao);
+    if (achou) return texto.replace(chave, modelo.replace('{n}', achou[1]));
+  }
+  return null;
+}
+
+/* Percorre o HTML trocando texto e os atributos que a pessoa le */
+function traduzirArvore(raiz) {
+  if (!DICIONARIO || !raiz) return;
+  const passeio = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, {
+    acceptNode(no) {
+      if (!no.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      const pai = no.parentNode;
+      if (!pai || pai.nodeName === 'SCRIPT' || pai.nodeName === 'STYLE') return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nos = [];
+  while (passeio.nextNode()) nos.push(passeio.currentNode);
+  nos.forEach(no => { const novo = traduzir(no.nodeValue); if (novo) no.nodeValue = novo; });
+
+  if (raiz.querySelectorAll) {
+    raiz.querySelectorAll('[placeholder], [aria-label], [alt], [title]').forEach(el => {
+      ['placeholder', 'aria-label', 'alt', 'title'].forEach(atrib => {
+        const valor = el.getAttribute(atrib);
+        if (!valor) return;
+        const pronto = DICIONARIO.textos[valor.trim()];
+        if (pronto) el.setAttribute(atrib, pronto);
+      });
+    });
+  }
+}
+
+/* O site troca de pagina e re-desenha listas o tempo todo; este
+   observador traduz tudo o que nasce depois do carregamento */
+function observarNovosTextos() {
+  new MutationObserver(mudancas => {
+    mudancas.forEach(m => {
+      m.addedNodes.forEach(no => {
+        if (no.nodeType === 1) traduzirArvore(no);
+        else if (no.nodeType === 3) { const novo = traduzir(no.nodeValue); if (novo) no.nodeValue = novo; }
+      });
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+}
+
+async function carregarIdioma() {
+  if (IDIOMA !== 'en') return;
+  document.documentElement.lang = 'en-US';
+  try {
+    const resposta = await fetch('/en.json');
+    DICIONARIO = await resposta.json();
+  } catch (e) {
+    return;                       /* sem dicionario, o site segue em portugues */
+  }
+  traduzirArvore(document.body);
+  observarNovosTextos();
+  const ativa = document.querySelector('.page.active');
+  if (ativa) atualizarMeta(paginaPorUrl(location.pathname) || 'home');
+}
+
+/* Deixa em destaque o idioma que a pessoa esta lendo */
+function marcarIdiomaNoBotao() {
+  const b = document.getElementById('btnIdioma');
+  if (!b) return;
+  b.innerHTML = IDIOMA === 'en' ? 'PT | <b>EN</b>' : '<b>PT</b> | EN';
+}
+
+/* Botao de idioma: leva a mesma pagina no outro idioma */
+function alternarIdioma() {
+  const id = paginaPorUrl(location.pathname) || 'home';
+  const destino = IDIOMA === 'en' ? (ROTAS[id] ? ROTAS[id].url : '/') : (ROTAS_EN[id] || '/en');
+  location.href = destino;
+}
 
 
 /*
@@ -3803,11 +3966,19 @@ function dadosDaPeca(p, url) {
 function atualizarMeta(id) {
   const rota = ROTAS[id];
   if (!rota) return;
-  document.title = rota.titulo;
+  /* em ingles, titulo e descricao vem do dicionario; o endereco canonico
+     aponta para a versao do idioma que a pessoa esta lendo */
+  const ingles = (typeof DICIONARIO !== 'undefined' && DICIONARIO && DICIONARIO.rotas) ? DICIONARIO.rotas[id] : null;
+  const url = urlDaRota(id);
+  document.title = (ingles && ingles.titulo) || rota.titulo;
   const desc = document.querySelector('meta[name="description"]');
-  if (desc) desc.setAttribute('content', rota.desc);
+  if (desc) desc.setAttribute('content', (ingles && ingles.desc) || rota.desc);
   const canonical = document.querySelector('link[rel="canonical"]');
-  if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + (rota.url === '/' ? '/' : rota.url));
+  if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
+  const alt_pt = document.getElementById('altPt');
+  const alt_en = document.getElementById('altEn');
+  if (alt_pt) alt_pt.setAttribute('href', 'https://www.estudiomabe.com.br' + (ROTAS[id] ? ROTAS[id].url : '/'));
+  if (alt_en) alt_en.setAttribute('href', 'https://www.estudiomabe.com.br' + (ROTAS_EN[id] || '/en'));
   trilhaDaPagina(id);
   marcarIndexacao(true);
 }
@@ -3862,8 +4033,9 @@ const showPageSemRota = showPage;
 showPage = function(id, semHistorico) {
   comTransicao(() => { showPageSemRota(id); atualizarMeta(id); });
   const rota = ROTAS[id];
-  if (rota && !semHistorico && location.pathname !== rota.url) {
-    history.pushState({ pagina: id }, '', rota.url);
+  const url = urlDaRota(id);
+  if (rota && !semHistorico && location.pathname !== url) {
+    history.pushState({ pagina: id }, '', url);
   }
 };
 
@@ -3891,21 +4063,21 @@ function mostrar404() {
 /* Botão voltar/avançar do navegador */
 window.addEventListener('popstate', e => {
   if (e.state && e.state.peca) { abrirPeca(e.state.peca, true); return; }
-  const slugUrl = location.pathname.match(/^\/peca\/([a-z0-9-]+)$/);
+  const slugUrl = location.pathname.match(/^(?:\/en)?\/peca\/([a-z0-9-]+)$/);
   if (slugUrl) { abrirPeca(slugUrl[1], true); return; }
-  const id = (e.state && e.state.pagina) || URL_PARA_PAGINA[location.pathname];
+  const id = (e.state && e.state.pagina) || paginaPorUrl(location.pathname);
   if (id) { showPage(id, true); } else { mostrar404(); }
 });
 
 /* Ao abrir o site direto numa URL interna (ex: link compartilhado) */
 (function rotaInicial() {
-  const slugUrl = location.pathname.match(/^\/peca\/([a-z0-9-]+)$/);
+  const slugUrl = location.pathname.match(/^(?:\/en)?\/peca\/([a-z0-9-]+)$/);
   if (slugUrl) {
     abrirPeca(slugUrl[1], true);
     history.replaceState({ peca: slugUrl[1] }, '', location.pathname);
     return;
   }
-  const id = URL_PARA_PAGINA[location.pathname];
+  const id = paginaPorUrl(location.pathname);
   if (id && id !== 'home') {
     showPage(id, true);
     history.replaceState({ pagina: id }, '', location.pathname);
@@ -3936,7 +4108,7 @@ document.addEventListener('click', function (e) {
   if (alvo.tagName === 'A' && (alvo.target === '_blank' || alvo.hasAttribute('download'))) return;
 
   const destino = alvo.getAttribute('href') || alvo.getAttribute('data-rota');
-  const peca = destino.match(/^\/peca\/([a-z0-9-]+)$/);
+  const peca = destino.match(/^(?:\/en)?\/peca\/([a-z0-9-]+)$/);
   if (peca) {
     e.preventDefault();
     const card = alvo.closest('.product-card, .decor-card, .relacionada');
@@ -3946,7 +4118,7 @@ document.addEventListener('click', function (e) {
     return;
   }
 
-  const id = URL_PARA_PAGINA[destino];
+  const id = paginaPorUrl(destino);
   if (id) { e.preventDefault(); showPage(id); }
 });
 /*
@@ -4027,6 +4199,10 @@ function responderCookies(resposta) {
   if (!medindo) return;            /* nada sendo medido, nada a consentir */
   setTimeout(() => aviso.classList.add('visivel'), 1400);
 })();
+
+/* Idioma por ultimo: depende de tudo o que foi definido acima */
+marcarIdiomaNoBotao();
+carregarIdioma();
 </script>
 </body>
 </html>

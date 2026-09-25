@@ -1,19 +1,67 @@
 {
   "redirects": [
-    { "source": "/peca/criado-botafogo", "destination": "/peca/mesa-de-cabeceira-botafogo", "permanent": true }
+    {
+      "source": "/peca/criado-botafogo",
+      "destination": "/peca/mesa-de-cabeceira-botafogo",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/mobiliario", "destination": "/index.html" },
-    { "source": "/itens-decorativos", "destination": "/index.html" },
-    { "source": "/linha-pet", "destination": "/index.html" },
-    { "source": "/sobre", "destination": "/index.html" },
-    { "source": "/projetos-realizados", "destination": "/index.html" },
-    { "source": "/eventos", "destination": "/index.html" },
-    { "source": "/para-arquitetos", "destination": "/index.html" },
-    { "source": "/contato", "destination": "/index.html" },
-    { "source": "/privacidade", "destination": "/index.html" },
-    { "source": "/como-comprar", "destination": "/index.html" },
-    { "source": "/peca/:slug", "destination": "/index.html" },
-    { "source": "/:caminho*", "destination": "/index.html" }
+    {
+      "source": "/mobiliario",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/itens-decorativos",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/linha-pet",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/sobre",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/projetos-realizados",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/eventos",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/para-arquitetos",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/contato",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/privacidade",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/como-comprar",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/peca/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/:caminho*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/:caminho*",
+      "destination": "/index.html"
+    }
   ]
 }
