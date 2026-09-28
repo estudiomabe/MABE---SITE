@@ -302,8 +302,51 @@
     .reveal-group .reveal:nth-child(5) { transition-delay: 0.32s; }
     .reveal-group .reveal:nth-child(6) { transition-delay: 0.4s; }
 
+    /* ANIMACAO LIGADA A ROLAGEM
+       Onde o navegador entende animation-timeline, a animacao deixa de
+       ter tempo proprio e passa a seguir a posicao da pagina: o titulo
+       sobe linha a linha e a foto se revela de cima para baixo.
+       Quem nao tem suporte continua com o efeito antigo, e quem pede
+       menos movimento no sistema nao ve nada disso. */
+    @keyframes subirLinha {
+      from { opacity: 0; transform: translateY(0.5em); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes revelarFoto {
+      from { opacity: 0.35; clip-path: inset(18% 0 0 0); }
+      to   { opacity: 1;    clip-path: inset(0 0 0 0); }
+    }
+
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .linha-anim {
+          display: inline-block;
+          animation: subirLinha linear both;
+          animation-timeline: view();
+          animation-range: entry 5% cover 26%;
+        }
+        /* cada linha entra um pouco depois da anterior */
+        .linha-anim:nth-child(2) { animation-range: entry 10% cover 32%; }
+        .linha-anim:nth-child(3) { animation-range: entry 15% cover 38%; }
+
+        /* O efeito vai no quadro da foto, nao na imagem: o quadro sempre
+           tem tamanho definido, e assim tambem nao briga com o zoom do
+           mouse, que mexe no transform da imagem. */
+        .projeto-foto, .evento-foto, .peca-foto,
+        .product-img-placeholder, .decor-img {
+          animation: revelarFoto linear both;
+          animation-timeline: view();
+          animation-range: entry 0% cover 38%;
+        }
+        /* no carrossel da home a rolagem e horizontal, entao o efeito
+           de entrada vertical nao se aplica */
+        .projetos-home-lista .projeto-foto { animation: none; }
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .page.active { animation: none; }
+      .linha-anim { opacity: 1 !important; transform: none !important; animation: none !important; }
       .reveal { opacity: 1; transform: none; transition: none; }
       .sketchup-card.reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
@@ -3456,6 +3499,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
 function applyReveal(root = document) {
+  separarLinhasDosTitulos(root);
   const selectors = [
     '.processo-step', '.depoimento-card', '.fundador-card',
     '.evento-item', '.product-card', '.decor-card',
@@ -3476,6 +3520,24 @@ function applyReveal(root = document) {
 }
 
 applyReveal();
+
+/* Cada linha de um titulo grande vira um bloco proprio, para entrar
+   escalonada conforme a pagina sobe. O conteudo nao muda: so ganha um
+   invólucro por linha, respeitando as quebras que ja existiam. */
+function separarLinhasDosTitulos(raiz = document) {
+  const titulos = '.hero-title, .section-title, .cinema-title, .cta-final-title, ' +
+                  '.projetos-hero-title, .eventos-hero-title, .sobre-hero-title, .arq-hero-title';
+  raiz.querySelectorAll(titulos).forEach(el => {
+    if (el.dataset.linhasSeparadas) return;
+    if (el.querySelector('.line')) return;   /* o titulo do topo ja tem entrada propria */
+    el.dataset.linhasSeparadas = '1';
+    const partes = el.innerHTML.split(/<br\s*\/?>/i);
+    if (!partes.length) return;
+    el.innerHTML = partes
+      .map(p => '<span class="linha-anim">' + p + '</span>')
+      .join('<br>');
+  });
+}
 
 /* Reaplica reveal sempre que trocamos de página (conteúdo recém-visível) */
 const originalShowPage = showPage;
