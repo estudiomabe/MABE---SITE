@@ -168,6 +168,43 @@
       --gold-texto: #6f5320; /* dourado escuro, so para texto sobre fundo claro */
       --erro:     #9a3f2b;
       --gold-lt:  #ddd0b0;
+
+      /* Tons que NAO acompanham o tema: legendas e setas por cima de fotos,
+         e o interior dos blocos escuros da marca. Fotografia nao tem tema. */
+      --tinta-fixa: #111110;
+      --papel-fixo: #e8e6e1;
+      --linha-fixa: #c8c5be;
+
+      color-scheme: light;
+    }
+
+    /* MODO ESCURO
+       So entra quando o visitante pede, pelo botao da nav. O site abre sempre
+       na paleta clara da marca, que e a identidade; a noturna e uma escolha
+       dele, guardada no proprio aparelho. */
+    html[data-tema="escuro"] {
+      --bg:       #1c1a17;   /* pedra escura, mantem o calor do papel */
+      --bg-dark:  #26231f;   /* painel levemente erguido */
+      --ink:      #ece9e3;
+      --ink-soft: #d4d0c8;
+      --muted:    #a5a29b;   /* 6,8:1 sobre o fundo noturno */
+      --border:   #35322c;
+      --gold:     #c9a961;   /* um ponto mais claro, para brilhar no escuro */
+      --gold-texto: #c9a961;
+      --erro:     #e0917a;
+
+      color-scheme: dark;
+    }
+
+    /* A logo e preta sobre transparente: no escuro ela inverte, como ja fazem
+       a do rodape e a da abertura. */
+    html[data-tema="escuro"] .nav-logo-img { filter: invert(1); }
+
+    /* Transicao curta so no instante da troca, para nao piscar */
+    @media (prefers-reduced-motion: no-preference) {
+      html.trocando-tema * {
+        transition: background-color 0.28s ease, border-color 0.28s ease, color 0.28s ease !important;
+      }
     }
 
     html { scroll-behavior: smooth; }
@@ -249,6 +286,41 @@
       letter-spacing: 0.14em; color: var(--muted); white-space: nowrap;
       display: flex; align-items: center; min-height: 44px;
     }
+    .nav-tema {
+      background: none; border: none; cursor: pointer; padding: 0.5rem 0.4rem;
+      color: var(--muted); display: flex; align-items: center; justify-content: center;
+      min-height: 44px; min-width: 44px; transition: color 0.2s;
+    }
+    .nav-tema:hover { color: var(--ink); }
+    .icone-tema { width: 18px; height: 18px; display: block; }
+    .tema-sol { display: none; }
+    html[data-tema="escuro"] .tema-sol { display: inline; }
+    html[data-tema="escuro"] .tema-lua { display: none; }
+    /* FAIXA COMPACTA DA NAV
+       O menu completo mede 1118 px e, com logo, acoes e respiros, so cabe
+       inteiro a partir de ~1810 px. Nesta faixa ele continua inteiro, mas
+       em corpo e espacamento menores e com o carrinho so no icone. Acima
+       de 1810 px nada disso se aplica e a nav fica como sempre foi. */
+    @media (min-width: 1261px) and (max-width: 1810px) {
+      .nav-inner { padding: 1.15rem 2vw; gap: 1.2vw; }
+      .nav-logo-img { height: 40px; }
+      /* O corpo cresce junto com a tela: 0,58rem em 1261 px, cheio a partir
+         de ~1560 px. Fixar em 0,58rem deixava o menu em 9,3 px, pequeno
+         demais para maiusculas espacadas. */
+      .nav-menu a.nav-menu-link { padding: 0.7rem 0.4rem; font-size: clamp(0.58rem, 0.2341rem + 0.4364vw, 0.66rem); }
+      .nav-actions { gap: 0.45rem; }
+      .cart-label { display: none; }
+      .nav-cart-btn { padding: 0.5rem 0.8rem; }
+    }
+    /* No celular a linha da nav e disputada: o botao encolhe no desenho mas
+       mantem o alvo de toque de 44 px por um retangulo invisivel em volta,
+       como ja fazem as setas das fotos. */
+    @media (max-width: 600px) {
+      .nav-actions { gap: 0.25rem; }
+      .nav-tema { min-width: 34px; padding: 0.5rem 0.2rem; position: relative; }
+      .nav-tema::after { content: ''; position: absolute; inset: -5px; }
+    }
+
     .nav-idioma span { color: var(--muted); }
     .nav-idioma b { color: var(--ink); font-weight: 500; }
     @media (max-width: 600px) { .nav-idioma { font-size: 0.58rem; padding: 0.5rem 0.2rem; } }
@@ -619,18 +691,18 @@
       position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
       width: 32px; height: 32px; padding: 0; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(232,230,225,0.9); color: var(--ink);
+      background: rgba(232,230,225,0.9); color: var(--tinta-fixa);
       border: 1px solid var(--border);
       opacity: 0; transition: opacity 0.25s ease, background 0.2s ease;
     }
     .product-card:hover .card-seta,
     .decor-card:hover .card-seta { opacity: 1; }
-    .card-seta:hover { background: var(--bg); }
+    .card-seta:hover { background: var(--papel-fixo); }
     .card-seta-ant  { left: 0.7rem; }
     .card-seta-prox { right: 0.7rem; }
     .card-contador {
       position: absolute; left: 0.7rem; bottom: 0.7rem; z-index: 3;
-      background: rgba(17,17,16,0.72); color: var(--bg);
+      background: rgba(17,17,16,0.72); color: var(--papel-fixo);
       font-size: 0.64rem; font-weight: 500; letter-spacing: 0.1em;
       padding: 0.3rem 0.6rem;
       opacity: 0; transition: opacity 0.25s ease;
@@ -653,7 +725,7 @@
     }
     .product-card:hover .product-img-overlay { opacity: 1; }
     .product-quick {
-      background: rgba(232,230,225,0.95); color: var(--ink); border: none;
+      background: rgba(232,230,225,0.95); color: var(--tinta-fixa); border: none;
       padding: 0.55rem 1rem; font-family: 'Inter', sans-serif;
       font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em;
       text-transform: uppercase; cursor: pointer; width: 100%;
@@ -711,17 +783,17 @@
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 44px; height: 44px; padding: 0; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(232,230,225,0.88); color: var(--ink);
+      background: rgba(232,230,225,0.88); color: var(--tinta-fixa);
       border: 1px solid var(--border);
       opacity: 0; transition: opacity 0.25s ease, background 0.2s ease;
     }
     .peca-foto:hover .peca-seta { opacity: 1; }
-    .peca-seta:hover { background: var(--bg); }
+    .peca-seta:hover { background: var(--papel-fixo); }
     .peca-seta-ant  { left: 1rem; }
     .peca-seta-prox { right: 1rem; }
     .peca-contador {
       position: absolute; right: 1rem; bottom: 1rem;
-      background: rgba(17,17,16,0.7); color: var(--bg);
+      background: rgba(17,17,16,0.7); color: var(--papel-fixo);
       font-size: 0.62rem; font-weight: 500; letter-spacing: 0.12em;
       padding: 0.35rem 0.7rem;
       opacity: 0; transition: opacity 0.25s ease;
@@ -1143,7 +1215,11 @@
     .toast { position: fixed; bottom: 6rem; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--ink); color: var(--bg); padding: 0.7rem 1.75rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 300; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    @media (max-width: 900px) {
+    /* MENU SANDUICHE
+       Entra abaixo de 1261 px, onde nem o menu compacto cabe mais. Antes
+       entrava abaixo de 901 px, e no meio a nav ficava cortada. O corpo do
+       texto volta ao tamanho cheio aqui, porque no painel ha largura sobrando. */
+    @media (max-width: 1260px) {
       .nav-burger { display: flex; }
       .nav-menu {
         position: fixed; top: 78px; left: 0; right: 0; bottom: 0;
@@ -1173,6 +1249,10 @@
         padding: 0 0 0.5rem; border-bottom: 1px solid var(--border);
       }
       .nav-drop-panel a { padding: 0.5rem 8vw 0.5rem 11vw; font-size: 0.92rem; }
+      .nav-menu a.nav-menu-link { font-size: 0.66rem; }
+    }
+
+    @media (max-width: 900px) {
       .manifesto { grid-template-columns: 1fr; gap: 2rem; }
       .processo-grid { grid-template-columns: 1fr 1fr; }
       .processo-step:nth-child(2) { border-right: none; }
@@ -1567,9 +1647,16 @@
     /* Blocos de fundo escuro: o cinza clareia e o dourado volta ao tom da marca,
        para o contraste continuar alto nos dois sentidos */
     .manifesto, .cinema, .sobre-hero, .sobre-valores, .eventos-hero, .projetos-hero,
-    .arq-cta, .sketchup-card--highlight, .aviso-cookies, .depoimentos, footer {
+    .arq-cta, .sketchup-card--highlight, .aviso-cookies, .depoimentos, footer,
+    #preloader {
       --muted: var(--muted-claro);
       --gold-texto: var(--gold);
+      /* Dentro de um bloco escuro, "fundo" e sempre o papel e "tinta" e sempre
+         o preto da marca, nos dois temas. E o que mantem estes blocos iguais
+         no claro e no escuro, sem reescrever nenhuma regra interna. */
+      --bg: var(--papel-fixo);
+      --ink: var(--tinta-fixa);
+      --border: var(--linha-fixa);
     }
 
     /* TRANSICAO ENTRE PAGINAS
@@ -1793,6 +1880,19 @@
       #page-privacidade .catalog-page { padding-bottom: 5rem; }
     }
   </style>
+<script>
+  /* Le a escolha de tema antes de qualquer pintura, para quem ja escolheu o
+     escuro nao ver um lampejo claro ao abrir. */
+  (function () {
+    try {
+      if (localStorage.getItem('mabe-tema') === 'escuro') {
+        document.documentElement.setAttribute('data-tema', 'escuro');
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', '#1c1a17');
+      }
+    } catch (e) { /* sem armazenamento: segue no tema claro */ }
+  })();
+</script>
 </head>
 <body>
 
@@ -1840,6 +1940,12 @@
       <a href="/contato" class="nav-menu-link">Contato</a>
     </div>
     <div class="nav-actions">
+      <button class="nav-tema" type="button" onclick="alternarTema()" id="btnTema" aria-label="Ativar modo escuro" title="Ativar modo escuro" aria-pressed="false">
+        <svg class="icone-tema" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <g class="tema-sol"><circle cx="12" cy="12" r="4.1"/><path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M18.5 5.5L17 7M7 17l-1.5 1.5"/></g>
+          <path class="tema-lua" d="M20.1 13.6A8.3 8.3 0 0 1 10.4 3.9a8.5 8.5 0 1 0 9.7 9.7Z"/>
+        </svg>
+      </button>
       <button class="nav-idioma" onclick="alternarIdioma()" id="btnIdioma" aria-label="Mudar idioma">PT | <span>EN</span></button>
       <button class="nav-cart-btn" onclick="toggleCart()">
         <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3.5h2.2l2.4 10.6a1.6 1.6 0 0 0 1.6 1.2h8.1a1.6 1.6 0 0 0 1.6-1.2l1.6-7.1H5.6"/><circle cx="9.8" cy="19.8" r="1.2"/><circle cx="17.2" cy="19.8" r="1.2"/></svg>
@@ -3932,6 +4038,44 @@ async function carregarIdioma() {
 }
 
 /* Deixa em destaque o idioma que a pessoa esta lendo */
+/* MODO ESCURO
+   A escolha fica no aparelho do visitante. Sem escolha, o site abre claro. */
+function temaAtual() {
+  return document.documentElement.getAttribute('data-tema') === 'escuro' ? 'escuro' : 'claro';
+}
+
+function marcarBotaoTema() {
+  const botao = document.getElementById('btnTema');
+  if (!botao) return;
+  const escuro = temaAtual() === 'escuro';
+  const rotulo = IDIOMA === 'en'
+    ? (escuro ? 'Switch to light mode' : 'Switch to dark mode')
+    : (escuro ? 'Voltar ao modo claro' : 'Ativar modo escuro');
+  botao.setAttribute('aria-label', rotulo);
+  botao.setAttribute('title', rotulo);
+  botao.setAttribute('aria-pressed', escuro ? 'true' : 'false');
+}
+
+function aplicarTema(tema, comTransicao) {
+  const raiz = document.documentElement;
+  if (comTransicao && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    raiz.classList.add('trocando-tema');
+    setTimeout(() => raiz.classList.remove('trocando-tema'), 320);
+  }
+  if (tema === 'escuro') raiz.setAttribute('data-tema', 'escuro');
+  else raiz.removeAttribute('data-tema');
+
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', tema === 'escuro' ? '#1c1a17' : '#e8e6e1');
+  marcarBotaoTema();
+}
+
+function alternarTema() {
+  const novo = temaAtual() === 'escuro' ? 'claro' : 'escuro';
+  try { localStorage.setItem('mabe-tema', novo); } catch (e) { /* segue sem guardar */ }
+  aplicarTema(novo, true);
+}
+
 function marcarIdiomaNoBotao() {
   const b = document.getElementById('btnIdioma');
   if (!b) return;
@@ -4262,8 +4406,9 @@ function responderCookies(resposta) {
   setTimeout(() => aviso.classList.add('visivel'), 1400);
 })();
 
-/* Idioma por ultimo: depende de tudo o que foi definido acima */
+/* Idioma e tema por ultimo: dependem de tudo o que foi definido acima */
 marcarIdiomaNoBotao();
+marcarBotaoTema();
 carregarIdioma();
 </script>
 </body>
