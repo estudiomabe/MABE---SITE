@@ -1754,6 +1754,13 @@
     .projetos-home-lista.carrossel > .projeto-item {
       flex: 0 0 100%; scroll-snap-align: start; margin-bottom: 0;
     }
+    /* Enquanto arrasta, o texto nao pode ser selecionado sem querer e a
+       rolagem precisa responder ao ponteiro sem suavizacao propria. */
+    .projetos-home-lista.arrastando {
+      scroll-snap-type: none; scroll-behavior: auto; user-select: none;
+    }
+    .projetos-home-lista.arrastando a { pointer-events: none; }
+
     .projetos-home-lista:focus-visible {
       outline: 2px solid var(--ink); outline-offset: 4px;
     }
@@ -3189,6 +3196,115 @@ function moverProjetos(passo) {
   irParaProjeto(i < 0 ? total - 1 : (i > total - 1 ? 0 : i));   /* circula nas pontas */
 }
 
+/* ARRASTE COM INERCIA NO CARROSSEL DA HOME
+   So para mouse e caneta. No celular a rolagem lateral do proprio navegador
+   ja tem inercia, e imitar isso em JS sempre sai pior.
+   Um arraste que comece em cima de uma foto pertence a galeria daquela
+   foto, nao ao carrossel: la o gesto troca a imagem do projeto. */
+(function arrasteDoCarrossel() {
+  const lista = document.getElementById('projetosHomeLista');
+  if (!lista) return;
+
+  const ATRITO = 0.94;        /* forca que sobra a cada quadro */
+  const PARADA = 0.4;         /* abaixo disso ja nao se percebe movimento */
+  const TETO = 2.5;           /* px por ms: um gesto humano rapido nao passa disso */
+  const DURACAO_MAX = 700;    /* a inercia nunca corre mais do que isso */
+  let arrastando = false, partiuEm = 0, rolagemInicial = 0;
+  let ultimoX = 0, ultimoT = 0, velocidade = 0, percorreu = 0, quadro = null;
+
+  function pararInercia() {
+    if (quadro) { cancelAnimationFrame(quadro); quadro = null; }
+  }
+
+  lista.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+    if (e.button !== 0) return;
+    if (e.target.closest('[data-fotos], .card-seta')) return;   /* e da galeria */
+    pararInercia();
+    arrastando = true; percorreu = 0; velocidade = 0;
+    partiuEm = e.clientX; rolagemInicial = lista.scrollLeft;
+    ultimoX = e.clientX; ultimoT = performance.now();
+    lista.classList.add('arrastando');
+    try { lista.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+
+  lista.addEventListener('pointermove', e => {
+    if (!arrastando) return;
+    const dx = e.clientX - partiuEm;
+    percorreu = Math.max(percorreu, Math.abs(dx));
+    lista.scrollLeft = rolagemInicial - dx;
+    const agora = performance.now();
+    const intervalo = agora - ultimoT;
+    /* Intervalo curto demais faz a divisao explodir e o carrossel sair
+       voando. Abaixo de 4ms a amostra nao vale, e acima disso ainda ha
+       teto: ninguem arrasta mais rapido que isso de verdade. */
+    if (intervalo >= 4) {
+      const bruta = (e.clientX - ultimoX) / intervalo;
+      velocidade = Math.max(-TETO, Math.min(TETO, bruta));
+      ultimoX = e.clientX; ultimoT = agora;
+    }
+  });
+
+  function soltar(e) {
+    if (!arrastando) return;
+    arrastando = false;
+    try { lista.releasePointerCapture(e.pointerId); } catch (err) {}
+    /* parou com o dedo quieto por um instante: nao ha inercia a herdar */
+    if (performance.now() - ultimoT > 80) velocidade = 0;
+    correrPorInercia();
+    /* Rede de seguranca: se por qualquer motivo a inercia nao terminar,
+       o carrossel nao pode ficar sem encaixe. */
+    setTimeout(() => { if (lista.classList.contains('arrastando')) assentarCarrossel(); }, DURACAO_MAX + 260);
+  }
+  lista.addEventListener('pointerup', soltar);
+  lista.addEventListener('pointercancel', soltar);
+
+  function correrPorInercia() {
+    const fim = performance.now() + DURACAO_MAX;
+    const limite = lista.scrollWidth - lista.clientWidth;
+    let v = velocidade * 16;   /* de px por ms para px por quadro */
+    /* Sem quadro de animacao disponivel (aba escondida, movimento
+       reduzido) nao ha inercia a mostrar: assenta direto. */
+    if (document.hidden || Math.abs(v) <= PARADA) { assentarCarrossel(); return; }
+    (function passo() {
+      v *= ATRITO;
+      lista.scrollLeft -= v;
+      const bateuNaPonta = lista.scrollLeft <= 0 || lista.scrollLeft >= limite;
+      if (Math.abs(v) > PARADA && performance.now() < fim && !bateuNaPonta) {
+        quadro = requestAnimationFrame(passo);
+        return;
+      }
+      quadro = null;
+      assentarCarrossel();
+    })();
+  }
+
+  /* Perdida a forca, o carrossel assenta no projeto mais proximo e devolve
+     o encaixe do navegador. */
+  function assentarCarrossel() {
+    pararInercia();
+    const total = lista.children.length;
+    const i = Math.max(0, Math.min(total - 1, Math.round(lista.scrollLeft / lista.clientWidth)));
+    lista.classList.remove('arrastando');
+    /* Com a aba escondida nao ha animacao para correr: o carrossel nao pode
+       ficar parado entre dois projetos esperando um quadro que nao vem. */
+    if (document.hidden) {
+      const antes = lista.style.scrollBehavior;
+      lista.style.scrollBehavior = 'auto';
+      irParaProjeto(i);
+      lista.style.scrollBehavior = antes;
+      return;
+    }
+    irParaProjeto(i);
+  }
+
+  /* Arrastar nao pode virar clique no projeto */
+  lista.addEventListener('click', e => {
+    if (percorreu > 6) { e.preventDefault(); e.stopPropagation(); percorreu = 0; }
+  }, true);
+  lista.addEventListener('dragstart', e => e.preventDefault());
+})();
+
 /* Setas do teclado quando o carrossel esta em foco */
 function tecladoProjetos(e) {
   if (e.key === 'ArrowLeft')  { e.preventDefault(); moverProjetos(-1); }
@@ -3631,6 +3747,7 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
     if (quadro && quadro.querySelector('.card-seta, .peca-seta')) {
       return { estado: 'arraste', escuro };
     }
+    if (alvo.closest('.projetos-home-lista')) return { estado: 'arraste', escuro };
     if (alvo.closest('.product-card, .decor-card')) return { estado: 'ver', escuro };
     if (alvo.closest(HOVER)) return { estado: 'realce', escuro };
     return { estado: null, escuro };
@@ -3919,6 +4036,41 @@ document.addEventListener('keydown', e => {
     ? JSON.parse(box.dataset.fotos || '[]').length
     : fotosAtuais.length;
 
+  const SAIDA = 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
+  const imgDe = box => box.querySelector('img');
+
+  /* A imagem acompanha o ponteiro, mas com resistencia: anda uma fracao do
+     gesto e para de andar num limite. E o que da a sensacao de peso, sem
+     descolar a foto da moldura. */
+  function acompanhar(box, dx) {
+    const img = imgDe(box);
+    if (!img) return;
+    const limite = 52;
+    const anda = Math.max(-limite, Math.min(limite, dx * 0.34));
+    img.style.transition = 'none';
+    img.style.transform = 'translateX(' + anda.toFixed(1) + 'px)';
+  }
+
+  /* Soltou: ou a foto nova entra desacelerando pelo lado de onde veio o
+     gesto, ou a atual volta ao lugar como quem resiste e relaxa. */
+  function assentarFoto(box, dx, trocou) {
+    const img = imgDe(box);
+    if (!img) return;
+    /* Sem quadro de animacao (aba escondida) o passo intermediario nunca
+       se desfaz e a foto ficaria torta. Nesse caso volta direto. */
+    if (!trocou || document.hidden) {
+      img.style.transition = trocou ? 'none' : SAIDA;
+      img.style.transform = '';
+      return;
+    }
+    img.style.transition = 'none';
+    img.style.transform = 'translateX(' + (dx < 0 ? 56 : -56) + 'px)';
+    requestAnimationFrame(() => {
+      img.style.transition = SAIDA;
+      img.style.transform = '';
+    });
+  }
+
   document.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     const box = caixaDe(e.target);
@@ -3926,15 +4078,28 @@ document.addEventListener('keydown', e => {
     if (!box || totalDe(box) < 2) return;
     inicio = { x: e.clientX, y: e.clientY, box };
   });
-  document.addEventListener('pointercancel', () => { inicio = null; });
+  document.addEventListener('pointermove', e => {
+    if (!inicio) return;
+    const dx = e.clientX - inicio.x, dy = e.clientY - inicio.y;
+    /* so acompanha quando o gesto ja se definiu como horizontal; assim a
+       rolagem vertical da pagina continua intocada */
+    if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
+    acompanhar(inicio.box, dx);
+  }, { passive: true });
+  document.addEventListener('pointercancel', () => {
+    if (inicio) assentarFoto(inicio.box, 0, false);
+    inicio = null;
+  });
   document.addEventListener('pointerup', e => {
     if (!inicio) return;
     const dx = e.clientX - inicio.x, dy = e.clientY - inicio.y, box = inicio.box;
     inicio = null;
     /* só conta como deslize se andou 40px e mais na horizontal que na vertical */
-    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const vale = Math.abs(dx) >= 40 && Math.abs(dx) >= Math.abs(dy) * 1.5;
+    if (!vale) { assentarFoto(box, dx, false); return; }
     const passo = dx < 0 ? 1 : -1;
     if (box.matches('[data-fotos]')) trocarFotoCaixa(box, passo); else navegarFoto(passo);
+    assentarFoto(box, dx, true);
     acabouDeDeslizar = true;
     setTimeout(() => { acabouDeDeslizar = false; }, 400);
   });
