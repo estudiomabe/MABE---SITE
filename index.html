@@ -535,8 +535,9 @@
     }
     .cinema-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.2rem, 4vw, 4rem);
-      font-weight: 300; line-height: 1.1; margin-bottom: 1.5rem;
+      font-size: clamp(2.4rem, 6vw, 6rem);
+      font-weight: 300; line-height: 0.96; letter-spacing: -0.022em;
+      margin-bottom: 2.25rem;
     }
     .cinema-sub {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -662,6 +663,18 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 1rem; font-style: italic; color: var(--muted); margin-top: 0.4rem;
     }
+
+    /* TITULOS DE RESPIRO
+       So nos momentos em que o titulo e o acontecimento da tela. A sobrelinha
+       e o corpo do texto continuam do mesmo tamanho: o contraste vem da
+       distancia entre eles, nao de aumentar tudo. */
+    .section-title.secao-grande {
+      font-size: clamp(2.4rem, 6vw, 6rem);
+      line-height: 0.94;
+      letter-spacing: -0.022em;
+      margin-top: 0.7rem;
+    }
+    .secao-grande + .section-sub { margin-top: 1.1rem; }
     .catalog-filters { display: flex; gap: 0; border: 1px solid var(--border); align-self: end; }
     .filter-btn {
       padding: 0.5rem 1.25rem; border: none; border-right: 1px solid var(--border);
@@ -887,9 +900,9 @@
     }
     .sobre-hero-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 5rem);
-      font-weight: 300; line-height: 1; letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
+      font-size: clamp(2.6rem, 6.5vw, 6.5rem);
+      font-weight: 300; line-height: 0.94; letter-spacing: -0.026em;
+      margin-bottom: 2rem;
     }
     .sobre-hero-sub {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -1076,9 +1089,9 @@
     }
     .cta-final-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.8rem, 7vw, 6.5rem);
-      font-weight: 300; line-height: 1.04; letter-spacing: -0.02em;
-      margin-bottom: 1.75rem;
+      font-size: clamp(3rem, 8vw, 7.5rem);
+      font-weight: 300; line-height: 0.92; letter-spacing: -0.028em;
+      margin-bottom: 2.25rem;
     }
     .cta-final-title em { font-style: italic; color: var(--muted); }
     .cta-final-aside {
@@ -1366,8 +1379,8 @@
     .depoimentos-overline { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-texto); margin-bottom: 0.75rem; }
     .depoimentos-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 3.5vw, 3.5rem);
-      font-weight: 300; line-height: 1; letter-spacing: -0.01em;
+      font-size: clamp(2.4rem, 6vw, 6rem);
+      font-weight: 300; line-height: 0.94; letter-spacing: -0.022em;
       color: var(--bg);
     }
     .depoimentos-sub {
@@ -1448,9 +1461,9 @@
     }
     .eventos-hero-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 5rem);
-      font-weight: 300; line-height: 1; letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
+      font-size: clamp(2.6rem, 6.5vw, 6.5rem);
+      font-weight: 300; line-height: 0.94; letter-spacing: -0.026em;
+      margin-bottom: 2rem;
     }
     .eventos-hero-sub {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -1575,9 +1588,9 @@
     }
     .projetos-hero-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 5rem);
-      font-weight: 300; line-height: 1; letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
+      font-size: clamp(2.6rem, 6.5vw, 6.5rem);
+      font-weight: 300; line-height: 0.94; letter-spacing: -0.026em;
+      margin-bottom: 2rem;
     }
     .projetos-hero-sub {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -2015,7 +2028,7 @@
   <!-- PROCESSO -->
   <section class="processo">
     <p class="section-overline"><span class="section-num">(03)</span>Como trabalhamos</p>
-    <h2 class="section-title">Do silêncio à forma</h2>
+    <h2 class="section-title secao-grande">Do silêncio à forma</h2>
     <p class="section-sub">Um processo que respeita o tempo de cada criação <span class="aside-note">(nenhuma etapa se apressa)</span></p>
     <div class="processo-grid">
       <div class="processo-step">
@@ -2044,7 +2057,7 @@
   <!-- PROJETOS REALIZADOS (preenchida por renderTrabalhos; some se a lista estiver vazia) -->
   <section class="projetos-home" id="projetosHome" hidden>
     <p class="section-overline"><span class="section-num">(04)</span>Projetos Realizados</p>
-    <h2 class="section-title">Trabalhos que já saíram do estúdio</h2>
+    <h2 class="section-title secao-grande">Trabalhos que já saíram do estúdio</h2>
     <p class="section-sub">Cada um feito para uma casa, uma rotina e uma pessoa</p>
     <div class="projetos-home-lista" id="projetosHomeLista" tabindex="0"
          role="group" aria-roledescription="carrossel"
@@ -2334,7 +2347,7 @@
     <!-- Valores -->
     <div class="sobre-valores">
       <p class="section-overline">O que nos guia</p>
-      <h2 class="section-title">Nossos valores</h2>
+      <h2 class="section-title secao-grande">Nossos valores</h2>
       <div class="valores-grid">
         <div class="valor-item">
           <strong>Madeira certificada</strong>
