@@ -1494,6 +1494,97 @@
       .depoimentos-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
     }
     /* EVENTOS */
+    /* PAGINA DE UM PROJETO
+       A foto de abertura ocupa a largura toda; o texto fica numa coluna
+       estreita, para a leitura nao atravessar a tela inteira. */
+    .projeto-page { background: var(--bg); min-height: calc(100vh - 78px); padding: 4rem 8vw 7rem; }
+    .projeto-voltar {
+      display: inline-block; margin-bottom: 3rem; text-decoration: none;
+      color: var(--muted); font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .projeto-voltar:hover { color: var(--ink); }
+    .projeto-titulo a { color: inherit; text-decoration: none; }
+    .projeto-titulo a:hover { color: var(--gold-texto); }
+
+    .projeto-abertura { max-width: 60rem; margin-bottom: 3.5rem; }
+    .projeto-abertura-data {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 0.9rem;
+    }
+    .projeto-abertura-titulo {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(2.4rem, 6vw, 6rem); line-height: 0.94;
+      letter-spacing: -0.022em; margin-bottom: 1.4rem;
+    }
+    .projeto-abertura-servico {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.15rem; color: var(--muted); max-width: 44rem;
+    }
+
+    .projeto-capa { margin-bottom: 4.5rem; background: var(--bg-dark); overflow: hidden; }
+    .projeto-capa img { width: 100%; height: auto; display: block; }
+
+    .projeto-corpo {
+      max-width: 38rem; margin: 0 auto 4.5rem;
+      font-size: 1.02rem; line-height: 1.85; color: var(--ink-soft);
+    }
+    .projeto-corpo p + p { margin-top: 1.4rem; }
+
+    .projeto-galeria { display: grid; gap: 2rem; margin-bottom: 4.5rem; }
+    .projeto-galeria figure { margin: 0; background: var(--bg-dark); overflow: hidden; }
+    .projeto-galeria img { width: 100%; height: auto; display: block; }
+
+    .projeto-ficha {
+      max-width: 38rem; margin: 0 auto 4.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .projeto-ficha-titulo {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold-texto);
+      margin: 2rem 0 1.2rem;
+    }
+    .projeto-ficha dl { display: grid; gap: 0; margin: 0; }
+    .projeto-ficha div {
+      display: grid; grid-template-columns: 10rem 1fr; gap: 1rem;
+      padding: 0.85rem 0; border-bottom: 1px solid var(--border);
+    }
+    .projeto-ficha dt {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .projeto-ficha dd { margin: 0; font-size: 0.95rem; }
+    @media (max-width: 600px) {
+      .projeto-ficha div { grid-template-columns: 1fr; gap: 0.25rem; }
+      .projeto-page { padding: 3rem 6vw 5rem; }
+      .projeto-voltar { margin-bottom: 2rem; }
+      .projeto-galeria { gap: 1.25rem; }
+    }
+
+    .projeto-proximo {
+      border-top: 1px solid var(--border); padding-top: 2.5rem;
+      display: grid; grid-template-columns: 1fr 2fr; gap: 2.5rem; align-items: center;
+      text-decoration: none; color: inherit;
+    }
+    .projeto-proximo-foto { background: var(--bg-dark); overflow: hidden; aspect-ratio: 4 / 5; }
+    .projeto-proximo-foto img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
+    }
+    .projeto-proximo:hover .projeto-proximo-foto img { transform: scale(1.03); }
+    .projeto-proximo-rotulo {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold-texto); margin-bottom: 0.9rem;
+    }
+    .projeto-proximo-titulo {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.7rem, 3.4vw, 3rem); line-height: 1.02; letter-spacing: -0.015em;
+    }
+    @media (max-width: 700px) {
+      .projeto-proximo { grid-template-columns: 1fr; gap: 1.5rem; }
+      .projeto-proximo-foto { max-width: 60%; }
+    }
+
     .eventos-page { background: var(--bg); min-height: calc(100vh - 78px); }
 
     .eventos-hero {
@@ -2554,6 +2645,13 @@
   </div>
 </div>
 
+<div id="page-projeto" class="page">
+  <div class="projeto-page">
+    <a class="projeto-voltar" href="/projetos-realizados">← Voltar para Projetos Realizados</a>
+    <div id="projetoConteudo"></div>
+  </div>
+</div>
+
 <div id="page-eventos" class="page">
   <div class="eventos-page">
 
@@ -3034,6 +3132,7 @@ let DICIONARIO = null;
 /* Fotos em retrato 4:5 (o quadro da secao e 4:5; outras proporcoes sao cortadas). */
 const trabalhos = [
   {
+    slug: 'rack-escrivaninha-freijo-urca',
     titulo: 'Rack e escrivaninha suspensos em freijó, para Clarissa Xavier',
     servico: 'Rack suspenso e escrivaninha flutuante com baú, em folha natural de freijó',
     descricao: 'Para a casa de Clarissa, na Urca, desenhamos duas peças presas direto na parede, que flutuam acima do piso e deixam os ambientes mais leves. Na sala, o rack tem portas laterais para guardar o que não precisa ficar à vista, nicho central para os aparelhos e puxadores redondos em ipê maciço, que trazem o contraste escuro. A escrivaninha esconde um baú sob o tampo, que se abre sobre dobradiças, e tem passa-fios embutido para manter a mesa livre de cabos.',
@@ -3045,6 +3144,7 @@ const trabalhos = [
            '/images/trabalho-escrivaninha-freijo-urca-3.webp']
   },
   {
+    slug: 'mesa-cabeceira-tauari',
     titulo: 'Mesa de cabeceira em tauari, para Glória Dantas',
     servico: 'Mesa de cabeceira com duas gavetas e prateleira ripada, em tauari maciço',
     descricao: 'Linhas retas e proporções enxutas, pensadas para acompanhar a cama sem pesar no quarto. As gavetas dispensam puxador: o recorte na própria frente faz esse papel. Embaixo, a prateleira ripada deixa a peça leve e mostra os encaixes da estrutura, com o veio claro e uniforme do tauari à vista.',
@@ -3055,6 +3155,7 @@ const trabalhos = [
            '/images/trabalho-mesa-de-cabeceira-tauari-3.webp']
   },
   {
+    slug: 'mesa-cabeceira-tauari-palha',
     titulo: 'Mesa de cabeceira em tauari com palha indiana',
     servico: 'Mesa de cabeceira em tauari maciço, acabamento em goma-laca e prateleira em palha indiana',
     descricao: 'Uma mesa de cabeceira fica ao alcance da mão no escuro, e é por isso que ela pede outro tipo de cuidado. Esta foi feita em tauari maciço, com as arestas suavizadas para o corpo encontrar só curvas, e a gaveta abre por um rasgo escavado na própria frente, sem puxador para enganchar no lençol. O acabamento é em goma-laca, aplicada em camadas finas como se fazia nas peças antigas: realça o veio e deixa um brilho macio, que a luz da manhã revela aos poucos. Embaixo, a prateleira em palha indiana trançada alivia o peso da peça e deixa o ar passar.',
@@ -3063,6 +3164,7 @@ const trabalhos = [
            '/images/trabalho-cabeceira-palha-2.webp']
   },
   {
+    slug: 'banco-meditacao-seiza',
     titulo: 'Banco de meditação em madeira maciça, para Tales',
     servico: 'Banco para meditação na postura seiza, em madeira maciça com acabamento em verniz a óleo',
     descricao: 'Tales medita e pratica ioga no Grajaú, e conhece bem o momento em que o corpo interrompe a prática antes da mente: o joelho reclama, o pé adormece, a sessão acaba. O banco existe para adiar esse momento. Na postura seiza, ele recebe o peso que antes caía sobre os tornozelos, deixa as pernas descansarem embaixo do assento e a coluna se alinhar sozinha, sem esforço. Fizemos a peça em madeira maciça, com as laterais inclinadas no ângulo que sustenta sem escorregar, todas as quinas arredondadas à mão, onde a perna encosta, e acabamento em verniz a óleo, que protege sem tirar o toque da madeira.',
@@ -3070,6 +3172,7 @@ const trabalhos = [
     imgs: ['/images/trabalho-banco-meditacao-1.webp']
   },
   {
+    slug: 'gaveteiro-cedrinho-meia-cana',
     titulo: 'Gaveteiro em cedrinho maciço, para Kamile Seiva',
     servico: 'Gaveteiro embutido em cedrinho maciço, com frentes em meia-cana e corrediças ocultas',
     descricao: 'Numa casa inteira forrada de madeira, qualquer peça nova corre o risco de soar como remendo. O gaveteiro foi desenhado para pertencer: as frentes em meia-cana de cedrinho maciço quebram a luz em listras verticais, conversam com os frisos das paredes e preenchem o nicho como se sempre tivessem estado ali, sob o tampo de pedra clara. As corrediças são ocultas, sem nenhuma ferragem à vista, para que a gaveta corra macia e a madeira apareça inteira. Os puxadores foram escolhidos com a arquiteta Kamile Seiva, para repetir o metal envelhecido que a casa já trazia.',
@@ -3079,6 +3182,7 @@ const trabalhos = [
            '/images/trabalho-gaveteiro-cedrinho-2.webp']
   },
   {
+    slug: 'mesa-estudio-musical-cumaru',
     titulo: 'Mesa para estúdio musical feita em cumaru com tampo em mármore, cliente Kamile Seiva.',
     servico: 'Móvel sob medida para estúdio musical em casa, em cumaru maciço com tampo de mármore',
     descricao: 'Desenhado pelo Estúdio MABE em conversa com a arquiteta Kamile Seiva, o móvel foi pensado para o estúdio musical que o marido dela mantém em casa. O corpo é de cumaru maciço, madeira densa e de tom quente, e o tampo de mármore dá a superfície firme e fresca que os equipamentos pedem. As gavetas abrem por um furo redondo feito na própria frente, sem puxador aparente, e as faces ripadas seguem o mesmo desenho sóbrio da bancada, que fica de frente para o verde da janela.',
@@ -3110,13 +3214,13 @@ function htmlTrabalhos(lista, tagTitulo, alternar) {
     const fotos = fotosDe(t);
     return `
     <div class="projeto-item${alternar && i % 2 === 1 ? ' reverse' : ''}">
-      <div class="projeto-foto" data-fotos='${JSON.stringify(fotos)}' data-i="0">
+      <div class="projeto-foto" data-fotos='${JSON.stringify(fotos)}' data-i="0" data-rota="${urlDoProjeto(t.slug)}">
         <img src="${fotos[0] || ''}" alt="${t.titulo}" loading="lazy">
         ${setasCard(t)}
       </div>
       <div class="projeto-info">
         <p class="projeto-data">${formatarMesAno(t.data)}</p>
-        <${tagTitulo} class="projeto-titulo">${t.titulo}</${tagTitulo}>
+        <${tagTitulo} class="projeto-titulo"><a href="${urlDoProjeto(t.slug)}">${t.titulo}</a></${tagTitulo}>
         <p class="projeto-servico">${t.servico}</p>
         <p class="projeto-descricao">${t.descricao}</p>
       </div>
@@ -3194,6 +3298,91 @@ function moverProjetos(passo) {
   const total = document.getElementById('projetosHomeLista').children.length;
   const i = projetoAtual() + passo;
   irParaProjeto(i < 0 ? total - 1 : (i > total - 1 ? 0 : i));   /* circula nas pontas */
+}
+
+/* PAGINA DE UM PROJETO REALIZADO
+   Cada trabalho ganha endereco proprio. A ficha tecnica mostra so o que
+   esta publicado de verdade: a data e o que foi feito. Campos extras
+   (madeira, acabamento, medidas, prazo) aparecem sozinhos quando o
+   projeto trouxer um objeto "ficha"; nada e inventado aqui. */
+function acharProjeto(slug) {
+  return trabalhos.find(t => t.slug === slug);
+}
+
+function urlDoProjeto(slug) {
+  return (IDIOMA === 'en' ? '/en' : '') + '/projeto/' + slug;
+}
+
+function projetosPorData() {
+  return [...trabalhos].sort((a, b) => b.data.localeCompare(a.data));
+}
+
+function renderProjeto(p) {
+  const fotos = fotosDe(p);
+  const capa = fotos[0] || '';
+  const resto = fotos.slice(1);
+
+  const ordem = projetosPorData();
+  const i = ordem.findIndex(t => t.slug === p.slug);
+  const proximo = ordem.length > 1 ? ordem[(i + 1) % ordem.length] : null;
+  const fotoProximo = proximo ? (fotosDe(proximo)[0] || '') : '';
+
+  const linhas = [['Entrega', formatarMesAno(p.data)], ['O que foi feito', p.servico]]
+    .concat(Object.entries(p.ficha || {}));
+
+  document.getElementById('projetoConteudo').innerHTML = `
+    <div class="projeto-abertura">
+      <p class="projeto-abertura-data">${formatarMesAno(p.data)}</p>
+      <h1 class="projeto-abertura-titulo">${p.titulo}</h1>
+      <p class="projeto-abertura-servico">${p.servico}</p>
+    </div>
+    ${capa ? `<div class="projeto-capa"><img src="${capa}" alt="${p.titulo}"></div>` : ''}
+    <div class="projeto-corpo"><p>${p.descricao}</p></div>
+    ${resto.length ? `<div class="projeto-galeria">${resto.map(f =>
+      `<figure><img src="${f}" alt="${p.titulo}" loading="lazy"></figure>`).join('')}</div>` : ''}
+    <div class="projeto-ficha">
+      <p class="projeto-ficha-titulo">Ficha técnica</p>
+      <dl>${linhas.map(([rotulo, valor]) =>
+        `<div><dt>${rotulo}</dt><dd>${valor}</dd></div>`).join('')}</dl>
+    </div>
+    ${proximo ? `
+    <a class="projeto-proximo" href="${urlDoProjeto(proximo.slug)}">
+      <div class="projeto-proximo-foto">${fotoProximo
+        ? `<img src="${fotoProximo}" alt="${proximo.titulo}" loading="lazy">` : ''}</div>
+      <div>
+        <p class="projeto-proximo-rotulo">Próximo projeto</p>
+        <p class="projeto-proximo-titulo">${proximo.titulo}</p>
+      </div>
+    </a>` : ''}`;
+}
+
+function abrirProjeto(slug, semHistorico) {
+  const p = acharProjeto(slug);
+  if (!p) { mostrar404(); return; }
+  renderProjeto(p);
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-projeto').classList.add('active');
+  document.querySelectorAll('.nav-menu a.nav-menu-link').forEach(a => a.classList.remove('active'));
+  closeMobileNav();
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => applyReveal());
+
+  const url = urlDoProjeto(slug);
+  const tituloEn = (typeof DICIONARIO !== 'undefined' && DICIONARIO) ? DICIONARIO.textos[p.titulo] : null;
+  const servicoEn = (typeof DICIONARIO !== 'undefined' && DICIONARIO) ? DICIONARIO.textos[p.servico] : null;
+  document.title = (tituloEn || p.titulo) + ' | Estúdio MABE';
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) {
+    desc.setAttribute('content', (servicoEn || p.servico) + (IDIOMA === 'en'
+      ? '. A completed project by Estúdio MABE, authorial cabinetmaking in Rio de Janeiro.'
+      : '. Projeto realizado pelo Estúdio MABE, marcenaria autoral no Rio de Janeiro.'));
+  }
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
+  marcarIndexacao(true);
+  escreverDadosEstruturados(null);
+
+  if (!semHistorico && location.pathname !== url) history.pushState({ projeto: slug }, '', url);
 }
 
 /* ARRASTE COM INERCIA NO CARROSSEL DA HOME
@@ -4293,6 +4482,18 @@ async function carregarIdioma() {
   }
   traduzirArvore(document.body);
   observarNovosTextos();
+
+  /* Peca e projeto tem endereco proprio, que paginaPorUrl nao reconhece.
+     Sem este desvio, os dois caiam no metadado da home: o titulo do
+     navegador e, pior, o canonical apontando para /en em todas elas, o
+     que faz o Google tratar as paginas como copia da home. Agora o
+     dicionario ja chegou, entao basta reabrir para o titulo sair em
+     ingles e o canonical apontar para o endereco certo. */
+  const pecaAberta = location.pathname.match(/^\/en\/peca\/([a-z0-9-]+)$/);
+  if (pecaAberta) { abrirPeca(pecaAberta[1], true); return; }
+  const projetoAberto = location.pathname.match(/^\/en\/projeto\/([a-z0-9-]+)$/);
+  if (projetoAberto) { abrirProjeto(projetoAberto[1], true); return; }
+
   const ativa = document.querySelector('.page.active');
   if (ativa) atualizarMeta(paginaPorUrl(location.pathname) || 'home');
 }
@@ -4529,8 +4730,11 @@ function mostrar404() {
 /* Botão voltar/avançar do navegador */
 window.addEventListener('popstate', e => {
   if (e.state && e.state.peca) { abrirPeca(e.state.peca, true); return; }
+  if (e.state && e.state.projeto) { abrirProjeto(e.state.projeto, true); return; }
   const slugUrl = location.pathname.match(/^(?:\/en)?\/peca\/([a-z0-9-]+)$/);
   if (slugUrl) { abrirPeca(slugUrl[1], true); return; }
+  const slugProjeto = location.pathname.match(/^(?:\/en)?\/projeto\/([a-z0-9-]+)$/);
+  if (slugProjeto) { abrirProjeto(slugProjeto[1], true); return; }
   const id = (e.state && e.state.pagina) || paginaPorUrl(location.pathname);
   if (id) { showPage(id, true); } else { mostrar404(); }
 });
@@ -4541,6 +4745,12 @@ window.addEventListener('popstate', e => {
   if (slugUrl) {
     abrirPeca(slugUrl[1], true);
     history.replaceState({ peca: slugUrl[1] }, '', location.pathname);
+    return;
+  }
+  const slugProjeto = location.pathname.match(/^(?:\/en)?\/projeto\/([a-z0-9-]+)$/);
+  if (slugProjeto) {
+    abrirProjeto(slugProjeto[1], true);
+    history.replaceState({ projeto: slugProjeto[1] }, '', location.pathname);
     return;
   }
   const id = paginaPorUrl(location.pathname);
@@ -4584,6 +4794,13 @@ document.addEventListener('click', function (e) {
     return;
   }
 
+  const projeto = destino.match(/^(?:\/en)?\/projeto\/([a-z0-9-]+)$/);
+  if (projeto) {
+    e.preventDefault();
+    abrirProjeto(projeto[1]);
+    return;
+  }
+
   const id = paginaPorUrl(destino);
   if (id) { e.preventDefault(); showPage(id); }
 });
@@ -4614,6 +4831,12 @@ abrirPeca = function (slug, semHistorico) {
     currency: 'BRL', value: p.price,
     items: [{ item_id: String(p.id), item_name: p.name, item_category: p.secao, price: p.price }]
   });
+};
+
+const abrirProjetoSemMedicao = abrirProjeto;
+abrirProjeto = function (slug, semHistorico) {
+  comTransicao(() => { abrirProjetoSemMedicao(slug, semHistorico); });
+  mabeVisualizacao();
 };
 
 const addToCartSemMedicao = addToCart;
