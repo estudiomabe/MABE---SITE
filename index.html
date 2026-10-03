@@ -175,6 +175,13 @@
       --papel-fixo: #e8e6e1;
       --linha-fixa: #c8c5be;
 
+      /* Cursor: acompanha o tema. Sobre bloco escuro ele vira papel,
+         por uma classe que o proprio cursor ganha ao passar por cima. */
+      --cursor-tinta: #111110;
+      --cursor-borda: rgba(17,17,16,0.35);
+      --cursor-borda-forte: rgba(17,17,16,0.6);
+      --cursor-fundo: rgba(17,17,16,0.06);
+
       color-scheme: light;
     }
 
@@ -192,6 +199,11 @@
       --gold:     #c9a961;   /* um ponto mais claro, para brilhar no escuro */
       --gold-texto: #c9a961;
       --erro:     #e0917a;
+
+      --cursor-tinta: #ece9e3;
+      --cursor-borda: rgba(236,233,227,0.35);
+      --cursor-borda-forte: rgba(236,233,227,0.62);
+      --cursor-fundo: rgba(236,233,227,0.08);
 
       color-scheme: dark;
     }
@@ -1140,19 +1152,52 @@
       position: fixed; top: 0; left: 0; pointer-events: none;
       border-radius: 50%; z-index: 800; display: none;
     }
-    .cursor-dot { width: 6px; height: 6px; background: var(--ink); margin: -3px 0 0 -3px; }
+    .cursor-dot { width: 6px; height: 6px; background: var(--cursor-tinta); margin: -3px 0 0 -3px; }
     .cursor-ring {
       width: 36px; height: 36px; margin: -18px 0 0 -18px;
-      border: 1px solid rgba(17,17,16,0.35);
+      border: 1px solid var(--cursor-borda);
       transition: width 0.3s ease, height 0.3s ease, margin 0.3s ease, border-color 0.3s ease, background 0.3s ease;
     }
     .cursor-ring.cursor-hover {
       width: 64px; height: 64px; margin: -32px 0 0 -32px;
-      background: rgba(17,17,16,0.06); border-color: rgba(17,17,16,0.6);
+      background: var(--cursor-fundo); border-color: var(--cursor-borda-forte);
     }
+
+    /* O anel diz o que acontece. So aparece onde a acao existe mesmo. */
+    .cursor-rotulo {
+      font-family: 'Inter', sans-serif; font-size: 0.5rem; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap;
+      color: var(--cursor-tinta); opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    /* Com palavra, o anel vira disco cheio. Fotografia tem cor imprevisivel:
+       so o preenchimento solido garante que a palavra se leia sobre
+       qualquer imagem. O ponto some, senao mancha o centro do disco. */
+    .cursor-ring.com-rotulo {
+      width: 92px; height: 92px; margin: -46px 0 0 -46px;
+      background: var(--cursor-tinta); border-color: var(--cursor-tinta);
+    }
+    .cursor-ring.com-rotulo .cursor-rotulo { color: var(--bg); opacity: 1; transition-delay: 0.08s; }
+    .cursor-dot.escondido { opacity: 0; }
+
+    /* Sobre os blocos pretos da marca o cursor vira papel, nos dois temas,
+       senao ele some justamente nas pausas mais bonitas do site. */
+    .cursor-dot.sobre-escuro { background: var(--papel-fixo); }
+    .cursor-ring.sobre-escuro { border-color: rgba(232,230,225,0.4); }
+    .cursor-ring.sobre-escuro.cursor-hover {
+      background: rgba(232,230,225,0.08); border-color: rgba(232,230,225,0.62);
+    }
+    .cursor-ring.sobre-escuro.com-rotulo {
+      background: var(--papel-fixo); border-color: var(--papel-fixo);
+    }
+    .cursor-ring.sobre-escuro.com-rotulo .cursor-rotulo { color: var(--tinta-fixa); }
+
     html.custom-cursor, html.custom-cursor * { cursor: none !important; }
     @media (pointer: fine) {
-      html.custom-cursor .cursor-dot, html.custom-cursor .cursor-ring { display: block; }
+      html.custom-cursor .cursor-dot { display: block; }
+      html.custom-cursor .cursor-ring {
+        display: flex; align-items: center; justify-content: center;
+      }
     }
 
     /* FAIXA DE TEXTO (MARQUEE TIPOGRÁFICO) */
@@ -1920,7 +1965,7 @@
 
 <!-- CURSOR CUSTOMIZADO -->
 <div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-ring" id="cursorRing"><span class="cursor-rotulo" id="cursorRotulo"></span></div>
 
 <!-- NAV -->
 <nav>
@@ -3566,13 +3611,50 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
     ring.style.transform = `translate(${rx}px, ${ry}px)`;
     requestAnimationFrame(follow);
   })();
+  const rotulo = document.getElementById('cursorRotulo');
   const HOVER = 'a, button, .product-card, .decor-card, .filter-btn, input, select, textarea';
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest(HOVER)) ring.classList.add('cursor-hover');
-  }, { passive: true });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest(HOVER)) ring.classList.remove('cursor-hover');
-  }, { passive: true });
+  const BLOCOS_ESCUROS = '.manifesto, .cinema, .sobre-hero, .sobre-valores, .eventos-hero, ' +
+    '.projetos-hero, .arq-cta, .sketchup-card--highlight, .aviso-cookies, .depoimentos, footer';
+
+  const PALAVRAS = {
+    arraste: { pt: 'arraste', en: 'drag' },
+    ver:     { pt: 'ver peça', en: 'view piece' }
+  };
+
+  /* O que o cursor deve dizer no ponto onde esta. Devolve null quando
+     nao ha nada a dizer. */
+  function leituraDoAlvo(alvo) {
+    if (!alvo || !alvo.closest) return { estado: null, escuro: false };
+    const escuro = !!alvo.closest(BLOCOS_ESCUROS);
+
+    const quadro = alvo.closest('.projeto-foto, .peca-foto');
+    if (quadro && quadro.querySelector('.card-seta, .peca-seta')) {
+      return { estado: 'arraste', escuro };
+    }
+    if (alvo.closest('.product-card, .decor-card')) return { estado: 'ver', escuro };
+    if (alvo.closest(HOVER)) return { estado: 'realce', escuro };
+    return { estado: null, escuro };
+  }
+
+  let estadoAtual = 'nenhum';
+  function aplicar({ estado, escuro }) {
+    dot.classList.toggle('sobre-escuro', escuro);
+    ring.classList.toggle('sobre-escuro', escuro);
+    if (estado === estadoAtual) return;
+    estadoAtual = estado;
+
+    const temPalavra = estado === 'arraste' || estado === 'ver';
+    ring.classList.toggle('cursor-hover', estado === 'realce');
+    ring.classList.toggle('com-rotulo', temPalavra);
+    dot.classList.toggle('escondido', temPalavra);
+    const palavra = PALAVRAS[estado];
+    if (palavra) rotulo.textContent = IDIOMA === 'en' ? palavra.en : palavra.pt;
+  }
+
+  /* No mouseover olhamos para onde o ponteiro chegou; no mouseout, para
+     onde ele vai. Assim o estado nao pisca ao cruzar elementos filhos. */
+  document.addEventListener('mouseover', e => aplicar(leituraDoAlvo(e.target)), { passive: true });
+  document.addEventListener('mouseout', e => aplicar(leituraDoAlvo(e.relatedTarget)), { passive: true });
 })();
 
 /* Marquee tipográfico: duplica o conteúdo para o loop ser contínuo */
