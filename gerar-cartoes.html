@@ -1,0 +1,166 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Cartões de compartilhamento</title>
+<!--
+  Desenha o cartao 1200x630 de cada projeto e de cada peca: foto a
+  esquerda, nome e marca sobre o bege da casa. Saem em images/og/.
+
+  Precisa do servidor: node gerar-cartoes-servidor.js
+  e entao abra http://localhost:8801/gerar-cartoes.html
+
+  Rode sempre que entrar um projeto ou uma peca nova. Depois, rode
+  node gerar-compartilhamento.js para atualizar as paginas.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@400;500&display=swap">
+<style>
+  body { font-family: system-ui, sans-serif; background: #222; color: #eee; padding: 20px; }
+  canvas { width: 520px; height: 273px; display: block; margin: 10px 0; border: 1px solid #444; }
+  #log { white-space: pre-wrap; font-family: monospace; font-size: 12px; line-height: 1.6; }
+</style>
+<div id="log">lendo o site…</div>
+<div id="saida"></div>
+
+<script>
+const L = document.getElementById('log');
+const diz = t => { L.textContent += '\n' + t; };
+
+const BEGE = '#e8e6e1', TINTA = '#111110', OURO = '#6f5320', MUDO = '#5e5b57';
+
+function carregar(src) {
+  return new Promise((ok, falha) => {
+    const i = new Image();
+    i.onload = () => ok(i);
+    i.onerror = () => falha(new Error('nao carregou ' + src));
+    i.src = src;
+  });
+}
+
+/* entre as fotos disponiveis, usa a de maior area: cartao ampliado de
+   foto pequena fica mole */
+async function melhorFoto(lista) {
+  const carregadas = [];
+  for (const src of lista) {
+    try { carregadas.push(await carregar(src)); } catch (e) { /* ignora */ }
+  }
+  if (!carregadas.length) return null;
+  return carregadas.sort((a, b) => (b.naturalWidth * b.naturalHeight) - (a.naturalWidth * a.naturalHeight))[0];
+}
+
+function cobrir(ctx, img, x, y, w, h) {
+  const escala = Math.max(w / img.width, h / img.height);
+  const lw = img.width * escala, lh = img.height * escala;
+  ctx.drawImage(img, x + (w - lw) / 2, y + (h - lh) / 2, lw, lh);
+}
+
+function quebrar(ctx, texto, largura) {
+  const linhas = [];
+  let atual = '';
+  for (const p of texto.split(' ')) {
+    const teste = atual ? atual + ' ' + p : p;
+    if (ctx.measureText(teste).width > largura && atual) { linhas.push(atual); atual = p; }
+    else atual = teste;
+  }
+  if (atual) linhas.push(atual);
+  return linhas;
+}
+
+async function cartao(item, logo) {
+  const foto = await melhorFoto(item.fotos);
+  if (!foto) { diz('pulado (sem foto)  ' + item.arquivo); return; }
+
+  const c = document.createElement('canvas');
+  c.width = 1200; c.height = 630;
+  const ctx = c.getContext('2d');
+
+  ctx.fillStyle = BEGE;
+  ctx.fillRect(0, 0, 1200, 630);
+  cobrir(ctx, foto, 0, 0, 600, 630);
+
+  const M = 56, COL = 600 + M, LARG = 1200 - COL - M;
+
+  ctx.fillStyle = OURO;
+  ctx.font = '500 17px Inter, sans-serif';
+  ctx.letterSpacing = '3.6px';
+  ctx.fillText(item.sobrelinha, COL, 108);
+  ctx.letterSpacing = '0px';
+
+  ctx.fillStyle = TINTA;
+  let corpo = 54, linhas;
+  do {
+    ctx.font = '300 ' + corpo + 'px "Cormorant Garamond", Georgia, serif';
+    linhas = quebrar(ctx, item.titulo, LARG);
+    if (linhas.length <= 5) break;
+    corpo -= 4;
+  } while (corpo > 30);
+
+  let y = 182;
+  linhas.forEach(l => { ctx.fillText(l, COL, y); y += corpo * 1.08; });
+
+  ctx.strokeStyle = '#c8c5be';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(COL, 488); ctx.lineTo(COL + 86, 488); ctx.stroke();
+
+  ctx.drawImage(logo, COL, 512, 168, 168 * (logo.height / logo.width));
+
+  ctx.fillStyle = MUDO;
+  ctx.font = '400 17px Inter, sans-serif';
+  ctx.fillText('estudiomabe.com.br', COL, 588);
+
+  document.getElementById('saida').appendChild(c);
+
+  const r = await fetch('/salvar', {
+    method: 'POST',
+    body: JSON.stringify({ nome: item.arquivo, dados: c.toDataURL('image/jpeg', 0.88) })
+  });
+  diz((r.ok ? 'ok    ' : 'FALHA ') + item.arquivo + '   (foto ' + foto.naturalWidth + 'x' + foto.naturalHeight + ')');
+}
+
+/* cada item do site e um objeto simples, sem chaves aninhadas */
+function objetosDe(html, nome) {
+  /* lista vazia escrita numa linha so, como "const decors = [];": sem este
+     desvio a busca seguia ate o "];" da lista seguinte e trazia os itens dela */
+  if (new RegExp('const ' + nome + ' = \\[\\s*\\];').test(html)) return [];
+  const m = html.match(new RegExp('const ' + nome + ' = \\[([\\s\\S]*?)\\n\\];'));
+  return m ? (m[1].match(/\{[^{}]*\}/g) || []) : [];
+}
+const campo = (txt, nome) => (txt.match(new RegExp(nome + ":\\s*'([^']*)'")) || [])[1];
+const fotosDe = txt => {
+  const bloco = (txt.match(/imgs:\s*\[([^\]]*)\]/) || [])[1];
+  if (bloco) return [...bloco.matchAll(/'([^']*)'/g)].map(x => x[1]);
+  const uma = campo(txt, 'img');
+  return uma ? [uma] : [];
+};
+const semAcento = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+(async function () {
+  try {
+    await document.fonts.load('300 54px "Cormorant Garamond"');
+    await document.fonts.load('500 17px Inter');
+    await document.fonts.ready;
+
+    const html = await (await fetch('/index.html')).text();
+    const itens = [];
+
+    objetosDe(html, 'trabalhos').forEach(t => {
+      const slug = campo(t, 'slug'), titulo = campo(t, 'titulo');
+      if (slug && titulo) itens.push({ arquivo: slug + '.jpg', titulo, fotos: fotosDe(t), sobrelinha: 'PROJETO REALIZADO' });
+    });
+
+    ['products', 'decors', 'petProducts'].forEach(lista => {
+      objetosDe(html, lista).forEach(p => {
+        const nome = campo(p, 'name');
+        if (!nome) return;
+        itens.push({ arquivo: 'peca-' + semAcento(nome) + '.jpg', titulo: nome, fotos: fotosDe(p), sobrelinha: 'PEÇA DO CATÁLOGO' });
+      });
+    });
+
+    diz('cartoes a gerar: ' + itens.length);
+    const logo = await carregar('/images/logo-nav.png');
+    for (const i of itens) await cartao(i, logo);
+    diz('\nterminado.');
+  } catch (e) {
+    diz('ERRO: ' + e.message);
+  }
+})();
+</script>
