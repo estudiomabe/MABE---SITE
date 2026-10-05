@@ -28,10 +28,6 @@
       "destination": "/index.html"
     },
     {
-      "source": "/eventos",
-      "destination": "/index.html"
-    },
-    {
       "source": "/para-arquitetos",
       "destination": "/index.html"
     },

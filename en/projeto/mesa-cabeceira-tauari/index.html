@@ -2123,7 +2123,6 @@
       <a href="/linha-pet" class="nav-menu-link">Linha Pet</a>
       <a href="/sobre" class="nav-menu-link">Sobre Nós</a>
       <a href="/projetos-realizados" class="nav-menu-link link-projetos" hidden>Projetos Realizados</a>
-      <a href="/eventos" class="nav-menu-link">Eventos</a>
       <a href="/para-arquitetos" class="nav-menu-link">Para Arquitetos</a>
       <a href="/contato" class="nav-menu-link">Contato</a>
     </div>
@@ -2684,26 +2683,29 @@
   </div>
 </div>
 
+<!-- PAGINA DE EVENTOS: retirada do ar ate haver eventos confirmados e fotos.
+     Os tres eventos nunca foram confirmados, e a pagina mostrava seis caixas
+     "ADICIONAR FOTO" para quem visitava. O original, com os comentarios de
+     secao, esta em _arquivo/eventos.html.
+     Para reativar: apague esta linha e a linha "FIM DOS EVENTOS" abaixo, e
+     devolva a rota "eventos" em ROTAS e em ROTAS_EN, o link na nav, as duas
+     linhas no sitemap e a reescrita no vercel.json.
 <div id="page-eventos" class="page">
   <div class="eventos-page">
 
-    <!-- Hero -->
     <div class="eventos-hero">
       <p class="eventos-hero-label">Presença &amp; Referência</p>
       <h1 class="eventos-hero-title">Eventos</h1>
       <p class="eventos-hero-sub">Os espaços onde o design acontece e onde o Estúdio MABE esteve presente.</p>
     </div>
 
-    <!-- Intro -->
     <div class="eventos-intro">
       <p>"Acreditamos que um bom marceneiro precisa entender o mundo à sua volta. Por isso estamos onde o design se encontra, se discute e se renova."</p>
     </div>
 
-    <!-- Lista de eventos -->
     <div class="eventos-lista">
       <p class="eventos-lista-label">Participações dos co-fundadores</p>
 
-      <!-- Evento 1 -->
       <div class="evento-item">
         <div class="evento-fotos">
           <div class="evento-foto">
@@ -2743,7 +2745,6 @@
         </div>
       </div>
 
-      <!-- Evento 2 (invertido) -->
       <div class="evento-item reverse">
         <div class="evento-fotos">
           <div class="evento-foto">
@@ -2783,7 +2784,6 @@
         </div>
       </div>
 
-      <!-- Evento 3 -->
       <div class="evento-item">
         <div class="evento-fotos">
           <div class="evento-foto">
@@ -2825,6 +2825,7 @@
     </div>
   </div>
 </div>
+     FIM DOS EVENTOS -->
 
 <!--
      PAGE: CONTATO
@@ -4445,8 +4446,6 @@ const ROTAS = {
                  desc: 'A história do Estúdio MABE: dois marceneiros, madeira certificada e a convicção de que permanência é um ato de respeito.' },
   projetos:    { url: '/projetos-realizados', titulo: 'Projetos Realizados | Estúdio MABE',
                  desc: 'Projetos de marcenaria sob medida já entregues pelo Estúdio MABE, com fotos e histórico dos trabalhos realizados no Rio de Janeiro.' },
-  eventos:     { url: '/eventos',          titulo: 'Eventos e feiras | Estúdio MABE',
-                 desc: 'Onde o Estúdio MABE esteve presente: Rio Design Week, CASACOR São Paulo e fóruns de arquitetura e interiores.' },
   arquitetos:  { url: '/para-arquitetos',  titulo: 'Para Arquitetos e Designers | Estúdio MABE',
                  desc: 'Parceria com arquitetos e designers de interiores: execução sob medida, biblioteca de blocos 3D em SketchUp e suporte técnico.' },
   contato:     { url: '/contato',          titulo: 'Contato | Estúdio MABE',
@@ -4469,7 +4468,7 @@ const URL_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS).map(([id, r]) =
 const ROTAS_EN = {
   home: '/en', mobiliario: '/en/furniture', decorativos: '/en/decorative-objects',
   pet: '/en/pet-line', sobre: '/en/about', projetos: '/en/completed-projects',
-  eventos: '/en/events', arquitetos: '/en/for-architects', contato: '/en/contact',
+  arquitetos: '/en/for-architects', contato: '/en/contact',
   privacidade: '/en/privacy', comprar: '/en/how-to-order'
 };
 const URL_EN_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS_EN).map(([id, u]) => [u, id]));
