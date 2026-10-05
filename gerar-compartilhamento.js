@@ -42,8 +42,29 @@ function objetosDe(nome) {
   if (new RegExp('const ' + nome + ' = \\[\\s*\\];').test(fonte)) return [];
   const m = fonte.match(new RegExp('const ' + nome + ' = \\[([\\s\\S]*?)\\n\\];'));
   if (!m) throw new Error('nao achei a lista "' + nome + '" no index.html');
-  return m[1].match(/\{[^{}]*\}/g) || [];
+  return separarObjetos(m[1]);
 }
+
+/* Separa os objetos de primeiro nivel contando chaves. Um item pode ter
+   outro objeto dentro, como a ficha tecnica de um projeto, e por isso nao
+   da para separar so por expressao regular. Texto entre aspas e ignorado,
+   para uma chave escrita numa descricao nao atrapalhar a contagem. */
+function separarObjetos(texto) {
+  const saida = [];
+  let profundidade = 0, inicio = -1, aspas = null;
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+    if (aspas) { if (c === aspas && texto[i - 1] !== '\\') aspas = null; continue; }
+    if (c === "'" || c === '"' || c === '`') { aspas = c; continue; }
+    if (c === '{') { if (profundidade === 0) inicio = i; profundidade++; }
+    else if (c === '}') {
+      profundidade--;
+      if (profundidade === 0 && inicio >= 0) { saida.push(texto.slice(inicio, i + 1)); inicio = -1; }
+    }
+  }
+  return saida;
+}
+
 
 const campo = (txt, nome) => (txt.match(new RegExp(nome + ":\\s*'([^']*)'")) || [])[1];
 const numero = (txt, nome) => {

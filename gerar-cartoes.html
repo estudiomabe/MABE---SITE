@@ -38,8 +38,10 @@ function carregar(src) {
 /* entre as fotos disponiveis, usa a de maior area: cartao ampliado de
    foto pequena fica mole */
 async function melhorFoto(lista) {
+  /* desenho tecnico nunca vira cartao: o cartao e a cara da peca */
+  const fotos = lista.filter(src => !/.svg$/i.test(src));
   const carregadas = [];
-  for (const src of lista) {
+  for (const src of (fotos.length ? fotos : lista)) {
     try { carregadas.push(await carregar(src)); } catch (e) { /* ignora */ }
   }
   if (!carregadas.length) return null;
@@ -121,8 +123,29 @@ function objetosDe(html, nome) {
      desvio a busca seguia ate o "];" da lista seguinte e trazia os itens dela */
   if (new RegExp('const ' + nome + ' = \\[\\s*\\];').test(html)) return [];
   const m = html.match(new RegExp('const ' + nome + ' = \\[([\\s\\S]*?)\\n\\];'));
-  return m ? (m[1].match(/\{[^{}]*\}/g) || []) : [];
+  return m ? separarObjetos(m[1]) : [];
 }
+
+/* Separa os objetos de primeiro nivel contando chaves. Um item pode ter
+   outro objeto dentro, como a ficha tecnica de um projeto, e por isso nao
+   da para separar so por expressao regular. Texto entre aspas e ignorado,
+   para uma chave escrita numa descricao nao atrapalhar a contagem. */
+function separarObjetos(texto) {
+  const saida = [];
+  let profundidade = 0, inicio = -1, aspas = null;
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+    if (aspas) { if (c === aspas && texto[i - 1] !== '\\') aspas = null; continue; }
+    if (c === "'" || c === '"' || c === '`') { aspas = c; continue; }
+    if (c === '{') { if (profundidade === 0) inicio = i; profundidade++; }
+    else if (c === '}') {
+      profundidade--;
+      if (profundidade === 0 && inicio >= 0) { saida.push(texto.slice(inicio, i + 1)); inicio = -1; }
+    }
+  }
+  return saida;
+}
+
 const campo = (txt, nome) => (txt.match(new RegExp(nome + ":\\s*'([^']*)'")) || [])[1];
 const fotosDe = txt => {
   const bloco = (txt.match(/imgs:\s*\[([^\]]*)\]/) || [])[1];
