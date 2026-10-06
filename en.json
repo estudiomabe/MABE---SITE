@@ -4,7 +4,7 @@
   "home": {
    "url": "/en",
    "titulo": "Estúdio MABE | Solid Wood Furniture in Rio de Janeiro",
-   "desc": "Bespoke furniture and decorative objects made with certified wood, handcraft techniques and authorial design. Rio de Janeiro, Brazil."
+   "desc": "Solid wood furniture made to order, in Rio de Janeiro. Each Estúdio MABE piece is made only once, for a specific project."
   },
   "mobiliario": {
    "url": "/en/furniture",
@@ -23,13 +23,13 @@
   },
   "sobre": {
    "url": "/en/about",
-   "titulo": "About Estúdio MABE | Authorial joinery in Rio de Janeiro",
+   "titulo": "About Estúdio MABE | Solid wood furniture in Rio de Janeiro",
    "desc": "The story of Estúdio MABE: two woodworkers, certified wood and the conviction that permanence is an act of respect."
   },
   "projetos": {
    "url": "/en/completed-projects",
    "titulo": "Completed Projects | Estúdio MABE",
-   "desc": "Bespoke joinery projects delivered by Estúdio MABE, with photographs and the story behind each piece made in Rio de Janeiro."
+   "desc": "Solid wood furniture projects delivered by Estúdio MABE, with photographs and the story behind each piece made in Rio de Janeiro."
   },
   "arquitetos": {
    "url": "/en/for-architects",
@@ -108,7 +108,6 @@
   "Fale com o estúdio": "Talk to the studio",
   "Rio de Janeiro, RJ": "Rio de Janeiro, Brazil",
   "Seg–Sex, 9h às 18h": "Mon to Fri, 9am to 6pm",
-  "© 2026 Estúdio MABE · Design Autoral Brasileiro · Marcenaria especializada em madeira maciça": "© 2026 Estúdio MABE · Brazilian Authorial Design · Solid wood joinery",
   "CNPJ: 63.307.833/0001-10 · Rio de Janeiro, RJ": "Company ID (CNPJ): 63.307.833/0001-10 · Rio de Janeiro, Brazil",
   "Como comprar": "How to order",
   "Política de Privacidade": "Privacy Policy",
@@ -324,6 +323,7 @@
   "De 20 a 45 dias úteis, conforme o projeto, contados a partir da aprovação e da confirmação do sinal. Peças mais simples saem na ponta curta do prazo; medidas sob encomenda e madeiras especiais ficam na ponta longa, e o prazo exato é combinado antes do início. Você recebe fotos do andamento pelo WhatsApp durante a produção.": "From 20 to 45 working days, depending on the project, counted from the approval and the confirmation of the deposit. Simpler pieces come out at the short end of that range; bespoke sizes and special woods sit at the long end, and the exact lead time is agreed before the order. You receive photos of the work in progress on WhatsApp.",
   "Cidade do Rio com montagem incluída; Grande Rio com custo adicional": "City of Rio with assembly included; Greater Rio at extra cost",
   "Entregamos e montamos na cidade do Rio de Janeiro sem custo adicional. Na Grande Rio e nas demais regiões, a entrega tem custo à parte, orçado junto com a proposta para você saber o valor antes de fechar. A data de entrega é agendada com você, e a peça sai do estúdio protegida para o transporte.": "We deliver and assemble in the city of Rio de Janeiro at no extra cost. In Greater Rio and other regions, delivery is charged separately and quoted with the proposal, so you know the amount before closing. The delivery date is agreed with you, and the piece leaves the studio protected for transport.",
-  "Co-fundador · Artífice · Manager": "Co-founder · Craftsman · Manager"
+  "Co-fundador · Artífice · Manager": "Co-founder · Craftsman · Manager",
+  "© 2026 Estúdio MABE · Mobiliário em madeira maciça, sob encomenda": "© 2026 Estúdio MABE · Solid wood furniture, made to order"
  }
 }

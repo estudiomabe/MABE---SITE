@@ -60,7 +60,7 @@
         "@type": ["LocalBusiness", "FurnitureStore"],
         "@id": "https://www.estudiomabe.com.br/#negocio",
         "name": "Estúdio MABE",
-        "description": "Marcenaria autoral que cria móveis, itens decorativos e linha pet sob encomenda em madeira maciça certificada, com técnicas artesanais e design autoral.",
+        "description": "Estúdio de mobiliário em madeira maciça sob encomenda, no Rio de Janeiro. Itens decorativos e linha pet, com técnicas artesanais e design autoral.",
         "url": "https://www.estudiomabe.com.br/",
         "logo": "https://www.estudiomabe.com.br/icon-512.png",
         "image": "https://www.estudiomabe.com.br/images/og/home.jpg",
@@ -2421,7 +2421,7 @@
     </div>
     <p class="footer-big" aria-hidden="true">estúdio mabe.</p>
     <div class="footer-bottom">
-      <p>© 2026 Estúdio MABE · Design Autoral Brasileiro · Marcenaria especializada em madeira maciça</p>
+      <p>© 2026 Estúdio MABE · Mobiliário em madeira maciça, sob encomenda</p>
       <p>CNPJ: 63.307.833/0001-10 · Rio de Janeiro, RJ</p>
       <p><a href="/como-comprar" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Como comprar</a> · <a href="/privacidade" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Política de Privacidade</a></p>
     </div>
@@ -3434,7 +3434,7 @@ function abrirProjeto(slug, semHistorico) {
   if (desc) {
     desc.setAttribute('content', (servicoEn || p.servico) + (IDIOMA === 'en'
       ? '. A completed project by Estúdio MABE, authorial cabinetmaking in Rio de Janeiro.'
-      : '. Projeto realizado pelo Estúdio MABE, marcenaria autoral no Rio de Janeiro.'));
+      : '. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro.'));
   }
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
@@ -4449,17 +4449,17 @@ function abrirPeca(slug, semHistorico) {
    Depende do rewrite em vercel.json, que serve index.html em qualquer rota. */
 const ROTAS = {
   home:        { url: '/',                 titulo: 'Estúdio MABE | Móveis em Madeira Maciça no Rio de Janeiro',
-                 desc: 'Móveis e itens decorativos sob medida criados com madeira certificada, técnicas artesanais e design autoral. Rio de Janeiro.' },
+                 desc: 'Mobiliário em madeira maciça sob encomenda, no Rio de Janeiro. Cada peça do Estúdio MABE é feita uma única vez, para um projeto específico.' },
   mobiliario:  { url: '/mobiliario',       titulo: 'Mobiliário sob encomenda | Estúdio MABE',
                  desc: 'Móveis em madeira maciça feitos à mão sob encomenda: mesas de cabeceira, racks, mesas e peças para sala, quarto, escritório e cozinha. Rio de Janeiro.' },
   decorativos: { url: '/itens-decorativos', titulo: 'Itens Decorativos em madeira maciça | Estúdio MABE',
                  desc: 'Vasos, bandejas, luminárias e objetos decorativos torneados à mão em madeira maciça certificada. Peças autorais do Estúdio MABE.' },
   pet:         { url: '/linha-pet',        titulo: 'Linha Pet: móveis de madeira para cães e gatos | Estúdio MABE',
                  desc: 'Camas, casinhas, comedouros e arranhadores em madeira maciça, com o mesmo acabamento do restante da casa. Estúdio MABE, Rio de Janeiro.' },
-  sobre:       { url: '/sobre',            titulo: 'Sobre o Estúdio MABE | Marcenaria autoral no Rio de Janeiro',
+  sobre:       { url: '/sobre',            titulo: 'Sobre o Estúdio MABE | Mobiliário em madeira maciça no Rio de Janeiro',
                  desc: 'A história do Estúdio MABE: dois marceneiros, madeira certificada e a convicção de que permanência é um ato de respeito.' },
   projetos:    { url: '/projetos-realizados', titulo: 'Projetos Realizados | Estúdio MABE',
-                 desc: 'Projetos de marcenaria sob medida já entregues pelo Estúdio MABE, com fotos e histórico dos trabalhos realizados no Rio de Janeiro.' },
+                 desc: 'Projetos de mobiliário em madeira maciça já entregues pelo Estúdio MABE, com fotos e histórico dos trabalhos realizados no Rio de Janeiro.' },
   arquitetos:  { url: '/para-arquitetos',  titulo: 'Para Arquitetos e Designers | Estúdio MABE',
                  desc: 'Parceria com arquitetos e designers de interiores: execução sob medida, biblioteca de blocos 3D em SketchUp e suporte técnico.' },
   contato:     { url: '/contato',          titulo: 'Contato | Estúdio MABE',
