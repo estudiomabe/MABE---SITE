@@ -93,8 +93,8 @@ function paginasDosProjetos() {
         titulo: nome + ' | Estúdio MABE',
         tituloSocial: nome,
         descricao: linha + (ehEn
-          ? '. A completed project by Estúdio MABE, authorial cabinetmaking in Rio de Janeiro.'
-          : '. Projeto realizado pelo Estúdio MABE, marcenaria autoral no Rio de Janeiro.'),
+          ? '. A completed project by Estúdio MABE, solid wood furniture in Rio de Janeiro.'
+          : '. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro.'),
         imagem: SITE + '/images/og/' + slug + '.jpg',
         tipo: 'article',
         locale: ehEn ? 'en_US' : 'pt_BR',
