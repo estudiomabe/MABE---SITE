@@ -506,6 +506,7 @@
     }
     .hero-marquee:hover .hero-marquee-track { animation-play-state: paused; }
     .hero-marquee-item {
+      display: block; text-decoration: none; color: inherit;
       position: relative; flex: 0 0 auto;
       width: 360px; height: 100%;
       border-right: 1px solid var(--border);
@@ -525,6 +526,9 @@
     .hero-marquee-caption span {
       font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 500;
       letter-spacing: 0.1em; text-transform: uppercase; color: #f5f3ee;
+      /* titulo de projeto e longo: tres linhas bastam e o resto vira reticencia */
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden; line-height: 1.35;
     }
     @keyframes heroMarqueeScroll {
       from { transform: translateX(0); }
@@ -3643,8 +3647,12 @@ let cart = [], activeFilter = 'todos';   /* restaurada no fim do arquivo, quando
 function renderHeroMarquee() {
   const track = document.getElementById('heroMarqueeTrack');
   if (!track) return;
-  const withPhoto = products.filter(p => fotosDe(p).length);
-  if (withPhoto.length === 0) {
+  /* Projetos realizados, do mais recente para o mais antigo, cada um com
+     a sua foto de capa. Desenho tecnico fica de fora: a faixa e vitrine. */
+  const comFoto = projetosPorData()
+    .map(t => ({ slug: t.slug, titulo: t.titulo, capa: fotosDe(t).find(f => !/\.svg$/i.test(f)) }))
+    .filter(t => t.capa);
+  if (comFoto.length === 0) {
     track.parentElement.innerHTML = `
       <div class="hero-img-placeholder">
         <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
@@ -3657,12 +3665,16 @@ function renderHeroMarquee() {
     return;
   }
   /* Duplica a sequência para o loop ficar contínuo (translateX -50%) */
-  const loopItems = [...withPhoto, ...withPhoto];
-  track.innerHTML = loopItems.map(p => `
-    <div class="hero-marquee-item">
-      <img src="${fotosDe(p)[0]}" alt="${p.name}" loading="lazy">
-      <div class="hero-marquee-caption"><span>${p.name}</span></div>
-    </div>`).join('');
+  const loopItems = [...comFoto, ...comFoto];
+  track.innerHTML = loopItems.map(t => `
+    <a class="hero-marquee-item" href="${urlDoProjeto(t.slug)}">
+      <img src="${t.capa}" alt="${t.titulo}" loading="lazy">
+      <div class="hero-marquee-caption"><span>${t.titulo}</span></div>
+    </a>`).join('');
+
+  /* Mantem a velocidade constante independente de quantos projetos
+     existem: cada quadro leva o mesmo tempo para atravessar a tela. */
+  track.style.animationDuration = (comFoto.length * 15.3).toFixed(1) + 's';
 }
 
 /* Esconde os filtros de ambientes que ainda nao tem nenhuma peca,
@@ -4019,7 +4031,8 @@ function marcaVoaParaNav(pre) {
 
   const PALAVRAS = {
     arraste: { pt: 'arraste', en: 'drag' },
-    ver:     { pt: 'ver peça', en: 'view piece' }
+    ver:     { pt: 'ver peça', en: 'view piece' },
+    projeto: { pt: 'ver projeto', en: 'view project' }
   };
 
   /* O que o cursor deve dizer no ponto onde esta. Devolve null quando
@@ -4032,6 +4045,7 @@ function marcaVoaParaNav(pre) {
     if (quadro && quadro.querySelector('.card-seta, .peca-seta')) {
       return { estado: 'arraste', escuro };
     }
+    if (alvo.closest('.hero-marquee-item')) return { estado: 'projeto', escuro };
     if (alvo.closest('.projetos-home-lista')) return { estado: 'arraste', escuro };
     if (alvo.closest('.product-card, .decor-card')) return { estado: 'ver', escuro };
     if (alvo.closest(HOVER)) return { estado: 'realce', escuro };
@@ -4045,7 +4059,7 @@ function marcaVoaParaNav(pre) {
     if (estado === estadoAtual) return;
     estadoAtual = estado;
 
-    const temPalavra = estado === 'arraste' || estado === 'ver';
+    const temPalavra = estado === 'arraste' || estado === 'ver' || estado === 'projeto';
     ring.classList.toggle('cursor-hover', estado === 'realce');
     ring.classList.toggle('com-rotulo', temPalavra);
     dot.classList.toggle('escondido', temPalavra);
