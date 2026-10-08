@@ -138,6 +138,11 @@ function paginasDasSecoes() {
     const textoEn = rotasEn[id];
     if (!textoEn) throw new Error('a rota "' + id + '" nao esta no en.json');
 
+    /* Itens Decorativos sem nenhuma peca nao pede indexacao, nem no HTML
+       cru: 51 palavras e um aviso de "em breve" nao sustentam um endereco
+       no indice. Sai do dado, entao volta sozinha quando a lista encher. */
+    const vazia = id === 'decorativos' && objetosDe('decors').length === 0;
+
     /* a home em portugues ja e o index.html; as demais ganham pasta propria */
     if (r.url !== '/') saida.push({
       pasta: r.url.replace(/^\//, ''),
@@ -149,7 +154,8 @@ function paginasDasSecoes() {
       tipo: 'website',
       locale: 'pt_BR',
       altPt: SITE + r.url,
-      altEn: SITE + parEn
+      altEn: SITE + parEn,
+      semIndexacao: vazia
     });
 
     saida.push({
@@ -162,7 +168,8 @@ function paginasDasSecoes() {
       tipo: 'website',
       locale: 'en_US',
       altPt: SITE + r.url,
-      altEn: SITE + parEn
+      altEn: SITE + parEn,
+      semIndexacao: vazia
     });
   }
   return saida;

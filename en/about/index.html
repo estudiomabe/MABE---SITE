@@ -3720,6 +3720,8 @@ function renderProducts() {
 
 function renderDecors() {
   const grade = document.getElementById('decorGrid');
+  /* o resto do codigo nao alcanca "decors": este sinalizador e a ponte */
+  window.MABE_TEM_DECORATIVOS = decors.length > 0;
   if (!decors.length) {
     grade.innerHTML = `
       <div class="projetos-vazio">
@@ -4767,7 +4769,10 @@ function atualizarMeta(id) {
   if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
   sincronizarIdiomas(ROTAS[id] ? ROTAS[id].url : '/', ROTAS_EN[id] || '/en');
   trilhaDaPagina(id);
-  marcarIndexacao(true);
+  /* pagina sem nenhuma peca nao pede indexacao: 51 palavras e um aviso de
+     "em breve" nao sustentam um endereco no indice, e pagina magra pesa
+     contra o dominio inteiro. Volta sozinha quando a primeira peca entrar. */
+  marcarIndexacao(!(id === 'decorativos' && window.MABE_TEM_DECORATIVOS === false));
 }
 
 /* Executa a troca de pagina dentro de uma transicao, quando o navegador
