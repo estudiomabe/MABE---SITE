@@ -78,6 +78,35 @@ const en = (texto) => dicionario[texto] || texto;
 
 /* ------------------------------------------------ as paginas a escrever */
 
+/* A pagina de erro, em 404.html na raiz.
+
+   A Vercel serve este arquivo com status 404 de verdade para todo endereco
+   que nao casa com nada. Antes, a reescrita curinga mandava qualquer
+   endereco para o index.html, entao /pagina-inventada devolvia 200 com a
+   tela de erro: para o buscador, um soft 404, que convida a indexar lixo.
+
+   Para isto funcionar as reescritas curinga saem do vercel.json. Quem
+   garante as rotas de verdade sao os arquivos estaticos deste gerador, e
+   e por isso que rodar "--verificar" antes de publicar deixou de ser
+   higiene e passou a ser obrigatorio. */
+
+function paginaDeErro() {
+  return {
+    pasta: '',
+    arquivo: '404.html',
+    url: SITE + '/404',
+    titulo: 'Página não encontrada | Estúdio MABE',
+    tituloSocial: 'Página não encontrada | Estúdio MABE',
+    descricao: 'O endereço que você procurou não existe mais ou foi digitado com algum engano. O mobiliário e os projetos continuam no site.',
+    imagem: SITE + '/images/og/home.jpg',
+    tipo: 'website',
+    locale: 'pt_BR',
+    altPt: SITE + '/',
+    altEn: SITE + '/en',
+    semIndexacao: true
+  };
+}
+
 /* As paginas de secao: Mobiliario, Sobre, Contato e as outras.
 
    Elas nunca entraram neste gerador, entao quem nao executa JavaScript
@@ -237,16 +266,43 @@ function montarPagina(p) {
   h = h.replace(/(<link rel="alternate" hreflang="pt-BR" id="altPt" href=")[^"]*(")/, '$1' + p.altPt + '$2');
   h = h.replace(/(<link rel="alternate" hreflang="en" id="altEn" href=")[^"]*(")/, '$1' + p.altEn + '$2');
 
+  /* portugues e a versao padrao para quem nao casa com nenhum idioma. Antes
+     isto estava preso na home, e dizia ao buscador que a versao padrao de
+     qualquer pagina do site era a inicial. */
+  /* o teste e se a etiqueta existe, nao se o texto mudou: na pagina /en o
+     valor novo e igual ao que ja estava la, e comparar strings acusava
+     falha onde nao havia */
+  const reDefault = /(<link rel="alternate" hreflang="x-default" id="altDefault" href=")[^"]*(")/;
+  if (!reDefault.test(h)) throw new Error('nao achei o x-default com id="altDefault"');
+  h = h.replace(reDefault, '$1' + p.altPt + '$2');
+
+  /* o seletor de idioma e um link de verdade: aponta para a outra lingua
+     desta pagina, para o robo ter o que seguir sem executar JavaScript */
+  const reSeletor = /(<a class="nav-idioma" href=")[^"]*(")/;
+  if (!reSeletor.test(h)) throw new Error('nao achei o seletor de idioma');
+  /* relativo, pelo mesmo motivo do index.html: um preview nao deve pular
+     para o dominio de producao ao trocar de idioma */
+  const outro = (p.locale === 'en_US' ? p.altPt : p.altEn).replace(SITE, '');
+  h = h.replace(reSeletor, '$1' + outro + '$2');
+
+  /* a pagina de erro nao pode convidar o buscador a indexar; o JavaScript
+     tambem faz isso ao abrir, mas o robo que nao executa precisa ler no HTML */
+  if (p.semIndexacao) {
+    const reRobots = /(<meta name="robots" id="metaRobots" content=")[^"]*(")/;
+    if (!reRobots.test(h)) throw new Error('nao achei a etiqueta robots');
+    h = h.replace(reRobots, '$1noindex, follow$2');
+  }
+
   return h.replace('<head>', '<head>\n  <!-- Gerado por gerar-compartilhamento.js. Nao edite a mao: rode o script. -->');
 }
 
 /* --------------------------------------------------------------- escreve */
 
-const paginas = [...paginasDasSecoes(), ...paginasDosProjetos(), ...paginasDasPecas()];
+const paginas = [paginaDeErro(), ...paginasDasSecoes(), ...paginasDosProjetos(), ...paginasDasPecas()];
 let escritos = 0, desatualizados = 0;
 
 for (const p of paginas) {
-  const destino = path.join(RAIZ, p.pasta, 'index.html');
+  const destino = path.join(RAIZ, p.pasta, p.arquivo || 'index.html');
   const conteudo = montarPagina(p);
   const atual = fs.existsSync(destino) ? fs.readFileSync(destino, 'utf8') : null;
   if (atual === conteudo) continue;
@@ -254,7 +310,7 @@ for (const p of paginas) {
   const relativo = path.relative(RAIZ, destino).replace(/\\/g, '/');
   if (SO_VERIFICAR) { desatualizados++; console.log('  desatualizado  ' + relativo); continue; }
 
-  fs.mkdirSync(path.join(RAIZ, p.pasta), { recursive: true });
+  if (p.pasta) fs.mkdirSync(path.join(RAIZ, p.pasta), { recursive: true });
   fs.writeFileSync(destino, conteudo);
   escritos++;
   console.log('  escrito  ' + relativo);

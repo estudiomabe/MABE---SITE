@@ -130,7 +130,7 @@
   <link rel="canonical" href="https://www.estudiomabe.com.br/en/about" />
   <link rel="alternate" hreflang="pt-BR" id="altPt" href="https://www.estudiomabe.com.br/sobre" />
   <link rel="alternate" hreflang="en" id="altEn" href="https://www.estudiomabe.com.br/en/about" />
-  <link rel="alternate" hreflang="x-default" href="https://www.estudiomabe.com.br/" />
+  <link rel="alternate" hreflang="x-default" id="altDefault" href="https://www.estudiomabe.com.br/sobre" />
 
   <!-- Open Graph: preview ao compartilhar (WhatsApp, Instagram, Facebook, LinkedIn) -->
   <meta property="og:type" content="website" />
@@ -300,6 +300,7 @@
     .nav-cart-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
     .nav-idioma {
       background: none; border: none; cursor: pointer; padding: 0.5rem 0.4rem;
+      text-decoration: none;
       font-family: 'Inter', sans-serif; font-size: 0.62rem; font-weight: 500;
       letter-spacing: 0.14em; color: var(--muted); white-space: nowrap;
       display: flex; align-items: center; min-height: 44px;
@@ -2137,7 +2138,7 @@
           <path class="tema-lua" d="M20.1 13.6A8.3 8.3 0 0 1 10.4 3.9a8.5 8.5 0 1 0 9.7 9.7Z"/>
         </svg>
       </button>
-      <button class="nav-idioma" onclick="alternarIdioma()" id="btnIdioma" aria-label="Mudar idioma">PT | <span>EN</span></button>
+      <a class="nav-idioma" href="/sobre" id="btnIdioma" aria-label="Mudar idioma">PT | <span>EN</span></a>
       <button class="nav-cart-btn" onclick="toggleCart()">
         <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 3.5h2.2l2.4 10.6a1.6 1.6 0 0 0 1.6 1.2h8.1a1.6 1.6 0 0 0 1.6-1.2l1.6-7.1H5.6"/><circle cx="9.8" cy="19.8" r="1.2"/><circle cx="17.2" cy="19.8" r="1.2"/></svg>
         <span class="cart-label">Carrinho</span>
@@ -3443,6 +3444,7 @@ function abrirProjeto(slug, semHistorico) {
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
   marcarIndexacao(true);
+  sincronizarIdiomas('/projeto/' + slug, '/en/projeto/' + slug);
   escreverDadosEstruturados(null);
 
   if (!semHistorico && location.pathname !== url) history.pushState({ projeto: slug }, '', url);
@@ -4450,6 +4452,7 @@ function abrirPeca(slug, semHistorico) {
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
   marcarIndexacao(true);
+  sincronizarIdiomas('/peca/' + slug, '/en/peca/' + slug);
   dadosDaPeca(p, url);
 
   if (!semHistorico && location.pathname !== url) history.pushState({ peca: slug }, '', url);
@@ -4665,22 +4668,10 @@ function marcarIdiomaNoBotao() {
 }
 
 /* Botao de idioma: leva a mesma pagina no outro idioma */
-function alternarIdioma() {
-  const paraIngles = IDIOMA !== 'en';
-
-  /* Peca e projeto usam o mesmo slug nos dois idiomas: so o prefixo /en
-     muda. Sem este desvio, quem estava lendo uma peca voltava para a home
-     e perdia o lugar, embora o endereco certo ja estivesse declarado no
-     hreflang da propria pagina. */
-  const item = location.pathname.match(/^(?:\/en)?\/(peca|projeto)\/([a-z0-9-]+)\/?$/);
-  if (item) {
-    location.href = (paraIngles ? '/en' : '') + '/' + item[1] + '/' + item[2];
-    return;
-  }
-
-  const id = paginaPorUrl(location.pathname) || 'home';
-  location.href = paraIngles ? (ROTAS_EN[id] || '/en') : (ROTAS[id] ? ROTAS[id].url : '/');
-}
+/* O seletor de idioma deixou de precisar de JavaScript para navegar: o
+   proprio <a href> leva ao endereco certo, mantido por sincronizarIdiomas.
+   Com isso o Google passa a ter um link para seguir ate a versao em
+   ingles, que antes nao existia em lugar nenhum do site. */
 
 
 /*
@@ -4774,10 +4765,7 @@ function atualizarMeta(id) {
   if (desc) desc.setAttribute('content', (ingles && ingles.desc) || rota.desc);
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute('href', 'https://www.estudiomabe.com.br' + url);
-  const alt_pt = document.getElementById('altPt');
-  const alt_en = document.getElementById('altEn');
-  if (alt_pt) alt_pt.setAttribute('href', 'https://www.estudiomabe.com.br' + (ROTAS[id] ? ROTAS[id].url : '/'));
-  if (alt_en) alt_en.setAttribute('href', 'https://www.estudiomabe.com.br' + (ROTAS_EN[id] || '/en'));
+  sincronizarIdiomas(ROTAS[id] ? ROTAS[id].url : '/', ROTAS_EN[id] || '/en');
   trilhaDaPagina(id);
   marcarIndexacao(true);
 }
@@ -4843,6 +4831,24 @@ showPage = function(id, semHistorico) {
    O servidor entrega o index.html em qualquer endereco, entao quem
    digita errado precisa cair numa pagina da marca em vez de sumir.
    O noindex evita que o Google trate esses enderecos como conteudo. */
+/* Guarda os tres hreflang e o link do seletor alinhados com a pagina
+   aberta. Antes, o x-default ficava preso na home e o seletor era um
+   botao sem endereco, entao nem o buscador nem o visitante tinham como
+   saber onde estava a outra versao desta pagina. */
+function sincronizarIdiomas(urlPt, urlEn) {
+  const S = 'https://www.estudiomabe.com.br';
+  const por = (id, u) => { const e = document.getElementById(id); if (e) e.setAttribute('href', S + u); };
+  por('altPt', urlPt);
+  por('altEn', urlEn);
+  /* portugues e a versao padrao para quem nao casa com nenhum idioma */
+  por('altDefault', urlPt);
+  /* O seletor leva para a outra lingua, nao para a home. Aqui o endereco
+     fica relativo de proposito: absoluto, ele pularia de um preview ou do
+     servidor local direto para o dominio de producao. */
+  const seletor = document.getElementById('btnIdioma');
+  if (seletor) seletor.setAttribute('href', IDIOMA === 'en' ? urlPt : urlEn);
+}
+
 function marcarIndexacao(permitir) {
   const meta = document.getElementById('metaRobots');
   if (meta) meta.setAttribute('content', permitir ? 'index, follow' : 'noindex, follow');
@@ -4914,6 +4920,12 @@ document.addEventListener('click', function (e) {
   const alvo = e.target.closest ? e.target.closest('a[href^="/"], [data-rota]') : null;
   if (!alvo) return;
   if (alvo.tagName === 'A' && (alvo.target === '_blank' || alvo.hasAttribute('download'))) return;
+
+  /* O seletor de idioma e um <a href> de verdade, para o robo ter um link
+     a seguir, mas trocar de idioma exige recarregar a pagina. Sem esta
+     saida o interceptor casava com /en/peca/<slug> e reabria a peca no
+     idioma atual: o clique nao fazia nada. */
+  if (alvo.id === 'btnIdioma') return;
 
   const destino = alvo.getAttribute('href') || alvo.getAttribute('data-rota');
   const peca = destino.match(/^(?:\/en)?\/peca\/([a-z0-9-]+)\/?$/);

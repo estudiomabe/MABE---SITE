@@ -44,23 +44,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/peca/:slug",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/projeto/:slug",
-      "destination": "/index.html"
-    },
-    {
       "source": "/en",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/:caminho*",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/:caminho*",
       "destination": "/index.html"
     }
   ]
