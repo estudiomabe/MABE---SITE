@@ -78,6 +78,67 @@ const en = (texto) => dicionario[texto] || texto;
 
 /* ------------------------------------------------ as paginas a escrever */
 
+/* As paginas de secao: Mobiliario, Sobre, Contato e as outras.
+
+   Elas nunca entraram neste gerador, entao quem nao executa JavaScript
+   recebia nas 19 o titulo, a descricao e o canonical da home. Canonical
+   e instrucao, nao dica: dizia ao buscador que todas eram copia da
+   inicial. E o og:title, que o JavaScript nunca corrige, fazia qualquer
+   uma delas chegar no WhatsApp com a previa da home.
+
+   A home em portugues fica de fora: ela e o proprio index.html. */
+
+function paginasDasSecoes() {
+  const bloco = fonte.slice(fonte.indexOf('const ROTAS = {'), fonte.indexOf('const ROTAS_EN'));
+  const pt = {};
+  for (const m of bloco.matchAll(/(\w+):\s*\{\s*url:\s*'([^']+)',\s*titulo:\s*'([^']*)',\s*\n?\s*desc:\s*'([^']*)'/g))
+    pt[m[1]] = { url: m[2], titulo: m[3], desc: m[4] };
+
+  const blocoEn = fonte.slice(fonte.indexOf('const ROTAS_EN'), fonte.indexOf('};', fonte.indexOf('const ROTAS_EN')));
+  const urlEn = {};
+  for (const m of blocoEn.matchAll(/(\w+):\s*'([^']+)'/g)) urlEn[m[1]] = m[2];
+
+  const rotasEn = JSON.parse(fs.readFileSync(path.join(RAIZ, 'en.json'), 'utf8')).rotas || {};
+
+  if (!Object.keys(pt).length) throw new Error('nao li a tabela ROTAS do index.html');
+
+  const saida = [];
+  for (const [id, r] of Object.entries(pt)) {
+    const parEn = urlEn[id];
+    if (!parEn) throw new Error('a rota "' + id + '" nao tem equivalente em ingles');
+    const textoEn = rotasEn[id];
+    if (!textoEn) throw new Error('a rota "' + id + '" nao esta no en.json');
+
+    /* a home em portugues ja e o index.html; as demais ganham pasta propria */
+    if (r.url !== '/') saida.push({
+      pasta: r.url.replace(/^\//, ''),
+      url: SITE + r.url,
+      titulo: r.titulo,
+      tituloSocial: r.titulo,
+      descricao: r.desc,
+      imagem: SITE + '/images/og/home.jpg',
+      tipo: 'website',
+      locale: 'pt_BR',
+      altPt: SITE + r.url,
+      altEn: SITE + parEn
+    });
+
+    saida.push({
+      pasta: parEn.replace(/^\//, ''),
+      url: SITE + parEn,
+      titulo: textoEn.titulo,
+      tituloSocial: textoEn.titulo,
+      descricao: textoEn.desc,
+      imagem: SITE + '/images/og/home.jpg',
+      tipo: 'website',
+      locale: 'en_US',
+      altPt: SITE + r.url,
+      altEn: SITE + parEn
+    });
+  }
+  return saida;
+}
+
 function paginasDosProjetos() {
   const saida = [];
   for (const t of objetosDe('trabalhos')) {
@@ -181,7 +242,7 @@ function montarPagina(p) {
 
 /* --------------------------------------------------------------- escreve */
 
-const paginas = [...paginasDosProjetos(), ...paginasDasPecas()];
+const paginas = [...paginasDasSecoes(), ...paginasDosProjetos(), ...paginasDasPecas()];
 let escritos = 0, desatualizados = 0;
 
 for (const p of paginas) {

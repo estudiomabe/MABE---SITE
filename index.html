@@ -2925,8 +2925,12 @@
           <p class="form-note">Sem compromisso. Apenas uma boa conversa sobre o seu espaço.</p>
         </div>
         <div class="form-success" id="formSuccess">
-          Recebemos sua mensagem.<br><br>
-          Em até 24 horas, Mateus ou Bernardo entram em contato para conversarmos sobre o seu projeto.
+          Abrimos o WhatsApp com os seus dados.<br><br>
+          A conversa chega até nós quando você tocar em enviar. A partir daí, Mateus ou Bernardo respondem em até 24 horas.
+        </div>
+        <div class="form-success" id="formBloqueado">
+          Seu navegador bloqueou a janela do WhatsApp.<br><br>
+          <a id="linkWhats" href="#" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Toque aqui para abrir a conversa com os seus dados já preenchidos.</a>
         </div>
       </div>
     </div>
@@ -3922,9 +3926,17 @@ function submitQuote() {
   }
   const wa = `Olá! Me chamo ${name}.%0ATelefone: ${phone}%0AE-mail: ${email}%0AAmbiente: ${type}%0A%0A${msg||'Gostaria de iniciar um projeto.'}`;
   mabeLead('formulario', { item_name: type });
-  window.open(`https://wa.me/5521990291331?text=${wa}`,'_blank');
-  document.getElementById('quoteForm').style.display='none';
-  document.getElementById('formSuccess').style.display='block';
+  /* window.open devolve null quando o navegador bloqueia a janela. Sem
+     esta checagem o site anunciava sucesso para um lead que nunca saiu. */
+  const endereco = `https://wa.me/5521990291331?text=${wa}`;
+  const janela = window.open(endereco, '_blank');
+  document.getElementById('quoteForm').style.display = 'none';
+  if (janela) {
+    document.getElementById('formSuccess').style.display = 'block';
+  } else {
+    document.getElementById('linkWhats').href = endereco;
+    document.getElementById('formBloqueado').style.display = 'block';
+  }
 }
 
 /* Restaura a selecao salva: precisa vir depois de allItems e do updateCartUI */
@@ -4653,9 +4665,20 @@ function marcarIdiomaNoBotao() {
 
 /* Botao de idioma: leva a mesma pagina no outro idioma */
 function alternarIdioma() {
+  const paraIngles = IDIOMA !== 'en';
+
+  /* Peca e projeto usam o mesmo slug nos dois idiomas: so o prefixo /en
+     muda. Sem este desvio, quem estava lendo uma peca voltava para a home
+     e perdia o lugar, embora o endereco certo ja estivesse declarado no
+     hreflang da propria pagina. */
+  const item = location.pathname.match(/^(?:\/en)?\/(peca|projeto)\/([a-z0-9-]+)\/?$/);
+  if (item) {
+    location.href = (paraIngles ? '/en' : '') + '/' + item[1] + '/' + item[2];
+    return;
+  }
+
   const id = paginaPorUrl(location.pathname) || 'home';
-  const destino = IDIOMA === 'en' ? (ROTAS[id] ? ROTAS[id].url : '/') : (ROTAS_EN[id] || '/en');
-  location.href = destino;
+  location.href = paraIngles ? (ROTAS_EN[id] || '/en') : (ROTAS[id] ? ROTAS[id].url : '/');
 }
 
 
