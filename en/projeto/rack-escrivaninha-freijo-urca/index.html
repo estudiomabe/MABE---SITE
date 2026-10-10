@@ -2179,7 +2179,7 @@
   </section>
 
   <!-- FAIXA DO MARQUEE: fotos dos produtos em largura total -->
-  <p class="strip-heading">Latest news</p>
+  <p class="strip-heading">Projetos recentes</p>
   <section class="hero-strip" aria-label="Peças do estúdio">
     <div class="hero-marquee" id="heroMarquee">
       <div class="hero-marquee-track" id="heroMarqueeTrack"></div>
@@ -2608,8 +2608,8 @@
       <div class="sketchup-intro">
         <p class="section-overline">Biblioteca de Blocos 3D · SketchUp</p>
         <h2 class="section-title">Modelos prontos<br>para o seu projeto</h2>
-        <p class="sketchup-desc">Disponibilizamos os blocos 3D de <strong>todos os nossos produtos</strong> em formato <strong>.skp</strong> (SketchUp) gratuitamente para arquitetos e designers parceiros. O objetivo é simples: queremos que você tenha total liberdade para inserir, testar e comparar cada peça dentro do seu projeto antes de qualquer decisão, verificando proporções reais, detalhes de acabamento e como cada item se encaixa no ambiente. Assim você e o seu cliente chegam à escolha certa com muito mais segurança.</p>
-        <p class="sketchup-desc">Os arquivos são compatíveis com <strong>SketchUp 2020 ou superior</strong>, atualizados a cada novo produto e enviados por e-mail em até 24 horas após a solicitação.</p>
+        <p class="sketchup-desc">Disponibilizamos os blocos 3D de <strong>todas as nossas peças</strong> em formato <strong>.skp</strong> (SketchUp) gratuitamente para arquitetos e designers parceiros. O objetivo é simples: queremos que você tenha total liberdade para inserir, testar e comparar cada peça dentro do seu projeto antes de qualquer decisão, verificando proporções reais, detalhes de acabamento e como cada item se encaixa no ambiente. Assim você e o seu cliente chegam à escolha certa com muito mais segurança.</p>
+        <p class="sketchup-desc">Os arquivos são compatíveis com <strong>SketchUp 2020 ou superior</strong>, atualizados a cada nova peça e enviados por e-mail em até 24 horas após a solicitação.</p>
       </div>
 
       <div class="sketchup-grid" id="sketchupGrid"></div>
@@ -2622,7 +2622,7 @@
     <!-- BENEFÍCIOS DA PARCERIA -->
     <div class="arq-benefits">
       <p class="section-overline">O que oferecemos</p>
-      <h2 class="section-title">Sua parceria com o MABE</h2>
+      <h2 class="section-title">Sua parceria com a MABE</h2>
       <div class="arq-benefits-grid">
         <div class="arq-benefit">
           <div class="arq-benefit-num">01</div>
@@ -2631,7 +2631,7 @@
         </div>
         <div class="arq-benefit">
           <div class="arq-benefit-num">02</div>
-          <h4>Tabela exclusiva de parceiros</h4>
+          <h4>Tabela de parceiros</h4>
           <p>Arquitetos e designers credenciados têm acesso a condições especiais de preço, prazo prioritário e atendimento dedicado.</p>
         </div>
         <div class="arq-benefit">
@@ -3824,7 +3824,7 @@ function renderSketchupLibrary() {
         </div>
       </div>
       <h4>Biblioteca Completa</h4>
-      <p>Todos os ${total} produtos em um único arquivo organizado por camadas e componentes, ideal para projetos de múltiplos ambientes.</p>
+      <p>Todas as ${total} peças em um único arquivo organizado por camadas e componentes, ideal para projetos de múltiplos ambientes.</p>
       <a href="mailto:contato.estudiomabe@gmail.com?subject=Biblioteca 3D completa em SketchUp, do Estúdio MABE" class="sketchup-dl sketchup-dl--full">↓ Solicitar biblioteca completa</a>
     </div>` : '';
 
@@ -4549,8 +4549,8 @@ function urlDaPeca(slug) {
 
 /* Frases montadas no codigo, com numero no meio */
 const PADROES_EN = [
-  [/^Todos os (\d+) produtos em um único arquivo organizado por camadas e componentes, ideal para projetos de múltiplos ambientes\.$/,
-   'All {n} products in a single file organised by layers and components, ideal for projects with several rooms.'],
+  [/^Todas as (\d+) peças em um único arquivo organizado por camadas e componentes, ideal para projetos de múltiplos ambientes\.$/,
+   'All {n} pieces in a single file organised by layers and components, ideal for projects with several rooms.'],
   [/^Blocos 3D de (\d+) peças$/, '3D blocks for {n} pieces']
 ];
 
