@@ -3117,10 +3117,14 @@ document.addEventListener('click', function (e) {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('.nav-menu a.nav-menu-link').forEach(a => a.classList.remove('active'));
-  const map = {home:0,mobiliario:1,decorativos:2,pet:3,sobre:4,projetos:5,eventos:6,arquitetos:7,contato:8};
-  const links = document.querySelectorAll('.nav-menu a.nav-menu-link');
-  if (links[map[id]]) links[map[id]].classList.add('active');
+  /* Acende o link cujo endereco e o desta pagina, em qualquer dos dois
+     idiomas. Antes era pela posicao no menu, numa lista que ainda contava
+     um link "Eventos" que ja tinha saido: em Para Arquitetos acendia
+     Contato, e em Contato nao acendia nada. */
+  const enderecos = [ROTAS[id] && ROTAS[id].url, ROTAS_EN[id]].filter(Boolean);
+  document.querySelectorAll('.nav-menu a.nav-menu-link').forEach(a => {
+    a.classList.toggle('active', enderecos.includes(a.getAttribute('href')));
+  });
   closeMobileNav();
   window.scrollTo(0,0);
 }
