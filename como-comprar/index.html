@@ -3635,18 +3635,31 @@ function dSVG(d) {
 
 /* A selecao de pecas sobrevive a recarga e a abertura em nova aba */
 const CHAVE_SELECAO = 'mabe-selecao';
+/* os tres tipos que existem no catalogo; decidem so qual miniatura usar */
+const TIPOS_DE_ITEM = ['product', 'decor', 'pet'];
 
 function carregarSelecao() {
   try {
     const bruto = localStorage.getItem(CHAVE_SELECAO);
     const lista = bruto ? JSON.parse(bruto) : [];
-    /* so aceita itens que ainda existem no catalogo de hoje */
-    return Array.isArray(lista) ? lista.filter(i => i && allItems.some(x => x.id === i.id)) : [];
+    if (!Array.isArray(lista)) return [];
+    /* Do navegador vem so o id e o tipo. Nome, preco e foto saem sempre do
+       catalogo de hoje, porque uma selecao guardada semana passada cotava
+       o preco antigo na mensagem do WhatsApp, e o site negociava com um
+       numero que nao vale mais. De tabela, nome e cor deixam de ir do
+       armazenamento local direto para dentro de innerHTML. */
+    return lista.map(i => {
+      const atual = i && allItems.find(x => x.id === i.id);
+      if (!atual) return null;
+      return { ...atual, type: TIPOS_DE_ITEM.includes(i.type) ? i.type : 'product' };
+    }).filter(Boolean);
   } catch (e) { return []; }
 }
 
 function salvarSelecao() {
-  try { localStorage.setItem(CHAVE_SELECAO, JSON.stringify(cart)); } catch (e) {}
+  /* guarda o minimo; o resto se busca no catalogo na proxima visita */
+  const enxuto = cart.map(p => ({ id: p.id, type: p.type }));
+  try { localStorage.setItem(CHAVE_SELECAO, JSON.stringify(enxuto)); } catch (e) {}
 }
 
 let cart = [], activeFilter = 'todos';   /* restaurada no fim do arquivo, quando allItems ja existe */
@@ -3849,10 +3862,10 @@ function updateCartUI() {
       </div>
       <button class="cart-item-remove" onclick="removeFromCart(${i})">✕</button>
     </div>`).join('');
-  const lines = cart.map(p=>`• ${p.name} – ${fmt(p.price)}`).join('%0A');
-  const msg = `Olá! Tenho interesse nestas peças do Estúdio MABE:%0A%0A${lines}%0A%0AValor estimado: ${fmt(total)}%0A%0AQueria saber o prazo e a entrega para %5Bbairro%5D.`;
+  const lines = cart.map(p => `• ${p.name} – ${fmt(p.price)}`).join('\n');
+  const msg = `Olá! Tenho interesse nestas peças do Estúdio MABE:\n\n${lines}\n\nValor estimado: ${fmt(total)}\n\nQueria saber o prazo e a entrega para [bairro].`;
   document.getElementById('whatsappOrder').dataset.valor = total;
-  document.getElementById('whatsappOrder').href = `https://wa.me/5521990291331?text=${msg}`;
+  document.getElementById('whatsappOrder').href = `https://wa.me/5521990291331?text=${encodeURIComponent(msg)}`;
 }
 
 function toggleCart() {
@@ -3929,11 +3942,15 @@ function submitQuote() {
     primeiro.scrollIntoView({ block: 'center', behavior: 'smooth' });
     return;
   }
-  const wa = `Olá! Me chamo ${name}.%0ATelefone: ${phone}%0AE-mail: ${email}%0AAmbiente: ${type}%0A%0A${msg||'Gostaria de iniciar um projeto.'}`;
+  /* Antes as quebras de linha vinham escritas como %0A no meio de texto
+     que nao era codificado, entao qualquer "&", "#" ou "+" digitado
+     pelo visitante truncava a URL e o lead chegava sem telefone nem
+     e-mail. Agora o texto se monta limpo e e codificado de uma vez. */
+  const texto = `Olá! Me chamo ${name}.\nTelefone: ${phone}\nE-mail: ${email}\nAmbiente: ${type}\n\n${msg || 'Gostaria de iniciar um projeto.'}`;
   mabeLead('formulario', { item_name: type });
   /* window.open devolve null quando o navegador bloqueia a janela. Sem
      esta checagem o site anunciava sucesso para um lead que nunca saiu. */
-  const endereco = `https://wa.me/5521990291331?text=${wa}`;
+  const endereco = `https://wa.me/5521990291331?text=${encodeURIComponent(texto)}`;
   const janela = window.open(endereco, '_blank');
   document.getElementById('quoteForm').style.display = 'none';
   if (janela) {

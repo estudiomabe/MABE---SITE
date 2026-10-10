@@ -1,0 +1,20 @@
+# Arquivos que ficam no repositorio mas nao vao para o ar.
+#
+# Estavam todos acessiveis em producao com status 200, nenhum linkado e
+# nenhum no sitemap, entao o Google provavelmente nao chegou neles. Mas
+# quem digitasse o endereco chegava.
+
+# Ferramentas que rodam na minha maquina.
+# O gerar-cartoes-servidor.js serve a pasta inteira sem conferir se o
+# caminho pedido continua dentro dela: publicar o codigo dele era
+# entregar o mapa do furo junto.
+gerar-compartilhamento.js
+gerar-cartoes-servidor.js
+gerar-cartoes.html
+recortar-foto.html
+og-card.html
+favicon-src.html
+
+# Documento comercial, nunca foi pagina do site.
+comparativo-nuvemshop.html
+comparativo-nuvemshop.pdf
