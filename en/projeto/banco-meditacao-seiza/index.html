@@ -2158,7 +2158,12 @@
 
     <!-- Texto centralizado -->
     <div class="hero-text">
-      <p class="hero-overline hero-overline">Design Autoral Brasileiro · Madeira maciça · Rio de Janeiro · Feito a mão</p>
+      <!-- Os &nbsp; prendem cada termo: no celular a linha so quebra nos
+           pontos medios, nunca no meio de "madeira maciça". A chave do
+           en.json guarda os mesmos espacos presos, senao a traducao
+           procura por uma chave que nao existe e a linha fica em
+           portugues no site em ingles. -->
+      <p class="hero-overline hero-overline">Design Autoral Brasileiro · Madeira&nbsp;maciça · Rio&nbsp;de&nbsp;Janeiro · Feito&nbsp;a&nbsp;mão</p>
       <h1 class="hero-title">
         <span class="line"><span class="line-inner">Design que dialoga com o <em>seu ambiente.</em></span></span>
       </h1>
