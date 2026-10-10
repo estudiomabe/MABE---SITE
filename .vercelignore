@@ -5,8 +5,8 @@
 # quem digitasse o endereco chegava.
 
 # Ferramentas que rodam na minha maquina.
-# O gerar-cartoes-servidor.js serve a pasta inteira sem conferir se o
-# caminho pedido continua dentro dela: publicar o codigo dele era
+# O gerar-cartoes-servidor.js servia a pasta inteira sem conferir se o
+# caminho pedido continuava dentro dela: publicar o codigo dele era
 # entregar o mapa do furo junto.
 gerar-compartilhamento.js
 gerar-cartoes-servidor.js
@@ -18,3 +18,12 @@ favicon-src.html
 # Documento comercial, nunca foi pagina do site.
 comparativo-nuvemshop.html
 comparativo-nuvemshop.pdf
+
+# Configuracao do Claude: preview, skill de publicacao e o CLAUDE.md.
+# A auditoria de 10/10/2026 concluiu que .claude estava fora do ar porque
+# /.claude/settings.json dava 404. So que esse arquivo nao existe: o
+# launch.json e o static-server.ps1, que existem, estavam em 200. Um
+# arquivo inexistente nao prova nada sobre a pasta. O no-ar.js da skill
+# agora testa cada arquivo de verdade listado aqui.
+.claude/
+CLAUDE.md
