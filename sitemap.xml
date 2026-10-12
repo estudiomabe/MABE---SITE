@@ -46,6 +46,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.estudiomabe.com.br/trabalhe-conosco</loc>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.estudiomabe.com.br/peca/mesa-de-cabeceira-botafogo</loc>
     <lastmod>2026-09-07</lastmod>
     <priority>0.6</priority>
@@ -104,6 +109,11 @@
     <loc>https://www.estudiomabe.com.br/en/how-to-order</loc>
     <lastmod>2026-09-24</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.estudiomabe.com.br/en/careers</loc>
+    <lastmod>2026-10-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.estudiomabe.com.br/en/peca/mesa-de-cabeceira-botafogo</loc>

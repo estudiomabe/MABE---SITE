@@ -50,9 +50,26 @@
    "url": "/en/how-to-order",
    "titulo": "How to order | Estúdio MABE",
    "desc": "Payment, production time, delivery and assembly for made-to-order pieces by Estúdio MABE."
+  },
+  "carreiras": {
+   "url": "/en/careers",
+   "titulo": "Careers | Estúdio MABE",
+   "desc": "Estúdio MABE is looking for cabinetmakers and woodworking assistants in Rio de Janeiro. Find out how to get in touch."
   }
  },
  "textos": {
+  "Estúdio": "Studio",
+  "Trabalhe conosco": "Careers",
+  "Marceneiros e auxiliares de marcenaria, no Rio de Janeiro": "Cabinetmakers and woodworking assistants, in Rio de Janeiro",
+  "Cada peça do Estúdio MABE é feita uma única vez, em madeira maciça, com os encaixes à vista. É um trabalho que depende de quem está na bancada, e por isso estamos sempre abertos a conhecer gente do ofício.": "Every Estúdio MABE piece is made only once, in solid wood, with the joinery left visible. It is work that depends on who is at the bench, so we are always open to meeting people of the craft.",
+  "Marceneiro": "Cabinetmaker",
+  "Para quem já trabalha com madeira maciça e domina o processo da peça: ler o projeto, cortar, fazer os encaixes, montar e dar o acabamento.": "For those who already work with solid wood and master the whole process: reading the drawings, cutting, making the joints, assembling and finishing.",
+  "Auxiliar de marcenaria": "Woodworking assistant",
+  "Para quem quer trabalhar ao lado dos marceneiros, na preparação da madeira, na montagem e no acabamento, e aprender o ofício no dia a dia do estúdio.": "For those who want to work alongside the cabinetmakers, preparing the wood, assembling and finishing, and learn the craft day to day in the studio.",
+  "Como se apresentar": "How to apply",
+  "Mande uma mensagem pelo WhatsApp com seu nome, a função que procura e um pouco da sua experiência. Se tiver fotos de peças que você fez, mande junto: elas dizem mais que qualquer currículo.": "Send a WhatsApp message with your name, the role you are looking for and a little about your experience. If you have photos of pieces you have made, send them too: they say more than any CV.",
+  "Falar no WhatsApp": "Message us on WhatsApp",
+  "Também dá para escrever para": "You can also write to",
   "Projetos recentes": "Recent projects",
   "Mobiliário": "Furniture",
   "Sala": "Living room",
