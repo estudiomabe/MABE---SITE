@@ -580,7 +580,9 @@
       letter-spacing: -0.01em; margin-bottom: 2.5rem;
       max-width: 94vw;
     }
-    .hero-title em { font-style: italic; color: var(--muted); }
+    /* sem destaque: a palavra segue o resto do titulo. O em fica no HTML
+       porque o dicionario guarda as duas metades como frases separadas */
+    .hero-title em { font-style: normal; color: inherit; }
     @media (min-width: 900px) {
       .hero-title .line-inner { white-space: nowrap; }
     }
@@ -994,7 +996,7 @@
       font-size: clamp(2.5rem, 4.5vw, 5rem);
       font-weight: 300; line-height: 1; letter-spacing: -0.02em; margin-bottom: 1.5rem;
     }
-    .arq-hero h1 em { font-style: italic; color: var(--muted); }
+    .arq-hero h1 em { font-style: normal; color: inherit; }
     .arq-hero-sub { color: var(--muted); font-size: 0.9rem; font-weight: 300; line-height: 1.7; margin-bottom: 2.5rem; max-width: 380px; }
 
     /* VISUAL: POLTRONA DE MADEIRA EM WIREFRAME GIRANDO */
@@ -1028,7 +1030,6 @@
     .arq-benefits { padding: 6rem 8vw; }
     .arq-benefits-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--border); margin-top: 3rem; }
     .arq-benefit { background: var(--bg); padding: 2.5rem 2rem; }
-    .arq-benefit-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--gold-texto); margin-bottom: 1rem; }
     .arq-benefit h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
     .arq-benefit p { font-size: 0.78rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
 
@@ -1115,7 +1116,7 @@
       font-weight: 300; line-height: 0.92; letter-spacing: -0.028em;
       margin-bottom: 2.25rem;
     }
-    .cta-final-title em { font-style: italic; color: var(--muted); }
+    .cta-final-title em { font-style: normal; color: inherit; }
     .cta-final-aside {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
       font-size: 1.05rem; color: var(--muted); margin-bottom: 3.5rem;
@@ -2624,32 +2625,26 @@
       <h2 class="section-title">Sua parceria com a MABE</h2>
       <div class="arq-benefits-grid">
         <div class="arq-benefit">
-          <div class="arq-benefit-num">01</div>
           <h4>Blocos 3D para SketchUp</h4>
           <p>Toda a nossa coleção em formato .skp, em escala real, para que você teste, compare e decida com precisão antes de qualquer reunião com o cliente.</p>
         </div>
         <div class="arq-benefit">
-          <div class="arq-benefit-num">02</div>
           <h4>Tabela de parceiros</h4>
           <p>Arquitetos e designers credenciados têm acesso a condições especiais de preço, prazo prioritário e atendimento dedicado.</p>
         </div>
         <div class="arq-benefit">
-          <div class="arq-benefit-num">03</div>
           <h4>Execução fiel ao projeto</h4>
           <p>Respeitamos cada detalhe do seu memorial descritivo. Quando há dúvidas, consultamos antes de executar. Nunca o contrário.</p>
         </div>
         <div class="arq-benefit">
-          <div class="arq-benefit-num">04</div>
           <h4>Prazo com compromisso</h4>
           <p>Datas acordadas são datas cumpridas. Comunicamos proativamente qualquer variação, porque o seu cronograma de obra não espera.</p>
         </div>
         <div class="arq-benefit">
-          <div class="arq-benefit-num">05</div>
           <h4>Amostras e visita técnica</h4>
           <p>Disponibilizamos amostras de materiais e realizamos visitas técnicas gratuitas para projetos em desenvolvimento.</p>
         </div>
         <div class="arq-benefit">
-          <div class="arq-benefit-num">06</div>
           <h4>Portfólio compartilhado</h4>
           <p>Com sua autorização, divulgamos o projeto com crédito ao escritório parceiro: visibilidade mútua, sempre com respeito à autoria.</p>
         </div>
