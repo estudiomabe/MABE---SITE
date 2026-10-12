@@ -49,7 +49,7 @@
   "comprar": {
    "url": "/en/how-to-order",
    "titulo": "How to order | Estúdio MABE",
-   "desc": "Payment, production time, delivery, assembly and returns policy for made-to-order pieces by Estúdio MABE."
+   "desc": "Payment, production time, delivery and assembly for made-to-order pieces by Estúdio MABE."
   }
  },
  "textos": {
@@ -235,8 +235,8 @@
   "Aceitamos Pix, transferência bancária e cartão de crédito em até 6 vezes. O pedido entra em produção com o pagamento de um sinal de 50%; o restante é pago na entrega. Os valores do catálogo são de referência: peças ajustadas em medida, madeira ou acabamento recebem orçamento próprio antes de qualquer cobrança.": "We accept Pix, bank transfer and credit card in up to 6 instalments. Production starts with a 50% deposit; the balance is paid on delivery. Prices shown on the site are a reference and are confirmed in the proposal.",
   "2. Prazo de produção": "2. Production time",
   "3. Entrega e montagem": "3. Delivery and assembly",
-  "4. Troca, devolução e arrependimento": "4. Exchange, return and right of withdrawal",
-  "Compras feitas a distância têm direito de arrependimento em até 7 dias após o recebimento, conforme o artigo 49 do Código de Defesa do Consumidor, com devolução do valor pago. Defeitos de fabricação são cobertos pela garantia legal e resolvidos pelo próprio estúdio, com reparo ou substituição. Como cada peça é feita para um espaço, ajustes de medida ou acabamento depois da aprovação do projeto são orçados à parte.": "Purchases made remotely carry a right of withdrawal within 7 days of delivery, under article 49 of the Brazilian Consumer Code, with a refund of the amount paid. Manufacturing defects are covered by the legal warranty and resolved by the studio, with repair or replacement. As each piece is made for a specific space, changes to size or finish after the design is approved are quoted separately.",
+  "4. Defeitos e ajustes": "4. Defects and adjustments",
+  "Defeitos de fabricação são cobertos pela garantia legal e resolvidos pelo próprio estúdio, com reparo ou substituição. Como cada peça é feita para um espaço, ajustes de medida ou acabamento depois da aprovação do projeto são orçados à parte.": "Manufacturing defects are covered by the legal warranty and resolved by the studio, with repair or replacement. As each piece is made for a specific space, changes to size or finish after the design is approved are quoted separately.",
   "5. Dúvidas": "5. Questions",
   "Qualquer condição pode ser conversada antes do pedido pelo WhatsApp": "Any term can be discussed before the order on WhatsApp",
   "ou pelo e-mail": "or by e-mail",
@@ -280,7 +280,6 @@
   "Pagamento": "Payment",
   "Prazo": "Lead time",
   "Entrega": "Delivery",
-  "Troca": "Returns",
   "Adicionar à seleção": "Add to selection",
   "+ Adicionar à seleção": "+ Add to selection",
   "Solicitar orçamento": "Request a quote",
@@ -301,7 +300,6 @@
   "Folhas de freijó": "Freijó veneer",
   "Puxadores em madeira maciça de ipê": "Handles in solid ipê",
   "Pix, transferência ou cartão em até 6×": "Pix, bank transfer or card in up to 6 instalments",
-  "7 dias para arrependimento, conforme o CDC": "7-day right of withdrawal, under Brazilian consumer law",
   "A primeira leva de itens decorativos está sendo feita no estúdio. São peças pequenas, de bancada, que pedem o mesmo cuidado das grandes e por isso levam o seu tempo. Em breve elas aparecem aqui.": "The first batch of decorative objects is being made at the studio. They are small, bench-made pieces that ask for the same care as the large ones, so they take their time. They will appear here soon.",
   "Presença & Referência": "Presence & Reference",
   "Os primeiros projetos realizados estão a caminho. Enquanto isso, conheça as peças do catálogo.": "The first completed projects are on their way. In the meantime, have a look at the pieces in the catalogue.",

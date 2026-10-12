@@ -3000,11 +3000,11 @@
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">3. Entrega e montagem</h3>
       <p style="margin-bottom:1.5rem">Entregamos e montamos na cidade do Rio de Janeiro sem custo adicional. Na Grande Rio e nas demais regiões, a entrega tem custo à parte, orçado junto com a proposta para você saber o valor antes de fechar. A data de entrega é agendada com você, e a peça sai do estúdio protegida para o transporte.</p>
 
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Troca, devolução e arrependimento</h3>
-      <p style="margin-bottom:1.5rem">Compras feitas a distância têm direito de arrependimento em até 7 dias após o recebimento, conforme o artigo 49 do Código de Defesa do Consumidor, com devolução do valor pago. Defeitos de fabricação são cobertos pela garantia legal e resolvidos pelo próprio estúdio, com reparo ou substituição. Como cada peça é feita para um espaço, ajustes de medida ou acabamento depois da aprovação do projeto são orçados à parte.</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Defeitos e ajustes</h3>
+      <p style="margin-bottom:1.5rem">Defeitos de fabricação são cobertos pela garantia legal e resolvidos pelo próprio estúdio, com reparo ou substituição. Como cada peça é feita para um espaço, ajustes de medida ou acabamento depois da aprovação do projeto são orçados à parte.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. Dúvidas</h3>
-      <p style="margin-bottom:1.5rem">Qualquer condição pode ser conversada antes do pedido pelo WhatsApp <a href="https://wa.me/5521990291331?text=Ol%C3%A1!%20Li%20as%20condi%C3%A7%C3%B5es%20no%20site%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20%5Bprazo%20%2F%20pagamento%20%2F%20entrega%20%2F%20troca%5D." target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline">+55 (21) 99029-1331</a> ou pelo e-mail <a href="mailto:contato.estudiomabe@gmail.com" style="color:var(--ink);text-decoration:underline">contato.estudiomabe@gmail.com</a>.</p>
+      <p style="margin-bottom:1.5rem">Qualquer condição pode ser conversada antes do pedido pelo WhatsApp <a href="https://wa.me/5521990291331?text=Ol%C3%A1!%20Li%20as%20condi%C3%A7%C3%B5es%20no%20site%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20%5Bprazo%20%2F%20pagamento%20%2F%20entrega%5D." target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline">+55 (21) 99029-1331</a> ou pelo e-mail <a href="mailto:contato.estudiomabe@gmail.com" style="color:var(--ink);text-decoration:underline">contato.estudiomabe@gmail.com</a>.</p>
     </div>
   </div>
 </div>
@@ -4242,8 +4242,7 @@ function acharPeca(slug) { return catalogo().find(p => p.slug === slug); }
 const CONDICOES = [
   { rotulo: 'Pagamento', resumo: 'Pix, transferência ou cartão em até 6×' },
   { rotulo: 'Prazo',     resumo: '20 a 45 dias úteis, conforme o projeto' },
-  { rotulo: 'Entrega',   resumo: 'Cidade do Rio com montagem incluída; Grande Rio com custo adicional' },
-  { rotulo: 'Troca',     resumo: '7 dias para arrependimento, conforme o CDC' }
+  { rotulo: 'Entrega',   resumo: 'Cidade do Rio com montagem incluída; Grande Rio com custo adicional' }
 ];
 
 function faixaCondicoes() {
@@ -4505,7 +4504,7 @@ const ROTAS = {
   privacidade: { url: '/privacidade',      titulo: 'Política de Privacidade | Estúdio MABE',
                  desc: 'Como o Estúdio MABE trata seus dados pessoais, em conformidade com a LGPD.' },
   comprar:     { url: '/como-comprar',     titulo: 'Como comprar | Estúdio MABE',
-                 desc: 'Pagamento, prazo de produção, entrega, montagem e política de troca das peças sob encomenda do Estúdio MABE.' },
+                 desc: 'Pagamento, prazo de produção, entrega e montagem das peças sob encomenda do Estúdio MABE.' },
 };
 
 const URL_PARA_PAGINA = Object.fromEntries(Object.entries(ROTAS).map(([id, r]) => [r.url, id]));
