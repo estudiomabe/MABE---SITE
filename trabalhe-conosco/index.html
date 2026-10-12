@@ -150,7 +150,7 @@
   <meta name="twitter:description" content="O Estúdio MABE procura marceneiros e auxiliares de marcenaria no Rio de Janeiro. Saiba como se apresentar." />
   <meta name="twitter:image" content="https://www.estudiomabe.com.br/images/og/home.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Poppins:wght@200&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Poppins:wght@200;300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     /* Os links de navegação usam href de verdade (para o Google e para
@@ -2083,6 +2083,14 @@
       #page-privacidade .catalog-page,
       #page-carreiras .catalog-page { padding-bottom: 5rem; }
     }
+
+    /* Titulos de secao na Poppins 300, como pede o manual (Light, -0,01em).
+       Nomes de pessoa e de evento ficam fora: sao nomes, nao secoes */
+    .cinema-title, .section-title, .depoimentos-title, .cta-final-title,
+    .arq-cta h2, .peca-relacionadas h2 {
+      font-family: 'Poppins', sans-serif; font-weight: 300; letter-spacing: -0.01em;
+    }
+    .arq-cta h2 { font-style: normal; }
 
     /* O titulo de cada pagina (o h1) na Poppins 200 do logo, como o da
        Sobre. Fica no fim para vencer as regras de cada pagina; tamanho e
