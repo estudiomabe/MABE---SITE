@@ -141,6 +141,32 @@ async function conferir(mudancas) {
   return { oks, falhas };
 }
 
+/* Le no GitHub o status que a Vercel publica para o commit e espera ele
+   sair de "pending". ok: true (concluido), false (falhou) ou null (nao deu
+   para saber: repositorio privado, sem rede ou sem status ainda). */
+async function statusDoDeploy(sha, inicio) {
+  const remoto = gitTexto('remote', 'get-url', 'origin').trim();
+  const m = remoto.match(/github\.com[:/]([^/]+)\/(.+?)(\.git)?$/);
+  if (!m) return { ok: null, texto: 'origem nao e do GitHub; status do deploy nao conferido' };
+  const url = 'https://api.github.com/repos/' + m[1] + '/' + m[2] + '/commits/' + sha + '/status';
+  for (;;) {
+    let j;
+    try {
+      const r = await fetch(url, { headers: { 'User-Agent': 'mabe-no-ar', 'Accept': 'application/vnd.github+json' } });
+      if (r.status === 404) return { ok: null, texto: 'nao consegui ler o status do deploy no GitHub (repositorio privado?)' };
+      j = await r.json();
+    } catch (e) {
+      return { ok: null, texto: 'nao consegui ler o status do deploy no GitHub (' + e.message + ')' };
+    }
+    const v = (j.statuses || []).find(s => /vercel/i.test(s.context));
+    if (v && v.state === 'success') return { ok: true, texto: v.description || 'deploy concluido' };
+    if (v && (v.state === 'failure' || v.state === 'error')) return { ok: false, texto: v.description || v.state };
+    if (Date.now() - inicio > PRAZO_MS) return { ok: null, texto: 'a Vercel nao informou o fim do deploy em 5 minutos' };
+    console.log('  ...    aguardando a Vercel: ' + (v ? v.description || v.state : 'ainda sem status'));
+    await esperar(INTERVALO_MS);
+  }
+}
+
 (async () => {
   const local = gitTexto('rev-parse', 'HEAD').trim();
   let remoto = '';
@@ -153,6 +179,12 @@ async function conferir(mudancas) {
   const mudancas = mudancasDoCommit();
   console.log('conferindo ' + local.slice(0, 7) + ' no ar...');
   const inicio = Date.now();
+
+  /* 0. O que a propria Vercel diz do deploy deste commit, lido no GitHub.
+     Sem isto, num commit que nao muda nada do site, a conferencia passava
+     com o deploy falhado: a versao antiga no ar ja era igual ao commit. */
+  const deploy = await statusDoDeploy(local, inicio);
+
   let r;
   for (;;) {
     r = await conferir(mudancas);
@@ -160,6 +192,11 @@ async function conferir(mudancas) {
     console.log('  ...    aguardando: ' + r.falhas[0].slice(0, 100));
     await esperar(INTERVALO_MS);
   }
+
+  if (deploy.ok === true) r.oks.unshift('Vercel: ' + deploy.texto);
+  else if (deploy.ok === false) r.falhas.unshift('Vercel registrou falha no deploy deste commit: ' + deploy.texto +
+    '. O site segue com a versao anterior. Veja o motivo em vercel.com, no projeto, aba Deployments.');
+  else console.log('  aviso  ' + deploy.texto);
 
   r.oks.forEach(m => console.log('  ok     ' + m));
   r.falhas.forEach(m => console.log('  FALHA  ' + m));
