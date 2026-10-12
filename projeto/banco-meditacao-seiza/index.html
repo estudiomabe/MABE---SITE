@@ -584,7 +584,10 @@
     /* sem destaque: a palavra segue o resto do titulo. O em fica no HTML
        porque o dicionario guarda as duas metades como frases separadas */
     .hero-title em { font-style: normal; color: inherit; }
+    /* Numa linha so a partir de 900 px. Na Poppins o titulo mede cerca de
+       19,6 vezes o tamanho da fonte; 4vw cabe entre os respiros de 8vw */
     @media (min-width: 900px) {
+      .hero-title { font-size: clamp(2.25rem, 4vw, 5.8rem); }
       .hero-title .line-inner { white-space: nowrap; }
     }
     .hero-subtitle {
@@ -711,7 +714,7 @@
     .filter-btn.active, .filter-btn:hover { background: var(--ink); color: var(--bg); }
 
     .products-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr));
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
       gap: 4.5rem 3rem;
     }
     .product-card { background: transparent; cursor: pointer; }
@@ -1067,7 +1070,9 @@
       .contato-item-value a { display: flex; align-items: center; min-height: 44px; }
     }
 
-    .form-grid { display: grid; gap: 1rem; }
+    /* minmax(0,1fr): sem isso a coluna cresce ate o texto mais longo do
+       select e a pagina rola para o lado em 320 px */
+    .form-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
     .form-group label { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
@@ -1369,9 +1374,9 @@
       .arq-visual { min-height: 300px; border-left: none; border-top: 1px solid var(--border); order: -1; }
       .armchair-stage { transform: scale(0.82); }
       .arq-benefits-grid { grid-template-columns: 1fr; }
-      .contato-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .contato-inner { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
       .footer-top { grid-template-columns: 1fr; gap: 2.5rem; }
-      .form-row { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 600px) {
       .nav-logo-img { height: 38px; }
@@ -2096,6 +2101,17 @@
        Sobre. Fica no fim para vencer as regras de cada pagina; tamanho e
        entrelinha continuam os de cada uma */
     .page h1 { font-family: 'Poppins', sans-serif; font-weight: 200; letter-spacing: -0.02em; }
+
+    /* Celular de 320 px: campos do formulario encolhem com a coluna, e o
+       botao do e-mail em Arquitetos (endereco longo, sem onde quebrar)
+       aperta o respiro e o espacamento das letras para caber */
+    .form-group input, .form-group select, .form-group textarea { min-width: 0; max-width: 100%; }
+    @media (max-width: 360px) {
+      .arq-cta .btn-ghost {
+        padding-left: 1rem; padding-right: 1rem; letter-spacing: 0.06em;
+        max-width: 100%; overflow-wrap: anywhere;
+      }
+    }
   </style>
 <script>
   /* Le a escolha de tema antes de qualquer pintura, para quem ja escolheu o
