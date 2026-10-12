@@ -927,8 +927,9 @@
       text-transform: uppercase; color: var(--gold-texto); margin-bottom: 1.5rem;
     }
     /* Poppins, a mesma familia do logo, no peso que o manual pede para
-       titulo (ExtraLight). So o 200 e carregado: o resto do site ainda usa
-       a Cormorant ate a troca de tipografia que esta no DESIGN.md */
+       titulo (ExtraLight). So o 200 e carregado: alem dos titulos de pagina
+       (.page h1, no fim do CSS), o site ainda usa a Cormorant ate a troca
+       de tipografia que esta no DESIGN.md */
     .sobre-hero-title {
       font-family: 'Poppins', sans-serif;
       font-size: clamp(2.6rem, 6.5vw, 6.5rem);
@@ -2082,6 +2083,11 @@
       #page-privacidade .catalog-page,
       #page-carreiras .catalog-page { padding-bottom: 5rem; }
     }
+
+    /* O titulo de cada pagina (o h1) na Poppins 200 do logo, como o da
+       Sobre. Fica no fim para vencer as regras de cada pagina; tamanho e
+       entrelinha continuam os de cada uma */
+    .page h1 { font-family: 'Poppins', sans-serif; font-weight: 200; letter-spacing: -0.02em; }
   </style>
 <script>
   /* Le a escolha de tema antes de qualquer pintura, para quem ja escolheu o

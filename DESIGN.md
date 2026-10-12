@@ -67,7 +67,7 @@ O manual não cobre modo escuro. O site tem um, com tokens próprios em `html[da
 
 | Papel | Fonte | Peso | Entreletra | Estado |
 |---|---|---|---|---|
-| Display (título de página) | Poppins | ExtraLight 200 | −0,02em | **[pendente]** hoje Cormorant Garamond |
+| Display (título de página) | Poppins | ExtraLight 200 | −0,02em | **[vale]** desde 12/10/2026: o `h1` de todas as páginas, pela regra `.page h1` no fim do CSS |
 | Seção (título de bloco) | Poppins | Light 300 | −0,01em | **[pendente]** hoje Cormorant Garamond |
 | Corpo | Inter | Light 300 / Regular 400 | normal | **[vale]** |
 | Rótulo | Inter | Medium 500, caixa alta | +0,20em | **[vale]** (hoje varia de 0,16 a 0,24em; padronizar em 0,20) |
@@ -78,7 +78,7 @@ O manual não cobre modo escuro. O site tem um, com tokens próprios em `html[da
 - **Poppins só em título, seção e número de total.** Inter em todo o resto, sem exceção.
 - **Sem palavra em destaque no título.** Nada de itálico ou cor diferente em uma palavra só: o título inteiro tem o mesmo estilo. O `<em>` continua no HTML dos três títulos que o tinham, porque o dicionário guarda as duas metades como frases separadas. **[vale]** desde 12/10/2026.
 
-A troca de Cormorant para Poppins foi testada em prévia e adiada pelo Mateus. Quando for feita, tipografia, dourado e 14 px vão juntos: um sem o outro fica desencontrado.
+O título de página já está em Poppins (pedido do Mateus em 12/10/2026). O resto da troca de Cormorant para Poppins, nos títulos de seção, foi adiado. Quando for feita, tipografia, dourado e 14 px vão juntos: um sem o outro fica desencontrado.
 
 ---
 
@@ -158,7 +158,7 @@ O manual ainda não tem padrão de vídeo. Até ter, vale isto:
 
 | Item | Estado | Onde está a regra |
 |---|---|---|
-| Cormorant → Poppins nos títulos | **[pendente]**, adiado | 3 |
+| Cormorant → Poppins nos títulos de seção (o de página já foi) | **[pendente]**, adiado | 3 |
 | Dourado só como fio (25 rótulos, 5 fundos) | **[pendente]**, adiado | 2 |
 | Corpo mínimo de 14 px (62 blocos) | **[pendente]**, adiado | 3 |
 | Tokens `--ink`, `--gold`, `--border`, linha interna | **[pendente]** | 2 |
