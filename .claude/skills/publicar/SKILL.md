@@ -50,6 +50,8 @@ Sintaxe dos scripts inline, JSON-LD, travessões, `en.json` válido e com o recu
 
 Suba o preview `mabe-site` (de `.claude/launch.json`) e confira em **320, 375 e 1280 px**: sem rolagem lateral, nada cortado, nos dois idiomas quando um texto mudou.
 
+Se a mudança é visual, confira contra o `DESIGN.md` da raiz: cor fora da tabela, dourado fora de fio, texto abaixo de 14 px ou um segundo efeito de movimento na mesma página são sinais de que algo saiu da marca.
+
 Se mexeu em formulário, carrinho, link ou rota, **exercite**: preencha, clique, leia a URL que sai. Para o WhatsApp, intercepte `window.open` e leia o parâmetro `text`, sem enviar nada. Ler o código não é teste.
 
 ## 5. Commit e push

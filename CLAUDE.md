@@ -6,13 +6,15 @@ www.estudiomabe.com.br. Deploy automático na Vercel a cada push em `master`, se
 
 Para publicar qualquer mudança, siga a skill `publicar` em `.claude/skills/publicar/`.
 
+**Antes de qualquer mudança visual, leia o `DESIGN.md`.** Ele traduz o manual de marca em regras de código (cores, tipografia, logo, dourado, fotografia, movimento) e marca o que o site já cumpre, o que está pendente e o que depende de decisão do Mateus.
+
 ## Como o site é feito
 
 - **Um arquivo só.** `index.html` é o site inteiro: um `<style>`, três `<script>` inline, cada página como `<div class="page">`. A navegação troca a classe `.active` e usa a History API. Não há framework nem dependência: não existe `package.json`.
 - **Inglês por dicionário.** Em `/en` o site carrega `en.json`, e `traduzirArvore()` troca cada nó de texto procurando o texto **exato** do DOM em `textos`. A chave é o português. Mudar um texto no `index.html` sem mudar a chave deixa a frase em português no site em inglês.
 - **Páginas geradas.** `gerar-compartilhamento.js` copia o `index.html` para cada rota (seções, `/peca/<slug>`, `/projeto/<slug>`, as versões `/en/...` e o `404.html`), trocando título, descrição, canonical, hreflang e Open Graph. Existem porque WhatsApp e redes sociais não executam JavaScript. São cópias: toda mudança em `index.html` ou `en.json` exige rodar o gerador antes do commit.
 - **Rotas.** `vercel.json` não tem rewrite coringa. Arquivo estático vence; rota desconhecida cai no `404.html` com status 404 de verdade. Os cabeçalhos de segurança também estão lá, com CSP em `'unsafe-inline'` porque todo o código é inline.
-- **Fora do site.** `.vercelignore` lista o que fica no repositório mas não vai ao ar: ferramentas locais (`gerar-*.js`, `gerar-cartoes.html`, `recortar-foto.html`), documentos, `.claude/` e este arquivo.
+- **Fora do site.** `.vercelignore` lista o que fica no repositório mas não vai ao ar: ferramentas locais (`gerar-*.js`, `gerar-cartoes.html`, `recortar-foto.html`), documentos, `.claude/`, o `DESIGN.md` e este arquivo.
 - **Cartões de compartilhamento.** `images/og/<slug>.jpg`, 1200×630, desenhados em canvas por `gerar-cartoes.html` com o servidor local `gerar-cartoes-servidor.js` (só `127.0.0.1:8801`).
 
 ## Convenções
