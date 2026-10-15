@@ -50,6 +50,19 @@
        então as visitas são disparadas manualmente por mabeVisualizacao() */
     ids.forEach(function (id) { gtag('config', id, { send_page_view: false }); });
   })();
+
+  /* Vercel Web Analytics: conta visitas sem cookie e sem identificar
+     ninguem, por isso dispensa o aviso. Ligado no painel da Vercel em
+     15/10/2026. So carrega no dominio de verdade: no preview local a
+     rota nao existe, e teste nao vira visita */
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  (function carregarContagem() {
+    if (location.hostname !== 'www.estudiomabe.com.br') return;
+    var s = document.createElement('script');
+    s.defer = true;
+    s.src = '/_vercel/insights/script.js';
+    document.head.appendChild(s);
+  })();
   </script>
   <!-- Dados estruturados (Schema.org): ajudam o Google a entender quem é o negócio -->
   <script type="application/ld+json">
@@ -2992,28 +3005,40 @@
   <div class="catalog-page" style="max-width:820px;margin:0 auto">
     <p class="section-overline">Institucional</p>
     <h1 class="section-title" style="margin-bottom:0.75rem">Política de Privacidade</h1>
-    <p class="section-sub" style="margin-bottom:3.5rem">Última atualização: setembro de 2026</p>
+    <p class="section-sub" style="margin-bottom:3.5rem">Última atualização: outubro de 2026</p>
 
     <div style="font-size:0.9rem;color:var(--ink-soft);font-weight:300;line-height:1.75;max-width:68ch">
-      <p style="margin-bottom:1.5rem">O <strong>Estúdio MABE</strong> (CNPJ 63.307.833/0001-10), com sede no Rio de Janeiro (RJ), respeita a sua privacidade e trata seus dados pessoais em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018, a LGPD).</p>
+      <p style="margin-bottom:1.5rem">Esta política explica como o <strong>Estúdio MABE</strong> (CNPJ 63.307.833/0001-10), com sede no Rio de Janeiro (RJ), trata os seus dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018, a LGPD).</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">1. Quais dados coletamos</h3>
-      <p style="margin-bottom:1.5rem">Coletamos apenas os dados que você nos fornece voluntariamente ao preencher o formulário de contato ou iniciar uma conversa pelo WhatsApp: nome, telefone, e-mail e a descrição do seu projeto. Também coletamos, quando você autoriza no aviso de cookies, dados de navegação anônimos (páginas visitadas, origem do acesso e tipo de dispositivo), conforme descrito no item 5.</p>
+      <p style="margin-bottom:1.5rem">Coletamos apenas os dados que você nos envia: nome, telefone, e-mail e a descrição do seu projeto, quando preenche o formulário de contato ou conversa conosco pelo WhatsApp ou por e-mail. Quem se candidata pela página Trabalhe conosco envia também a função que procura, um resumo da sua experiência e, se quiser, fotos de peças que fez.</p>
+      <p style="margin-bottom:1.5rem">O site em si não tem cadastro, login nem pagamento, e não guarda esses dados: o formulário apenas monta a mensagem e abre o WhatsApp com ela. Fora isso, o site só conta as visitas, de forma anônima, como explicado no item 6.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">2. Para que usamos</h3>
-      <p style="margin-bottom:1.5rem">Utilizamos seus dados exclusivamente para responder ao seu contato, elaborar orçamentos, conduzir o desenvolvimento do seu projeto e, quando autorizado, enviar comunicações sobre o estúdio. Não vendemos, alugamos nem compartilhamos seus dados com terceiros para fins de marketing.</p>
+      <p style="margin-bottom:1.5rem">Usamos seus dados apenas para responder ao seu contato, preparar orçamentos e conduzir o seu projeto até a entrega. Os dados de candidatos servem apenas para avaliar a candidatura. Não vendemos, não alugamos e não repassamos seus dados a ninguém para fins de marketing, nem enviamos mensagens que você não pediu.</p>
 
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">3. Armazenamento e segurança</h3>
-      <p style="margin-bottom:1.5rem">Seus dados são armazenados pelo tempo necessário ao atendimento da sua solicitação e ao cumprimento de obrigações legais. Adotamos medidas razoáveis de segurança para protegê-los contra acesso não autorizado.</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">3. Serviços de outras empresas</h3>
+      <p style="margin-bottom:1.5rem">Para o site funcionar e para conversarmos com você, usamos serviços de outras empresas, que recebem apenas o necessário para cada função:</p>
+      <p style="margin-bottom:1.5rem">Vercel, que hospeda o site e faz a contagem de visitas do item 6. Como qualquer servidor, registra dados técnicos de cada acesso, como o endereço IP e o tipo de navegador.</p>
+      <p style="margin-bottom:1.5rem">Google Fonts, que entrega as fontes do site. Ao abrir uma página, o seu navegador busca as fontes nos servidores do Google, que recebem o seu endereço IP.</p>
+      <p style="margin-bottom:1.5rem">WhatsApp, da Meta. O formulário de contato abre o WhatsApp com o que você escreveu já preenchido na mensagem, e esses dados passam pelo WhatsApp a partir desse momento, mesmo antes de você tocar em enviar.</p>
+      <p style="margin-bottom:1.5rem">Gmail, do Google, onde recebemos e respondemos os e-mails.</p>
+      <p style="margin-bottom:1.5rem">O link para o Instagram apenas leva ao nosso perfil: o site não carrega nada do Instagram.</p>
 
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Seus direitos</h3>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Por quanto tempo guardamos</h3>
+      <p style="margin-bottom:1.5rem">Os dados de um pedido de orçamento ficam guardados enquanto a conversa estiver em andamento e por até 12 meses depois do último contato, caso você queira retomar o projeto. Se a encomenda for feita, guardamos o necessário pelo prazo que a lei exige para documentos fiscais e para a garantia da peça. Candidaturas ficam guardadas por até 12 meses. Você pode pedir a exclusão antes, a qualquer momento.</p>
+      <p style="margin-bottom:1.5rem">Adotamos medidas razoáveis de segurança para proteger seus dados contra acesso não autorizado.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. O que fica no seu navegador</h3>
+      <p style="margin-bottom:1.5rem">O site guarda no seu próprio navegador, sem enviar a ninguém, apenas três informações: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro e, se o aviso de cookies estiver ativo, a sua resposta a ele. Elas são necessárias ao funcionamento e não dependem de consentimento. O site não grava cookies.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">6. Medição de audiência</h3>
+      <p style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais. Não usamos o Google Analytics nem o Google Ads. Se um dia passarmos a usar, esta política será atualizada antes, e eles só serão ativados depois que você aceitar no aviso de cookies exibido ao entrar no site. Se recusar, o site continua funcionando igual.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">7. Seus direitos</h3>
       <p style="margin-bottom:1.5rem">Nos termos da LGPD, você pode solicitar a qualquer momento: confirmação do tratamento, acesso, correção, anonimização ou exclusão dos seus dados, além da revogação de consentimento. Para exercer esses direitos, escreva para <a href="mailto:contato.estudiomabe@gmail.com" style="color:var(--ink);text-decoration:underline">contato.estudiomabe@gmail.com</a>.</p>
 
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. Cookies e medição de audiência</h3>
-      <p style="margin-bottom:1.5rem">Utilizamos o Google Analytics e o Google Ads para entender como o site é usado e medir o resultado dos nossos anúncios. Essas ferramentas gravam cookies no seu navegador com dados de navegação: páginas visitadas, origem do acesso, tipo de dispositivo e cliques nos botões de contato. Por esse meio não coletamos nome, telefone nem e-mail, e os dados não são usados para identificar você individualmente.</p>
-      <p style="margin-bottom:1.5rem">Esses cookies só são ativados se você aceitar no aviso exibido ao entrar no site. Se recusar, o site continua funcionando normalmente e nenhum cookie de medição é gravado. Para mudar sua escolha depois, basta limpar os dados do site no seu navegador, e o aviso voltará a aparecer. Cookies estritamente necessários ao funcionamento (como a memória da sua seleção de peças) não dependem de consentimento.</p>
-
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">6. Contato</h3>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">8. Contato</h3>
       <p style="margin-bottom:1.5rem">Dúvidas sobre esta política podem ser encaminhadas ao e-mail acima ou pelo WhatsApp +55 (21) 99029-1331.</p>
     </div>
   </div>
