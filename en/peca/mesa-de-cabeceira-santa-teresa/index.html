@@ -1154,6 +1154,10 @@
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--ink); }
     .form-group textarea { resize: vertical; min-height: 120px; }
     .form-note { font-size: 0.7rem; color: var(--muted); text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; margin-top: 0.5rem; }
+    /* Aviso no ponto da coleta (LGPD, art. 9): antes de tocar, quem preenche
+       sabe que os dados vão para o WhatsApp. 14 px, o mínimo do manual */
+    .form-aviso { font-size: 0.875rem; line-height: 1.6; color: var(--muted); text-align: center; }
+    .form-aviso a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
     .form-success { display: none; border: 1px solid var(--border); padding: 2.5rem; color: var(--ink); text-align: center; background: var(--bg-dark); font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; }
 
     /* FOOTER */
@@ -2782,6 +2786,7 @@
           </div>
           <button class="btn-primary" style="width:100%;padding:1rem 2rem;margin-top:0.25rem" onclick="submitQuote()">Solicitar conversa inicial</button>
           <p class="form-note">Sem compromisso. Apenas uma boa conversa sobre o seu espaço.</p>
+          <p class="form-aviso">O botão abre o WhatsApp com estes dados já escritos na mensagem. Veja como cuidamos deles na <a href="/privacidade">Política de Privacidade</a>.</p>
         </div>
         <div class="form-success" id="formSuccess">
           Abrimos o WhatsApp com os seus dados.<br><br>
