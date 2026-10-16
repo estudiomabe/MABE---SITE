@@ -15,15 +15,36 @@
        MEDICAO: Google Analytics 4 e Google Ads
        Cole os IDs abaixo quando criar as contas. Enquanto estiverem
        vazios NADA é carregado e NENHUM cookie é gravado. O aviso de
-       cookies também fica escondido.
+       cookies e o link "Preferências de cookies" do rodapé também ficam
+       escondidos.
+
+       Com ID, a tag do Google só é baixada depois que o visitante clica
+       em Aceitar, e só em www.estudiomabe.com.br. Quem recusa ou não
+       responde não manda nada ao Google Analytics nem ao Google Ads (as
+       fontes do Google Fonts são outro assunto, ver a política, item 3).
+       O Aceitar libera medir visitas e conversões, não anúncio
+       personalizado: ad_personalization fica negado.
+
+       ANTES DE PUBLICAR COM UM ID: a Política de Privacidade diz hoje
+       que o site não usa Google Analytics nem Google Ads. Troque no mesmo
+       commit os itens 1, 3, 5 e 6 e a data dela, e libere na CSP do
+       vercel.json os endereços do Google que a tag usa (o texto pronto e
+       a lista, nos dois idiomas, estão na lista de pendências, fora do
+       repositório).
 
        ID_ANALYTICS: pegue em Analytics > Admin > Fluxos de dados ("G-XXXXXXXXXX")
        ID_ADS: pegue em Google Ads > Ferramentas > Conversões ("AW-000000000")
+       VERSAO_AVISO: troque quando o que o aviso pede mudar, e todos
+       respondem de novo. Anote aqui o texto de cada versão:
+         2026-10: "Usamos cookies para entender como o site é usado e
+         medir o resultado dos nossos anúncios. Você pode recusar, e o
+         site continua funcionando igual."
       -->
   <script>
   window.MABE_MEDICAO = {
     ID_ANALYTICS: '',   /* ex: 'G-XXXXXXXXXX' */
-    ID_ADS:       ''    /* ex: 'AW-123456789' */
+    ID_ADS:       '',   /* ex: 'AW-123456789' */
+    VERSAO_AVISO: '2026-10'
   };
 
   window.dataLayer = window.dataLayer || [];
@@ -38,9 +59,30 @@
     wait_for_update: 600
   });
 
-  (function carregarTags() {
+  /* A resposta guardada vale só se for desta versão do aviso. Valor
+     antigo, estragado ou de outra versão conta como sem resposta */
+  function mabeRespostaGuardada() {
+    try {
+      var r = JSON.parse(localStorage.getItem('mabe-consentimento'));
+      if (r && r.versao === MABE_MEDICAO.VERSAO_AVISO &&
+          (r.resposta === 'aceito' || r.resposta === 'recusado')) return r.resposta;
+    } catch (e) {}
+    return null;
+  }
+
+  /* Baixa a tag do Google. Só é chamada depois do Aceitar, agora ou numa
+     visita anterior: antes disso nenhum pedido sai para o Google */
+  function mabeCarregarGoogle() {
     var ids = [MABE_MEDICAO.ID_ANALYTICS, MABE_MEDICAO.ID_ADS].filter(Boolean);
-    if (!ids.length) return;                     /* sem ID configurado, não faz nada */
+    if (!ids.length || window.mabeGoogleCarregado) return;
+    if (!document.documentElement.classList.contains('medicao-ligada')) return;
+    window.mabeGoogleCarregado = true;
+    gtag('consent', 'update', {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'denied',      /* o aviso não pede anúncio personalizado */
+      analytics_storage: 'granted'
+    });
     var s = document.createElement('script');
     s.async = true;
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ids[0];
@@ -48,7 +90,16 @@
     gtag('js', new Date());
     /* send_page_view: false, porque o site troca de página sem recarregar,
        então as visitas são disparadas manualmente por mabeVisualizacao() */
-    ids.forEach(function (id) { gtag('config', id, { send_page_view: false }); });
+    ids.forEach(function (id) {
+      gtag('config', id, { send_page_view: false, allow_ad_personalization_signals: false });
+    });
+  }
+
+  (function prepararMedicao() {
+    if (!MABE_MEDICAO.ID_ANALYTICS && !MABE_MEDICAO.ID_ADS) return;   /* sem ID, nada a fazer */
+    if (location.hostname !== 'www.estudiomabe.com.br') return;        /* teste não vira visita */
+    document.documentElement.classList.add('medicao-ligada');           /* mostra Preferências de cookies */
+    if (mabeRespostaGuardada() === 'aceito') mabeCarregarGoogle();
   })();
 
   /* Vercel Web Analytics: conta visitas sem cookie e sem identificar
@@ -1975,10 +2026,29 @@
       transition: all 0.3s ease;
     }
     .aviso-cookies button:hover { border-color: var(--bg); color: var(--bg); }
-    .aviso-cookies button.principal { background: var(--bg); border-color: var(--bg); color: var(--ink); }
-    .aviso-cookies button.principal:hover { background: var(--gold); border-color: var(--gold-texto); color: var(--ink); }
+    /* Aceitar e Recusar com o mesmo peso: o guia de cookies da ANPD trata
+       destacar só o aceite como empurrar a escolha */
+    .aviso-cookies button,
+    .aviso-cookies button.principal { color: rgba(232,230,225,0.9); border-color: rgba(232,230,225,0.5); }
+    .aviso-cookies button:hover,
+    .aviso-cookies button.principal:hover { border-color: var(--bg); color: var(--bg); }
     @media (max-width: 600px) {
       .aviso-cookies { left: 1rem; right: 1rem; bottom: 1rem; padding: 1.25rem; }
+    }
+    /* "Preferências de cookies" no rodapé: só existe com medição ligada
+       (classe posta no <head>) e tem a cara dos links ao lado */
+    .so-com-medicao { display: none; }
+    .medicao-ligada .so-com-medicao { display: inline; }
+    .link-preferencias {
+      background: none; border: 0; padding: 0; font: inherit; letter-spacing: inherit;
+      text-align: inherit; color: rgba(232,230,225,0.35); cursor: pointer; text-decoration: underline;
+    }
+    /* na política, sobre fundo claro */
+    .medicao-ligada p.so-com-medicao { display: block; }
+    #page-privacidade .link-preferencias { color: var(--ink); }
+    /* no celular o botão do WhatsApp cobre o fim do rodapé */
+    @media (max-width: 600px) {
+      .medicao-ligada .footer-bottom { padding-bottom: 4.5rem; }
     }
 
     /* Foco de teclado: antes havia uma regra so no site inteiro, entao
@@ -2356,7 +2426,7 @@
     <div class="footer-bottom">
       <p>© 2026 Estúdio MABE · Mobiliário em madeira maciça, sob encomenda</p>
       <p>CNPJ: 63.307.833/0001-10 · Rio de Janeiro, RJ</p>
-      <p><a href="/como-comprar" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Como comprar</a> · <a href="/privacidade" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Política de Privacidade</a> · <a href="/trabalhe-conosco" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Trabalhe conosco</a></p>
+      <p><a href="/como-comprar" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Como comprar</a> · <a href="/privacidade" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Política de Privacidade</a> · <a href="/trabalhe-conosco" style="color:rgba(232,230,225,0.35);cursor:pointer;text-decoration:underline">Trabalhe conosco</a><span class="so-com-medicao"> · <button type="button" class="link-preferencias" onclick="abrirPreferenciasCookies()">Preferências de cookies</button></span></p>
     </div>
   </footer>
 </div>
@@ -2764,6 +2834,7 @@
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">6. Medição de audiência</h3>
       <p style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais. Não usamos o Google Analytics nem o Google Ads. Se um dia passarmos a usar, esta política será atualizada antes, e eles só serão ativados depois que você aceitar no aviso de cookies exibido ao entrar no site. Se recusar, o site continua funcionando igual.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem"><button type="button" class="link-preferencias" onclick="abrirPreferenciasCookies()">Preferências de cookies</button></p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">7. Seus direitos</h3>
       <p style="margin-bottom:1.5rem">Nos termos da LGPD, você pode solicitar a qualquer momento: confirmação do tratamento, acesso, correção, anonimização ou exclusão dos seus dados, além da revogação de consentimento. Para exercer esses direitos, escreva para <a href="mailto:contato.estudiomabe@gmail.com" style="color:var(--ink);text-decoration:underline">contato.estudiomabe@gmail.com</a>.</p>
@@ -2890,7 +2961,8 @@
    Marque APENAS UM dos dois como conversão, para não contar em dobro.
     */
 function mabeEvento(nome, params) {
-  if (typeof gtag !== 'function') return;
+  /* sem o Aceitar a tag nao foi baixada, e nada fica na fila esperando */
+  if (typeof gtag !== 'function' || !window.mabeGoogleCarregado) return;
   gtag('event', nome, params || {});
 }
 
@@ -4847,39 +4919,114 @@ if (!document.getElementById('page-404').classList.contains('active')) mabeVisua
 
 /*
    AVISO DE COOKIES (LGPD)
-   A resposta fica guardada no navegador do visitante. Enquanto não
-   houver ID de medição configurado, o aviso nem chega a aparecer.
+   A resposta fica guardada no navegador do visitante, com a data e a
+   versão do aviso, que mostram quando e para o que ele disse sim.
+   Enquanto não houver ID de medição configurado, o aviso nem chega a
+   aparecer. A tag do Google, quando aceita, é baixada no <head> por
+   mabeCarregarGoogle().
     */
 const CHAVE_CONSENTIMENTO = 'mabe-consentimento';
 
-function aplicarConsentimento(resposta) {
-  const permissao = resposta === 'aceito' ? 'granted' : 'denied';
-  if (typeof gtag !== 'function') return;
-  gtag('consent', 'update', {
-    ad_storage: permissao,
-    ad_user_data: permissao,
-    ad_personalization: permissao,
-    analytics_storage: permissao
+/* Os cookies que o Google grava, no www e no domínio inteiro */
+function apagarCookiesGoogle() {
+  const raiz = location.hostname.replace(/^www\./, '');
+  document.cookie.split(';').forEach(c => {
+    const nome = c.split('=')[0].trim();
+    if (!/^(_ga|_gid|_gat|_gcl)/.test(nome)) return;
+    ['', '; domain=' + location.hostname, '; domain=.' + raiz].forEach(dominio => {
+      document.cookie = nome + '=; Max-Age=0; path=/' + dominio;
+    });
   });
 }
 
-function responderCookies(resposta) {
-  try { localStorage.setItem(CHAVE_CONSENTIMENTO, resposta); } catch (e) {}
-  aplicarConsentimento(resposta);
+/* Quem reabriu o aviso por Preferências de cookies volta para onde estava */
+let focoAntesDoAviso = null;
+
+function fecharAvisoCookies() {
   const aviso = document.getElementById('avisoCookies');
   if (aviso) aviso.classList.remove('visivel');
+  if (focoAntesDoAviso && document.contains(focoAntesDoAviso)) focoAntesDoAviso.focus();
+  focoAntesDoAviso = null;
 }
+
+/* Tira a tag do Google de uma página que já a baixou: avisa que o
+   consentimento acabou, desliga, apaga os cookies e recarrega sem ela */
+function desligarGoogle() {
+  gtag('consent', 'update', {
+    ad_storage: 'denied', ad_user_data: 'denied',
+    ad_personalization: 'denied', analytics_storage: 'denied'
+  });
+  [MABE_MEDICAO.ID_ANALYTICS, MABE_MEDICAO.ID_ADS].filter(Boolean)
+    .forEach(id => { window['ga-disable-' + id] = true; });
+  apagarCookiesGoogle();
+  location.reload();
+}
+
+function responderCookies(resposta) {
+  try {
+    localStorage.setItem(CHAVE_CONSENTIMENTO, JSON.stringify({
+      resposta: resposta,
+      versao: MABE_MEDICAO.VERSAO_AVISO,
+      data: new Date().toISOString()
+    }));
+  } catch (e) {
+    /* sem conseguir gravar, ao menos nenhum "aceito" antigo fica valendo */
+    try { localStorage.removeItem(CHAVE_CONSENTIMENTO); } catch (e2) {}
+  }
+  fecharAvisoCookies();
+
+  if (resposta === 'aceito') {
+    if (!window.mabeGoogleCarregado) {
+      mabeCarregarGoogle();
+      mabeVisualizacao();            /* a página em que a pessoa aceitou */
+    }
+    return;
+  }
+  /* Recusou: cookies do Google que tenham ficado de um aceite antigo saem */
+  apagarCookiesGoogle();
+  if (window.mabeGoogleCarregado) desligarGoogle();   /* a tag não sai sozinha */
+}
+
+/* A resposta vale para todas as abas: outra aba aberta, ou uma página
+   que volta do cache do navegador pelo botão Voltar, confere de novo */
+function conferirRespostaDeFora() {
+  const resposta = mabeRespostaGuardada();
+  if (window.mabeGoogleCarregado && resposta !== 'aceito') { desligarGoogle(); return; }
+  const aviso = document.getElementById('avisoCookies');
+  if (resposta && aviso && !focoAntesDoAviso) aviso.classList.remove('visivel');
+  if (resposta === 'aceito' && !window.mabeGoogleCarregado &&
+      document.documentElement.classList.contains('medicao-ligada')) {
+    mabeCarregarGoogle();
+    mabeVisualizacao();
+  }
+}
+window.addEventListener('storage', e => { if (e.key === CHAVE_CONSENTIMENTO) conferirRespostaDeFora(); });
+window.addEventListener('pageshow', e => { if (e.persisted) conferirRespostaDeFora(); });
 
 (function iniciarAvisoCookies() {
   const aviso = document.getElementById('avisoCookies');
   if (!aviso) return;
-  let resposta = null;
-  try { resposta = localStorage.getItem(CHAVE_CONSENTIMENTO); } catch (e) {}
-  if (resposta) { aplicarConsentimento(resposta); return; }
-  const medindo = !!(MABE_MEDICAO.ID_ANALYTICS || MABE_MEDICAO.ID_ADS);
-  if (!medindo) return;            /* nada sendo medido, nada a consentir */
+  /* Esc fecha o aviso só quando ele foi reaberto: a primeira vez pede resposta */
+  aviso.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && focoAntesDoAviso) fecharAvisoCookies();
+  });
+  /* a classe vem do <head>: há ID e o endereço é o do site */
+  if (!document.documentElement.classList.contains('medicao-ligada')) return;
+  if (mabeRespostaGuardada()) return; /* já respondeu esta versão do aviso */
   setTimeout(() => aviso.classList.add('visivel'), 1400);
 })();
+
+/* "Preferências de cookies", no rodapé e na política: reabre o aviso
+   para mudar a resposta a qualquer momento, como pede a LGPD */
+function abrirPreferenciasCookies() {
+  const aviso = document.getElementById('avisoCookies');
+  if (!aviso) return;
+  /* se o aviso da primeira visita já está na tela, ele continua pedindo resposta */
+  if (!aviso.classList.contains('visivel')) focoAntesDoAviso = document.activeElement;
+  aviso.classList.add('visivel');
+  const primeiro = aviso.querySelector('button');
+  if (primeiro) primeiro.focus();
+}
 
 /* Idioma e tema por ultimo: dependem de tudo o que foi definido acima */
 marcarIdiomaNoBotao();
