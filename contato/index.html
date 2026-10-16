@@ -782,8 +782,10 @@
       gap: 4.5rem 3rem;
     }
     .product-card { background: transparent; cursor: pointer; }
+    /* 4:5, o recorte das fotos do site (DESIGN.md, fotografia): em 4:3
+       a foto em pé perdia o alto do tampo e os pés da peça */
     .product-img-placeholder {
-      width: 100%; aspect-ratio: 4/3;
+      width: 100%; aspect-ratio: 4/5;
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden; border: 1px solid var(--border);
     }
@@ -878,11 +880,14 @@
     .peca-voltar:hover { color: var(--ink); }
     .peca-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 5rem; align-items: start; }
     .peca-foto {
-      width: 100%; aspect-ratio: 4/3; overflow: hidden;
+      width: 100%; aspect-ratio: 4/5; overflow: hidden;   /* mesmo recorte das fotos */
       border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: center;
     }
     .peca-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Peça deitada (rack, banco): em 4:5 sobra fundo em cima e embaixo.
+       Ela marca quadro:'largo' nos dados e fica em 4:3 */
+    .product-img-placeholder.quadro-largo, .peca-foto.quadro-largo { aspect-ratio: 4/3; }
     .peca-foto { position: relative; }
     .peca-seta {
       position: absolute; top: 50%; transform: translateY(-50%);
@@ -3040,11 +3045,16 @@ window.addEventListener('scroll', () => {
 
 /* Products */
 const products = [
+  { id:15, name:'Mesa de Cabeceira Santa Teresa', category:'quarto', price:900,
+    bg:'#1a1612', accent:'#b8905a',
+    mat:'Tauari maciço · Medidas: 50×40×60 cm · Prateleira em palha indiana',
+    texto:'Tauari maciço e palha indiana, numa peça feita à mão do começo ao fim. O tampo tem os cantos suavizados, e a gaveta abre por um rasgo escavado na própria frente, sem puxador para enganchar no lençol. Embaixo, a prateleira em palha indiana exalta o trabalho manual: a trama aberta torna a peça mais leve ao olhar e deixa o ar passar. Uma mesa de cabeceira para ficar ao alcance da mão por muitos anos.',
+    imgs:['/images/mesa-de-cabeceira-santa-teresa-1.webp','/images/mesa-de-cabeceira-santa-teresa-2.webp'] },
   { id:14, name:'Mesa de Cabeceira Botafogo', category:'quarto', price:950,
     bg:'#1a1612', accent:'#b8905a',
     mat:'Tauari maciço · Medidas: 50×40×60 cm · Puxadores esculpidos na própria madeira',
     imgs:['/images/mesa-de-cabeceira-botafogo-1.webp'] },
-  { id:13, name:'Rack Urca',           category:'sala',       price:3490,  bg:'#22201a', accent:'#a08060', mat:'Folhas de freijó · Puxadores em madeira maciça de ipê', imgs:['/images/rack-urca-1.webp'] },
+  { id:13, name:'Rack Urca',           category:'sala',       price:3490,  bg:'#22201a', accent:'#a08060', quadro:'largo', mat:'Folhas de freijó · Puxadores em madeira maciça de ipê', imgs:['/images/rack-urca-1.webp'] },
 ];
 
 /* Vazia ate existirem itens decorativos de verdade. As pecas antigas, que eram
@@ -3604,7 +3614,7 @@ function renderProducts() {
   const list = activeFilter==='todos' ? products : products.filter(p=>p.category===activeFilter);
   document.getElementById('productsGrid').innerHTML = list.map(p=>`
     <div class="product-card" data-rota="/peca/${slugify(p.name)}">
-      <div class="product-img-placeholder" style="background:${p.bg}" data-fotos='${JSON.stringify(fotosDe(p))}' data-i="0">
+      <div class="product-img-placeholder${p.quadro === 'largo' ? ' quadro-largo' : ''}" style="background:${p.bg}" data-fotos='${JSON.stringify(fotosDe(p))}' data-i="0">
         ${productThumb(p)}
         ${setasCard(p)}
         <div class="product-img-overlay">
@@ -4178,7 +4188,7 @@ function renderPeca(p) {
        </button>
        <span class="peca-contador" id="pecaContador">1 / ${fotos.length}</span>` : '';
   const galeria = fotos.length
-    ? `<div class="peca-foto" style="background:${p.bg}">
+    ? `<div class="peca-foto${p.quadro === 'largo' ? ' quadro-largo' : ''}" style="background:${p.bg}">
          <img id="pecaFotoPrincipal" src="${fotos[0]}" alt="${p.name}" />
          ${setas}
        </div>
@@ -4186,7 +4196,7 @@ function renderPeca(p) {
             `<button class="peca-mini${i === 0 ? ' ativa' : ''}" onclick="irParaFoto(${i})" aria-label="Foto ${i + 1} de ${fotos.length}">
                <img src="${src}" alt="" loading="lazy" />
              </button>`).join('')}</div>` : ''}`
-    : `<div class="peca-foto" style="background:${p.bg}">${p.tipo === 'product' ? pSVG(p) : dSVG(p)}</div>`;
+    : `<div class="peca-foto${p.quadro === 'largo' ? ' quadro-largo' : ''}" style="background:${p.bg}">${p.tipo === 'product' ? pSVG(p) : dSVG(p)}</div>`;
   const detalhe = p.mat || p.desc || '';
   /* o campo de material vem como "Tauari maciço · Medidas: 50×40×60 cm · ..." */
   const partes = detalhe.split('·').map(s => s.trim()).filter(Boolean);
@@ -4195,7 +4205,7 @@ function renderPeca(p) {
     if (medida) return { rotulo: 'Medidas', valor: medida[1] };
     return null;
   }).filter(Boolean);
-  const descricao = partes.filter(parte => !/^Medidas?:/i.test(parte)).join(' · ');
+  const descricao = p.texto || partes.filter(parte => !/^Medidas?:/i.test(parte)).join(' · ');
 
   const msg = encodeURIComponent(`Olá! Tenho interesse na peça ${p.name}${p.tipo === 'pet' ? ' (Linha Pet)' : ''}, que vi no site por ${fmt(p.price)}. Queria saber o prazo e se dá para adaptar a medida.`);
 
@@ -4634,7 +4644,7 @@ function dadosDaPeca(p, url) {
   const produto = {
     '@type': 'Product',
     name: p.name,
-    description: p.desc || p.mat || `${p.name} em madeira maciça, feita à mão pelo Estúdio MABE.`,
+    description: p.texto || p.desc || p.mat || `${p.name} em madeira maciça, feita à mão pelo Estúdio MABE.`,
     url: SITE + url,
     category: p.secao,
     material: 'Madeira maciça certificada',

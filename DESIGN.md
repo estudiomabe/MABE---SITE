@@ -114,6 +114,7 @@ Títulos de página e de seção já estão em Poppins (pedido do Mateus em 12/1
 - **Toda peça tem um macro do encaixe.** É a foto que prova o preço.
 - **Sombra é estrutura.** Não abrir até sumir.
 - **No site**: recorte 4:5, WebP, feito aqui em canvas, o que também descarta EXIF e GPS. O original chega com 2000 px ou mais, nomeado `trabalho-<peça>-<n>.jpg`.
+- **Quadro da foto no catálogo e na página da peça**: 4:5, o mesmo recorte, para a peça aparecer inteira. Peça deitada (rack, banco) marca `quadro:'largo'` nos dados e fica em 4:3, senão sobra fundo em cima e embaixo. **[vale]** desde 15/10/2026.
 - **Texto alternativo** descreve a peça, a espécie e o momento ("Rack suspenso em peroba do campo, com a mão abrindo a porta sem puxador"), não "foto 1".
 - **Nunca** imagem gerada ou editada por IA apresentada como obra real.
 
