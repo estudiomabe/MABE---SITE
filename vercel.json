@@ -1,14 +1,14 @@
 {
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "mabe-site.vercel.app"
         }
       ],
-      "destination": "https://www.estudiomabe.com.br/:path*",
+      "destination": "https://www.estudiomabe.com.br/$1",
       "permanent": true
     },
     {
