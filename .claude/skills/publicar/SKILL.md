@@ -64,4 +64,6 @@ Se mexeu em formulário, carrinho, link ou rota, **exercite**: preencha, clique,
 node .claude/skills/publicar/scripts/no-ar.js
 ```
 
-Espera o deploy até o `index.html` e o `en.json` do ar ficarem idênticos ao commit. Depois exige cada URL do `sitemap.xml` em 200 e idêntica ao arquivo dela, 404 numa rota inexistente, e nenhum arquivo do `.vercelignore` acessível. Só diga que está publicado depois que ele passar.
+Espera o deploy até o `index.html` e o `en.json` do ar ficarem idênticos ao commit. Depois exige cada URL do `sitemap.xml` em 200 e idêntica ao arquivo dela, 404 numa rota inexistente, e nenhum arquivo do `.vercelignore` acessível.
+
+Arquivo idêntico não prova que a página mostra o certo. Em seguida, sem esperar pedido, abra https://www.estudiomabe.com.br no navegador e confira o que mudou, em PT e EN, em 320, 375 e 1280 px: o texto novo aparece e o antigo sumiu, as imagens carregam, nada vaza para os lados e o console não tem erro. Imagem nova: baixe a do ar e confirme que não tem EXIF nem GPS. Só diga que está publicado depois das duas conferências.
