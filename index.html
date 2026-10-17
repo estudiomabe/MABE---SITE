@@ -350,6 +350,8 @@
       transition: color 0.2s ease, background 0.2s ease;
     }
     .nav-drop-panel a:hover { color: var(--ink); background: var(--bg-dark); }
+    /* a seta que abre os cômodos só existe no menu sanduíche */
+    .nav-drop-abrir { display: none; }
 
     .nav-actions { display: flex; align-items: center; gap: 1rem; flex: 0 0 auto; }
 
@@ -1429,11 +1431,25 @@
          inferior media so a largura do texto (138px), nao a tela toda,
          e aparece como uma linha curta cruzando "Mobiliário" */
       .nav-drop > a.nav-menu-link { display: block; width: 100%; }
-      .nav-drop { width: 100%; }
-      .nav-drop-panel {
+      /* Os cômodos começam fechados: a seta à direita de "Mobiliário" abre
+         e fecha a lista, e tocar no nome continua levando ao catálogo */
+      .nav-drop { width: 100%; display: grid; grid-template-columns: 1fr auto; }
+      .nav-drop-abrir {
+        display: flex; align-items: center; justify-content: center;
+        width: calc(8vw + 2.75rem); min-height: 44px; padding: 0 8vw 0 0;
+        background: none; border: none; border-bottom: 1px solid var(--border);
+        color: var(--muted); cursor: pointer;
+      }
+      .nav-drop-abrir svg { width: 18px; height: 18px; transition: transform 0.25s ease; }
+      .nav-drop-abrir[aria-expanded="true"] svg { transform: rotate(180deg); }
+      /* o :hover entra junto: no toque, a seta deixa .nav-drop em hover e a
+         regra do computador empurraria a lista meia tela para a esquerda */
+      .nav-drop-panel, .nav-drop:hover .nav-drop-panel {
+        grid-column: 1 / -1;
         position: static; transform: none; opacity: 1; visibility: visible; pointer-events: auto;
         min-width: 0; text-align: left; padding: 0;
       }
+      .nav-drop:not(.aberto) .nav-drop-panel { display: none; }
       .nav-drop-panel-inner {
         background: none; border: none; box-shadow: none; text-align: left;
         padding: 0 0 0.5rem; border-bottom: 1px solid var(--border);
@@ -2258,7 +2274,10 @@
       <a href="/" class="nav-menu-link active">Home</a>
       <div class="nav-drop">
         <a href="/mobiliario" class="nav-menu-link">Mobiliário</a>
-        <div class="nav-drop-panel">
+        <button class="nav-drop-abrir" type="button" aria-expanded="false" aria-controls="navDropMobiliario" aria-label="Cômodos de Mobiliário" onclick="alternarComodos(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-drop-panel" id="navDropMobiliario">
           <div class="nav-drop-panel-inner">
             <a href="/mobiliario" onclick="event.preventDefault();goToCategory('sala')">Sala</a>
             <a href="/mobiliario" onclick="event.preventDefault();goToCategory('quarto')">Quarto</a>
@@ -3055,15 +3074,31 @@ function goToCategory(cat) {
 }
 
 function toggleMobileNav() {
-  document.getElementById('navMenu').classList.toggle('mobile-open');
+  const aberto = document.getElementById('navMenu').classList.toggle('mobile-open');
   document.querySelector('.nav-burger').classList.toggle('open');
   document.body.classList.toggle('nav-lock');
+  if (!aberto) fecharComodos();
 }
 
 function closeMobileNav() {
   document.getElementById('navMenu').classList.remove('mobile-open');
   document.querySelector('.nav-burger').classList.remove('open');
   document.body.classList.remove('nav-lock');
+  fecharComodos();
+}
+
+/* Menu sanduíche: a seta ao lado de "Mobiliário" mostra ou esconde os
+   cômodos. Toda vez que o menu fecha, a lista volta a ficar fechada. */
+function alternarComodos(botao) {
+  const aberto = botao.parentElement.classList.toggle('aberto');
+  botao.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+}
+
+function fecharComodos() {
+  const botao = document.querySelector('.nav-drop-abrir');
+  if (!botao) return;
+  botao.parentElement.classList.remove('aberto');
+  botao.setAttribute('aria-expanded', 'false');
 }
 
 window.addEventListener('scroll', () => {
