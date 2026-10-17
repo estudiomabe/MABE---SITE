@@ -1,6 +1,17 @@
 {
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "mabe-site.vercel.app"
+        }
+      ],
+      "destination": "https://www.estudiomabe.com.br/:path*",
+      "permanent": true
+    },
+    {
       "source": "/peca/criado-botafogo",
       "destination": "/peca/mesa-de-cabeceira-botafogo",
       "permanent": true
