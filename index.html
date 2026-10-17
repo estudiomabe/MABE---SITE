@@ -1050,8 +1050,18 @@
       line-height: 1.7; margin-top: 1.5rem;
     }
 
+    /* O começo do estúdio: quatro fotos 4:5 em fila, duas por linha abaixo de 900 px */
+    .sobre-inicio { padding: 0 8vw 7rem; }
+    .sobre-inicio-texto { max-width: 640px; margin-bottom: 3rem; }
+    .sobre-inicio-sub {
+      font-size: 0.86rem; color: var(--muted); font-weight: 300;
+      line-height: 1.7; margin-top: 1.25rem;
+    }
+    .sobre-inicio-fotos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .sobre-inicio-fotos img { display: block; width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; }
+
     .sobre-valores { padding: 6rem 8vw; background: var(--ink); color: var(--bg); }
-    .valores-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2.5rem; margin-top: 3rem; }
+    .valores-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2.5rem; margin-top: 3rem; }
     .valor-item { padding-top: 1.5rem; border-top: 1px solid rgba(232,230,225,0.18); }
     .valor-item strong { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--bg); }
     .valor-item span { font-size: 0.76rem; color: rgba(232,230,225,0.5); font-weight: 300; line-height: 1.7; }
@@ -1440,7 +1450,7 @@
       .processo-step:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
       .catalog-header { grid-template-columns: 1fr; gap: 1.5rem; }
       .fundadores { grid-template-columns: 1fr; }
-      .valores-grid { grid-template-columns: 1fr 1fr; }
+      .sobre-inicio-fotos { grid-template-columns: 1fr 1fr; }
       .arq-hero { grid-template-columns: 1fr; }
       .arq-hero-text { padding: 4rem 8vw; }
       .arq-visual { min-height: 300px; border-left: none; border-top: 1px solid var(--border); order: -1; }
@@ -1454,6 +1464,8 @@
       .nav-logo-img { height: 38px; }
       .cart-label { display: none; }
       .nav-cart-btn { padding: 0.5rem 0.75rem; }
+      .valores-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .sobre-inicio-fotos { gap: 0.5rem; }
     }
 
     /* Seções escuras usam Cormorant Garamond, a mesma família da logo */
@@ -2364,7 +2376,7 @@
       <div class="processo-step">
         <div class="processo-num">04</div>
         <h4>A entrega</h4>
-        <p>A peça chega ao seu espaço com instalação inclusa e garantia de cinco anos. Não entregamos um móvel. Entregamos um lugar para viver.</p>
+        <p>A peça chega ao seu espaço com instalação inclusa. Não entregamos um móvel. Entregamos um lugar para viver.</p>
       </div>
     </div>
   </section>
@@ -2533,6 +2545,21 @@
       </div>
     </div>
 
+    <!-- O começo: fotos de 28/09/2025, nos primeiros dias do estúdio -->
+    <div class="sobre-inicio">
+      <div class="sobre-inicio-texto">
+        <p class="section-overline">Setembro de 2025</p>
+        <h2 class="section-title">Onde tudo começou</h2>
+        <p class="sobre-inicio-sub">Antes da primeira peça, havia um espaço vazio. Estas fotos são dos primeiros dias do estúdio: a fiação puxada do teto, as primeiras estruturas de pé e as ferramentas ainda nas caixas. Cada peça que fazemos hoje carrega esse começo.</p>
+      </div>
+      <div class="sobre-inicio-fotos">
+        <img src="/images/inicio-do-estudio-1.webp" alt="Do alto, pela janela, o salão do estúdio em obra: andaime, estruturas de metal e piso de ladrilho hidráulico" width="924" height="1155" loading="lazy">
+        <img src="/images/inicio-do-estudio-2.webp" alt="Sargentos presos numa estrutura de madeira e, ao fundo, o salão sendo montado" width="924" height="1155" loading="lazy">
+        <img src="/images/inicio-do-estudio-3.webp" alt="Fiação puxada do teto entre estruturas de metal, com ferramentas novas ainda nas caixas" width="924" height="1155" loading="lazy">
+        <img src="/images/inicio-do-estudio-4.webp" alt="A porta de enrolar entreaberta e, do lado de dentro, o trabalho começando" width="924" height="1155" loading="lazy">
+      </div>
+    </div>
+
     <!-- Valores -->
     <div class="sobre-valores">
       <p class="section-overline">O que nos guia</p>
@@ -2549,10 +2576,6 @@
         <div class="valor-item">
           <strong>Design autoral</strong>
           <span>Cada projeto nasce do zero, a partir do seu espaço e da sua forma de viver</span>
-        </div>
-        <div class="valor-item">
-          <strong>Garantia de 5 anos</strong>
-          <span>Porque confiamos tanto no que fazemos que colocamos no contrato</span>
         </div>
       </div>
     </div>
@@ -2835,7 +2858,7 @@
       <p style="margin-bottom:1.5rem">O link para o Instagram apenas leva ao nosso perfil: o site não carrega nada do Instagram.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Por quanto tempo guardamos</h3>
-      <p style="margin-bottom:1.5rem">Os dados de um pedido de orçamento ficam guardados enquanto a conversa estiver em andamento e por até 12 meses depois do último contato, caso você queira retomar o projeto. Se a encomenda for feita, guardamos o necessário pelo prazo que a lei exige para documentos fiscais e para a garantia da peça. Candidaturas ficam guardadas por até 12 meses. Você pode pedir a exclusão antes, a qualquer momento.</p>
+      <p style="margin-bottom:1.5rem">Os dados de um pedido de orçamento ficam guardados enquanto a conversa estiver em andamento e por até 12 meses depois do último contato, caso você queira retomar o projeto. Se a encomenda for feita, guardamos o necessário pelo prazo que a lei exige para documentos fiscais. Candidaturas ficam guardadas por até 12 meses. Você pode pedir a exclusão antes, a qualquer momento.</p>
       <p style="margin-bottom:1.5rem">Adotamos medidas razoáveis de segurança para proteger seus dados contra acesso não autorizado.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. O que fica no seu navegador</h3>
@@ -2875,7 +2898,7 @@
       <p style="margin-bottom:1.5rem">Entregamos e montamos na cidade do Rio de Janeiro sem custo adicional. Na Grande Rio e nas demais regiões, a entrega tem custo à parte, orçado junto com a proposta para você saber o valor antes de fechar. A data de entrega é agendada com você, e a peça sai do estúdio protegida para o transporte.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Defeitos e ajustes</h3>
-      <p style="margin-bottom:1.5rem">Defeitos de fabricação são cobertos pela garantia legal e resolvidos pelo próprio estúdio, com reparo ou substituição. Como cada peça é feita para um espaço, ajustes de medida ou acabamento depois da aprovação do projeto são orçados à parte.</p>
+      <p style="margin-bottom:1.5rem">Defeitos de fabricação são resolvidos pelo próprio estúdio, com reparo ou substituição. Como cada peça é feita para um espaço, ajustes de medida ou acabamento depois da aprovação do projeto são orçados à parte.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. Dúvidas</h3>
       <p style="margin-bottom:1.5rem">Qualquer condição pode ser conversada antes do pedido pelo WhatsApp <a href="https://wa.me/5521990291331?text=Ol%C3%A1!%20Li%20as%20condi%C3%A7%C3%B5es%20no%20site%20e%20tenho%20uma%20d%C3%BAvida%20sobre%20%5Bprazo%20%2F%20pagamento%20%2F%20entrega%5D." target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline">+55 (21) 99029-1331</a> ou pelo e-mail <a href="mailto:contato.estudiomabe@gmail.com" style="color:var(--ink);text-decoration:underline">contato.estudiomabe@gmail.com</a>.</p>
