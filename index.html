@@ -11,40 +11,68 @@
 
 
   <!--
-       MEDICAO: Google Analytics 4 e Google Ads
-       Cole os IDs abaixo quando criar as contas. Enquanto estiverem
-       vazios NADA é carregado e NENHUM cookie é gravado. O aviso de
-       cookies e o link "Preferências de cookies" do rodapé também ficam
-       escondidos.
+       MEDICAO: Google Analytics 4
+       Cole o ID abaixo quando criar a conta. Enquanto estiver vazio NADA
+       é carregado e NENHUM cookie é gravado. O aviso de cookies, o link
+       "Preferências de cookies" e os trechos da Política de Privacidade
+       que falam do Google Analytics (classe so-com-medicao) também ficam
+       escondidos, e no lugar deles aparecem os da classe sem-medicao.
 
        Com ID, a tag do Google só é baixada depois que o visitante clica
        em Aceitar, e só em www.estudiomabe.com.br. Quem recusa ou não
-       responde não manda nada ao Google Analytics nem ao Google Ads (as
-       fontes do Google Fonts são outro assunto, ver a política, item 3).
-       O Aceitar libera medir visitas e conversões, não anúncio
-       personalizado: ad_personalization fica negado.
+       responde não manda nada ao Google Analytics (as fontes do Google
+       Fonts são outro assunto, ver a política, item 3). O Aceitar libera
+       só analytics_storage: nada de anúncio nem de Google signals.
 
-       ANTES DE PUBLICAR COM UM ID: a Política de Privacidade diz hoje
-       que o site não usa Google Analytics nem Google Ads. Troque no mesmo
-       commit os itens 1, 3, 5 e 6 e a data dela, e libere na CSP do
-       vercel.json os endereços do Google que a tag usa (o texto pronto e
-       a lista, nos dois idiomas, estão na lista de pendências, fora do
-       repositório).
+       ANTES DE COLAR O ID, no painel do GA4 (a política promete isto):
+       - fluxo da Web > Medição otimizada: DESLIGADA, a chave inteira. O
+         site já manda cada visita, as peças e os contatos. Ligada, toda
+         troca de página conta duas vezes (o histórico dispara page_view
+         mesmo com send_page_view: false), e o "clique de saída" mandaria
+         ao Google o endereço do link de reserva do formulário, que leva
+         nome, telefone e e-mail;
+       - Retenção de dados: 14 meses;
+       - Google signals: desligado.
+       NO MESMO COMMIT DO ID:
+       - troque a data de "Última atualização" da política;
+       - apague da política os parágrafos sem-medicao e a regra CSS deles,
+         e tire a classe so-com-medicao dos parágrafos de texto (fica só no
+         botão Preferências de cookies e no rodapé): assim o HTML servido
+         não diz as duas coisas. As chaves velhas do en.json saem também.
+       O passo a passo completo está fora do repositório, nas notas de
+       ativação do Google Analytics.
 
        ID_ANALYTICS: pegue em Analytics > Admin > Fluxos de dados ("G-XXXXXXXXXX")
-       ID_ADS: pegue em Google Ads > Ferramentas > Conversões ("AW-000000000")
+       Google Ads: não está ligado. Ligar exige uma escolha separada no
+       aviso, ad_storage liberado só por ela, texto novo na política e a
+       CSP da seção Google Ads do guia do Google.
        VERSAO_AVISO: troque quando o que o aviso pede mudar, e todos
        respondem de novo. Anote aqui o texto de cada versão:
-         2026-10: "Usamos cookies para entender como o site é usado e
-         medir o resultado dos nossos anúncios. Você pode recusar, e o
-         site continua funcionando igual."
+         2026-10: "Com a sua permissão, usamos cookies do Google
+         Analytics para entender como o site é usado. Ao aceitar, você
+         também concorda que esses dados sejam tratados pelo Google nos
+         Estados Unidos e em outros países. Você pode recusar, e o site
+         continua funcionando igual." (reescrito em 18/10/2026, antes de
+         o aviso ter aparecido para alguém)
       -->
   <script>
   window.MABE_MEDICAO = {
     ID_ANALYTICS: '',   /* ex: 'G-XXXXXXXXXX' */
-    ID_ADS:       '',   /* ex: 'AW-123456789' */
     VERSAO_AVISO: '2026-10'
   };
+
+  /* Origem de campanha da entrada (utm_*, gclid...). A rotaInicial limpa
+     o endereço logo na carga, então ela é guardada aqui, antes disso, e
+     vai junto no primeiro page_view enviado. Só esses parâmetros: o
+     resto da query não interessa ao Analytics. */
+  window.MABE_CAMPANHA = (function () {
+    var entrada = new URLSearchParams(location.search), fica = new URLSearchParams();
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id',
+     'gclid', 'gbraid', 'wbraid', 'gad_source'].forEach(function (k) {
+      if (entrada.has(k)) fica.set(k, entrada.get(k));
+    });
+    return fica.toString();
+  })();
 
   window.dataLayer = window.dataLayer || [];
   function gtag() { dataLayer.push(arguments); }
@@ -72,30 +100,33 @@
   /* Baixa a tag do Google. Só é chamada depois do Aceitar, agora ou numa
      visita anterior: antes disso nenhum pedido sai para o Google */
   function mabeCarregarGoogle() {
-    var ids = [MABE_MEDICAO.ID_ANALYTICS, MABE_MEDICAO.ID_ADS].filter(Boolean);
+    var ids = [MABE_MEDICAO.ID_ANALYTICS].filter(Boolean);
     if (!ids.length || window.mabeGoogleCarregado) return;
     if (!document.documentElement.classList.contains('medicao-ligada')) return;
     window.mabeGoogleCarregado = true;
-    gtag('consent', 'update', {
-      ad_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'denied',      /* o aviso não pede anúncio personalizado */
-      analytics_storage: 'granted'
-    });
+    /* o aviso pede só a medição do site: os sinais de anúncio continuam
+       negados, como no default acima */
+    gtag('consent', 'update', { analytics_storage: 'granted' });
     var s = document.createElement('script');
     s.async = true;
     s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ids[0];
     document.head.appendChild(s);
     gtag('js', new Date());
     /* send_page_view: false, porque o site troca de página sem recarregar,
-       então as visitas são disparadas manualmente por mabeVisualizacao() */
+       então as visitas são disparadas manualmente por mabeVisualizacao().
+       Google signals desligado também aqui, além do painel: ele liga a
+       visita à conta Google de quem está logado, e o aviso não pede isso */
     ids.forEach(function (id) {
-      gtag('config', id, { send_page_view: false, allow_ad_personalization_signals: false });
+      gtag('config', id, {
+        send_page_view: false,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false
+      });
     });
   }
 
   (function prepararMedicao() {
-    if (!MABE_MEDICAO.ID_ANALYTICS && !MABE_MEDICAO.ID_ADS) return;   /* sem ID, nada a fazer */
+    if (!MABE_MEDICAO.ID_ANALYTICS) return;                            /* sem ID, nada a fazer */
     if (location.hostname !== 'www.estudiomabe.com.br') return;        /* teste não vira visita */
     document.documentElement.classList.add('medicao-ligada');           /* mostra Preferências de cookies */
     if (mabeRespostaGuardada() === 'aceito') mabeCarregarGoogle();
@@ -2081,6 +2112,9 @@
     }
     /* na política, sobre fundo claro */
     .medicao-ligada p.so-com-medicao { display: block; }
+    /* e o texto de hoje, que diz que o Google Analytics não é usado, sai
+       sozinho no dia em que o ID for colado */
+    .medicao-ligada .sem-medicao { display: none; }
     #page-privacidade .link-preferencias { color: var(--ink); }
     /* no celular o botão do WhatsApp cobre o fim do rodapé */
     @media (max-width: 600px) {
@@ -2863,7 +2897,10 @@
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">1. Quais dados coletamos</h3>
       <p style="margin-bottom:1.5rem">Coletamos apenas os dados que você nos envia: nome, telefone, e-mail e a descrição do seu projeto, quando preenche o formulário de contato ou conversa conosco pelo WhatsApp ou por e-mail. Quem se candidata pela página Trabalhe conosco envia também a função que procura, um resumo da sua experiência e, se quiser, fotos de peças que fez.</p>
-      <p style="margin-bottom:1.5rem">O site em si não tem cadastro, login nem pagamento, e não guarda esses dados: o formulário apenas monta a mensagem e abre o WhatsApp com ela. Fora isso, o site só conta as visitas, de forma anônima, como explicado no item 6.</p>
+      <!-- sem-medicao: o texto de hoje. so-com-medicao: o que passa a valer
+           quando o ID do Google Analytics for colado (ver MEDICAO no head) -->
+      <p class="sem-medicao" style="margin-bottom:1.5rem">O site em si não tem cadastro, login nem pagamento, e não guarda esses dados: o formulário apenas monta a mensagem e abre o WhatsApp com ela. Fora isso, o site só conta as visitas, de forma anônima, como explicado no item 6.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem">O site em si não tem cadastro, login nem pagamento, e não guarda esses dados: o formulário apenas monta a mensagem e abre o WhatsApp com ela. Fora isso, o site conta as visitas de forma anônima e, se você aceitar, mede a navegação com o Google Analytics, como explicado no item 6.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">2. Para que usamos</h3>
       <p style="margin-bottom:1.5rem">Usamos seus dados apenas para responder ao seu contato, preparar orçamentos e conduzir o seu projeto até a entrega. Os dados de candidatos servem apenas para avaliar a candidatura. Não vendemos, não alugamos e não repassamos seus dados a ninguém para fins de marketing, nem enviamos mensagens que você não pediu.</p>
@@ -2874,6 +2911,7 @@
       <p style="margin-bottom:1.5rem">Google Fonts, que entrega as fontes do site. Ao abrir uma página, o seu navegador busca as fontes nos servidores do Google, que recebem o seu endereço IP.</p>
       <p style="margin-bottom:1.5rem">WhatsApp, da Meta. O formulário de contato abre o WhatsApp com o que você escreveu já preenchido na mensagem, e esses dados passam pelo WhatsApp a partir desse momento, mesmo antes de você tocar em enviar.</p>
       <p style="margin-bottom:1.5rem">Gmail, do Google, onde recebemos e respondemos os e-mails.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem">Google Analytics, do Google, que mede a navegação no site, só se você aceitar no aviso de cookies, como explicado no item 6.</p>
       <p style="margin-bottom:1.5rem">O link para o Instagram apenas leva ao nosso perfil: o site não carrega nada do Instagram.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">4. Por quanto tempo guardamos</h3>
@@ -2881,10 +2919,14 @@
       <p style="margin-bottom:1.5rem">Adotamos medidas razoáveis de segurança para proteger seus dados contra acesso não autorizado.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. O que fica no seu navegador</h3>
-      <p style="margin-bottom:1.5rem">O site guarda no seu próprio navegador, sem enviar a ninguém, apenas três informações: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro e, se o aviso de cookies estiver ativo, a sua resposta a ele. Elas são necessárias ao funcionamento e não dependem de consentimento. O site não grava cookies.</p>
+      <p class="sem-medicao" style="margin-bottom:1.5rem">O site guarda no seu próprio navegador, sem enviar a ninguém, apenas três informações: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro e, se o aviso de cookies estiver ativo, a sua resposta a ele. Elas são necessárias ao funcionamento e não dependem de consentimento. O site não grava cookies.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem">O site guarda no seu próprio navegador três informações: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro e a sua resposta ao aviso de cookies. Elas são necessárias ao funcionamento e não dependem de consentimento. O site só grava cookies se você aceitar o Google Analytics, que também registra as peças que você abre e adiciona à seleção, como explicado no item 6. Você também pode apagar ou bloquear cookies a qualquer momento nas configurações do seu navegador.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">6. Medição de audiência</h3>
-      <p style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais. Não usamos o Google Analytics nem o Google Ads. Se um dia passarmos a usar, esta política será atualizada antes, e eles só serão ativados depois que você aceitar no aviso de cookies exibido ao entrar no site. Se recusar, o site continua funcionando igual.</p>
+      <p class="sem-medicao" style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais. Não usamos o Google Analytics nem o Google Ads. Se um dia passarmos a usar, esta política será atualizada antes, e eles só serão ativados depois que você aceitar no aviso de cookies exibido ao entrar no site. Se recusar, o site continua funcionando igual.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem">Se você aceitar no aviso de cookies exibido ao entrar no site, também usamos o Google Analytics, do Google, para entender como o site é usado. Ele grava cookies no seu navegador (_ga e outro que começa com _ga_, que duram até 2 anos) e registra as páginas visitadas, as peças que você abre e adiciona à seleção, de onde você chegou, o tipo de aparelho e de navegador e os cliques nos botões de contato, sem nome, telefone nem e-mail. O Google também recebe o seu endereço IP, que o Google Analytics usa para estimar a cidade de onde você acessa e para filtrar acessos automáticos, e depois descarta, sem ligá-lo ao seu cookie. Os dados de cada visita ficam guardados no Google Analytics por 14 meses; depois disso, restam só os totais. Não usamos esses dados para anúncios.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem">Esses dados são tratados pela Google LLC nos Estados Unidos e em outros países onde o Google mantém servidores. Por isso, essa transferência internacional só acontece com o seu consentimento, dado no aviso de cookies (art. 33, VIII, da LGPD). Se recusar, nada é enviado ao Google Analytics, e o site continua funcionando igual. Você pode mudar a sua escolha a qualquer momento em Preferências de cookies, logo abaixo ou no rodapé da página inicial.</p>
       <p class="so-com-medicao" style="margin-bottom:1.5rem"><button type="button" class="link-preferencias" onclick="abrirPreferenciasCookies()">Preferências de cookies</button></p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">7. Seus direitos</h3>
@@ -2964,7 +3006,7 @@
 
 <!-- AVISO DE COOKIES (LGPD) -->
 <div class="aviso-cookies" id="avisoCookies" role="dialog" aria-live="polite" aria-label="Aviso sobre cookies">
-  <p>Usamos cookies para entender como o site é usado e medir o resultado dos nossos anúncios. Você pode recusar, e o site continua funcionando igual. Detalhes na <a href="/privacidade">Política de Privacidade</a>.</p>
+  <p>Com a sua permissão, usamos cookies do Google Analytics para entender como o site é usado. Ao aceitar, você também concorda que esses dados sejam tratados pelo Google nos Estados Unidos e em outros países. Você pode recusar, e o site continua funcionando igual. Detalhes na <a href="/privacidade">Política de Privacidade</a>.</p>
   <div class="aviso-cookies-acoes">
     <button class="principal" onclick="responderCookies('aceito')">Aceitar</button>
     <button onclick="responderCookies('recusado')">Recusar</button>
@@ -3017,12 +3059,37 @@ function mabeEvento(nome, params) {
   gtag('event', nome, params || {});
 }
 
+/* Cada visita é medida depois que a troca de página terminou, com o título
+   e o endereço novos. A primeira espera o dicionário em /en (ver
+   mabePrimeiraVisita, no fim): antes disso nenhuma sai, nem a do 404. */
 function mabeVisualizacao() {
-  mabeEvento('page_view', {
-    page_location: location.href,
-    page_path: location.pathname,
-    page_title: document.title
+  if (!window.mabePrimeiraVisitaFeita || !window.mabeGoogleCarregado) return;
+  let endereco = location.href;
+  /* a origem da campanha vai uma vez só, no primeiro page_view enviado,
+     mesmo que o Aceitar tenha vindo depois de navegar */
+  if (window.MABE_CAMPANHA && !window.mabeCampanhaEnviada) {
+    endereco = location.origin + location.pathname + '?' + MABE_CAMPANHA;
+    window.mabeCampanhaEnviada = true;
+  }
+  mabeEvento('page_view', { page_location: endereco, page_title: document.title });
+}
+
+/* A peça vista, com o preço: base do funil peça vista > contato */
+function mabeItemVisto(slug) {
+  if (!window.mabePrimeiraVisitaFeita) return;   /* a primeira visita manda a da peça aberta */
+  const p = acharPeca(slug);
+  if (!p) return;
+  mabeEvento('view_item', {
+    currency: 'BRL', value: p.price,
+    items: [{ item_id: String(p.id), item_name: p.name, item_category: p.secao, price: p.price }]
   });
+}
+
+/* A página que está aberta agora: usada na primeira visita e no Aceitar */
+function mabeVisitaAtual() {
+  mabeVisualizacao();
+  const peca = location.pathname.match(/^(?:\/en)?\/peca\/([a-z0-9-]+)\/?$/);
+  if (peca && document.getElementById('page-peca').classList.contains('active')) mabeItemVisto(peca[1]);
 }
 
 function mabeLead(origem, extras) {
@@ -3039,12 +3106,24 @@ function mabeLead(origem, extras) {
 document.addEventListener('click', function (e) {
   const link = e.target.closest ? e.target.closest('a[href]') : null;
   if (!link) return;
+  /* Candidato a vaga e quem escreve sobre os próprios dados não estão
+     pedindo orçamento: nessas páginas, os contatos da própria página e o
+     botão flutuante do WhatsApp não viram lead. O pedido da seleção, na
+     gaveta do carrinho, fica fora das páginas e conta em qualquer uma */
+  const ativa = document.querySelector('.page.active');
+  if (ativa && (ativa.id === 'page-carreiras' || ativa.id === 'page-privacidade') &&
+      (ativa.contains(link) || link.classList.contains('whatsapp-fab'))) return;
+  /* o link de reserva do formulário já contou no primeiro toque */
+  if (link.dataset.semLead) return;
   const href = link.getAttribute('href') || '';
   const extras = {};
   if (link.dataset.peca)  extras.item_name = link.dataset.peca;
   if (link.dataset.valor) extras.value = Number(link.dataset.valor);
 
-  if (href.indexOf('wa.me') !== -1)       mabeLead(link.dataset.evento || 'whatsapp', extras);
+  if (href.indexOf('wa.me') !== -1) {
+    mabeLead(link.dataset.evento || 'whatsapp', extras);
+    if (link.dataset.evento === 'formulario') link.dataset.semLead = '1';
+  }
   else if (href.indexOf('mailto:') === 0) mabeLead('email', extras);
   else if (href.indexOf('tel:') === 0)    mabeLead('telefone', extras);
 }, true);
@@ -3929,16 +4008,21 @@ function submitQuote() {
      pelo visitante truncava a URL e o lead chegava sem telefone nem
      e-mail. Agora o texto se monta limpo e e codificado de uma vez. */
   const texto = `Olá! Me chamo ${name}.\nTelefone: ${phone}\nE-mail: ${email}\nAmbiente: ${type}\n\n${msg || 'Gostaria de iniciar um projeto.'}`;
-  mabeLead('formulario', { item_name: type });
   /* window.open devolve null quando o navegador bloqueia a janela. Sem
      esta checagem o site anunciava sucesso para um lead que nunca saiu. */
   const endereco = `https://wa.me/5521990291331?text=${encodeURIComponent(texto)}`;
   const janela = window.open(endereco, '_blank');
   document.getElementById('quoteForm').style.display = 'none';
   if (janela) {
+    mabeLead('formulario', { item_name: type });
     document.getElementById('formSuccess').style.display = 'block';
   } else {
-    document.getElementById('linkWhats').href = endereco;
+    /* Bloqueada, o lead só conta no toque no link abaixo, uma vez, com a
+       mesma origem e o mesmo ambiente (o ouvinte de cliques lê os data-) */
+    const link = document.getElementById('linkWhats');
+    link.href = endereco;
+    link.dataset.evento = 'formulario';
+    link.dataset.peca = type;
     document.getElementById('formBloqueado').style.display = 'block';
   }
 }
@@ -4618,12 +4702,17 @@ async function carregarIdioma() {
      que faz o Google tratar as paginas como copia da home. Agora o
      dicionario ja chegou, entao basta reabrir para o titulo sair em
      ingles e o canonical apontar para o endereco certo. */
+  /* Reabre pelas versoes sem medicao: e a mesma pagina, agora traduzida,
+     e nao uma visita nova. A visita sai depois, em mabePrimeiraVisita */
   const pecaAberta = location.pathname.match(/^\/en\/peca\/([a-z0-9-]+)\/?$/);
-  if (pecaAberta) { abrirPeca(pecaAberta[1], true); return; }
+  if (pecaAberta) { abrirPecaSemMedicao(pecaAberta[1], true); return; }
   const projetoAberto = location.pathname.match(/^\/en\/projeto\/([a-z0-9-]+)\/?$/);
-  if (projetoAberto) { abrirProjeto(projetoAberto[1], true); return; }
+  if (projetoAberto) { abrirProjetoSemMedicao(projetoAberto[1], true); return; }
 
   const ativa = document.querySelector('.page.active');
+  /* O 404 so troca o titulo. Antes ele recebia os metadados da home: o
+     titulo, o canonical apontando para /en e o pedido de indexacao */
+  if (ativa && ativa.id === 'page-404') { document.title = tituloDo404(); return; }
   if (ativa) atualizarMeta(paginaPorUrl(location.pathname) || 'home');
 }
 
@@ -4807,12 +4896,15 @@ function passarNomeParaFotoGrande() {
 }
 
 let transicaoEmCurso = false;
+/* Devolve uma promessa que resolve quando a troca ja rodou. Com animacao,
+   o navegador so chama troca() depois de fotografar a tela antiga, entao
+   quem precisa do titulo ou do endereco novo (a medicao) espera por ela */
 function comTransicao(troca) {
   const podeAnimar = typeof document.startViewTransition === 'function' &&
                      !matchMedia('(prefers-reduced-motion: reduce)').matches &&
                      !transicaoEmCurso &&        /* uma de cada vez, senao o navegador cancela */
                      !document.hidden;          /* aba escondida cancela a transicao */
-  if (!podeAnimar) { troca(); marcarFotoCompartilhada(null); return; }   /* sem animacao, limpa na hora */
+  if (!podeAnimar) { troca(); marcarFotoCompartilhada(null); return Promise.resolve(); }   /* sem animacao, limpa na hora */
   transicaoEmCurso = true;
   const t = document.startViewTransition(troca);
   /* o navegador cancela a transicao em alguns casos (aba escondida, por exemplo);
@@ -4822,17 +4914,19 @@ function comTransicao(troca) {
     transicaoEmCurso = false;
     marcarFotoCompartilhada(null);
   });
+  return (t.updateCallbackDone || Promise.resolve()).catch(() => {});
 }
 
 /* Envolve o showPage já decorado: troca a página, a URL e os metadados */
 const showPageSemRota = showPage;
 showPage = function(id, semHistorico) {
-  comTransicao(() => { showPageSemRota(id); atualizarMeta(id); });
+  const trocou = comTransicao(() => { showPageSemRota(id); atualizarMeta(id); });
   const rota = ROTAS[id];
   const url = urlDaRota(id);
   if (rota && !semHistorico && location.pathname !== url) {
     history.pushState({ pagina: id }, '', url);
   }
+  return trocou;
 };
 
 
@@ -4863,13 +4957,19 @@ function marcarIndexacao(permitir) {
   if (meta) meta.setAttribute('content', permitir ? 'index, follow' : 'noindex, follow');
 }
 
+/* Em /en o titulo vem do dicionario; antes de ele chegar, fica o portugues */
+function tituloDo404() {
+  const titulo = 'Página não encontrada | Estúdio MABE';
+  return (DICIONARIO && DICIONARIO.textos[titulo]) || titulo;
+}
+
 function mostrar404() {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.getElementById('page-404').classList.add('active');
   document.querySelectorAll('.nav-menu a.nav-menu-link').forEach(a => a.classList.remove('active'));
   closeMobileNav();
   window.scrollTo(0, 0);
-  document.title = 'Página não encontrada | Estúdio MABE';
+  document.title = tituloDo404();
   marcarIndexacao(false);
   escreverDadosEstruturados(null);
   mabeVisualizacao();
@@ -4886,7 +4986,10 @@ window.addEventListener('popstate', e => {
   if (id) { showPage(id, true); } else { mostrar404(); }
 });
 
-/* Ao abrir o site direto numa URL interna (ex: link compartilhado) */
+/* Ao abrir o site direto numa URL interna (ex: link compartilhado).
+   A troca da secao pode vir animada, e o titulo so muda no fim dela: a
+   primeira visita (no fim do arquivo) espera esta promessa */
+let rotaInicialPronta = Promise.resolve();
 (function rotaInicial() {
   const slugUrl = location.pathname.match(/^(?:\/en)?\/peca\/([a-z0-9-]+)\/?$/);
   if (slugUrl) {
@@ -4902,7 +5005,7 @@ window.addEventListener('popstate', e => {
   }
   const id = paginaPorUrl(location.pathname);
   if (id && id !== 'home') {
-    showPage(id, true);
+    rotaInicialPronta = showPage(id, true);
     history.replaceState({ pagina: id }, '', location.pathname);
   } else if (id === 'home') {
     atualizarMeta('home');
@@ -4963,33 +5066,42 @@ document.addEventListener('click', function (e) {
    ser avisada manualmente ao Analytics. Sem isto, todo visitante
    apareceria parado na home e a campanha não mostraria nada.
    Os envolvimentos abaixo ficam no fim de propósito: o roteamento
-   inicial já rodou, e a primeira visita é disparada logo em seguida.
+   inicial já rodou sem eles, e a primeira visita é disparada no fim,
+   por mabePrimeiraVisita.
+   Cada medição espera a troca terminar (a promessa de comTransicao):
+   com animação, o título e o endereço só mudam depois.
     */
 const showPageSemMedicao = showPage;
 showPage = function (id, semHistorico) {
-  showPageSemMedicao(id, semHistorico);
-  mabeVisualizacao();
+  mabeEntradaAntes();
+  const antes = document.querySelector('.page.active');
+  const trocou = showPageSemMedicao(id, semHistorico);
+  /* mesma página (logo na home, cômodo do menu já em Mobiliário): não é
+     visita nova */
+  if (!(antes && antes.id === 'page-' + id)) Promise.resolve(trocou).then(mabeVisualizacao);
+  return trocou;
 };
 
 const abrirPecaSemMedicao = abrirPeca;
 abrirPeca = function (slug, semHistorico) {
-  comTransicao(() => {
+  mabeEntradaAntes();
+  return comTransicao(() => {
     abrirPecaSemMedicao(slug, semHistorico);
     passarNomeParaFotoGrande();
-  });
-  const p = acharPeca(slug);
-  if (!p) return;                 /* peça inexistente já caiu na home acima */
-  mabeVisualizacao();
-  mabeEvento('view_item', {
-    currency: 'BRL', value: p.price,
-    items: [{ item_id: String(p.id), item_name: p.name, item_category: p.secao, price: p.price }]
+  }).then(() => {
+    if (!acharPeca(slug)) return;   /* peça inexistente: mostrar404 já registrou a visita */
+    mabeVisualizacao();
+    mabeItemVisto(slug);
   });
 };
 
 const abrirProjetoSemMedicao = abrirProjeto;
 abrirProjeto = function (slug, semHistorico) {
-  comTransicao(() => { abrirProjetoSemMedicao(slug, semHistorico); });
-  mabeVisualizacao();
+  mabeEntradaAntes();
+  return comTransicao(() => { abrirProjetoSemMedicao(slug, semHistorico); }).then(() => {
+    if (!acharProjeto(slug)) return;   /* idem: o 404 já mediu */
+    mabeVisualizacao();
+  });
 };
 
 const addToCartSemMedicao = addToCart;
@@ -5003,8 +5115,23 @@ addToCart = function (id, type) {
   });
 };
 
-/* Primeira visita. A tela 404 ja registra a dela em mostrar404() */
-if (!document.getElementById('page-404').classList.contains('active')) mabeVisualizacao();
+/* Primeira visita: chamada no fim do arquivo, depois de carregarIdioma e
+   da troca de seção da entrada. Em /en, antes do dicionário o título
+   ainda está em português (ou misturado, na peça); numa seção aberta
+   direto, ele só muda no fim da animação. Até aqui nada foi medido, nem
+   o 404 da entrada. */
+function mabePrimeiraVisita() {
+  if (window.mabePrimeiraVisitaFeita) return;
+  window.mabePrimeiraVisitaFeita = true;
+  mabeVisitaAtual();
+}
+
+/* Se a pessoa navegar antes de o dicionário chegar (rede lenta em /en),
+   a página de entrada é medida ali, antes da troca, com o título que
+   tiver: melhor que perdê-la */
+function mabeEntradaAntes() {
+  if (!window.mabePrimeiraVisitaFeita) mabePrimeiraVisita();
+}
 
 /*
    AVISO DE COOKIES (LGPD)
@@ -5045,7 +5172,7 @@ function desligarGoogle() {
     ad_storage: 'denied', ad_user_data: 'denied',
     ad_personalization: 'denied', analytics_storage: 'denied'
   });
-  [MABE_MEDICAO.ID_ANALYTICS, MABE_MEDICAO.ID_ADS].filter(Boolean)
+  [MABE_MEDICAO.ID_ANALYTICS].filter(Boolean)
     .forEach(id => { window['ga-disable-' + id] = true; });
   apagarCookiesGoogle();
   location.reload();
@@ -5067,7 +5194,7 @@ function responderCookies(resposta) {
   if (resposta === 'aceito') {
     if (!window.mabeGoogleCarregado) {
       mabeCarregarGoogle();
-      mabeVisualizacao();            /* a página em que a pessoa aceitou */
+      mabeVisitaAtual();             /* a página em que a pessoa aceitou */
     }
     return;
   }
@@ -5086,11 +5213,19 @@ function conferirRespostaDeFora() {
   if (resposta === 'aceito' && !window.mabeGoogleCarregado &&
       document.documentElement.classList.contains('medicao-ligada')) {
     mabeCarregarGoogle();
-    mabeVisualizacao();
+    mabeVisitaAtual();
   }
 }
 window.addEventListener('storage', e => { if (e.key === CHAVE_CONSENTIMENTO) conferirRespostaDeFora(); });
-window.addEventListener('pageshow', e => { if (e.persisted) conferirRespostaDeFora(); });
+window.addEventListener('pageshow', e => {
+  if (!e.persisted) return;
+  const jaMedia = window.mabeGoogleCarregado;
+  conferirRespostaDeFora();
+  /* voltou do cache do navegador (bfcache), sem recarregar: é uma visita
+     nova à mesma página. Se a própria conferência acabou de ligar a tag,
+     ela já mediu */
+  if (jaMedia && window.mabeGoogleCarregado && mabeRespostaGuardada() === 'aceito') mabeVisitaAtual();
+});
 
 (function iniciarAvisoCookies() {
   const aviso = document.getElementById('avisoCookies');
@@ -5120,7 +5255,14 @@ function abrirPreferenciasCookies() {
 /* Idioma e tema por ultimo: dependem de tudo o que foi definido acima */
 marcarIdiomaNoBotao();
 marcarBotaoTema();
-carregarIdioma();
+/* a primeira visita sai com a página já no idioma certo e com a troca
+   da entrada terminada, mesmo se o dicionário falhar (aí o site segue em
+   português; o erro continua aparecendo no console) */
+const idiomaPronto = carregarIdioma();
+idiomaPronto.catch(e => console.error(e));
+/* o dicionário tem 2 s: com a rede travada, a visita sai em português */
+const idiomaComPrazo = Promise.race([idiomaPronto, new Promise(r => setTimeout(r, 2000))]);
+Promise.allSettled([idiomaComPrazo, rotaInicialPronta]).then(mabePrimeiraVisita);
 </script>
 </body>
 </html>
