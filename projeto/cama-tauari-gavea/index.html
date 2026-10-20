@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" id="metaRobots" content="index, follow" />
   <title>Cama em tauari maciço, para Marcos Zisman | Estúdio MABE</title>
-  <meta name="description" content="Cama em tauari maciço, com duas gavetas sob o estrado e puxadores escavados na própria madeira. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro." />
+  <meta name="description" content="Bicama em tauari maciço, com cama auxiliar sob o estrado e puxadores escavados na própria madeira. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro." />
 
 
 
@@ -138,8 +138,18 @@
      15/10/2026. So carrega no dominio de verdade: no preview local a
      rota nao existe, e teste nao vira visita */
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+
+  /* Quem pede na política (item 6) para não ser contado: a escolha fica
+     neste navegador. Com ela, o script nem carrega; e o beforeSend corta
+     as visitas seguintes de quem muda a escolha com a página aberta */
+  function mabeSemContagem() {
+    try { return localStorage.getItem('mabe-sem-contagem') === '1'; } catch (e) { return false; }
+  }
+  window.va('beforeSend', function (evento) { return mabeSemContagem() ? null : evento; });
+
   (function carregarContagem() {
     if (location.hostname !== 'www.estudiomabe.com.br') return;
+    if (mabeSemContagem()) return;
     var s = document.createElement('script');
     s.defer = true;
     s.src = '/_vercel/insights/script.js';
@@ -233,7 +243,7 @@
   <meta property="og:locale" content="pt_BR" />
   <meta property="og:url" content="https://www.estudiomabe.com.br/projeto/cama-tauari-gavea" />
   <meta property="og:title" content="Cama em tauari maciço, para Marcos Zisman" />
-  <meta property="og:description" content="Cama em tauari maciço, com duas gavetas sob o estrado e puxadores escavados na própria madeira. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro." />
+  <meta property="og:description" content="Bicama em tauari maciço, com cama auxiliar sob o estrado e puxadores escavados na própria madeira. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro." />
   <meta property="og:image" content="https://www.estudiomabe.com.br/images/og/cama-tauari-gavea.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -242,7 +252,7 @@
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Cama em tauari maciço, para Marcos Zisman" />
-  <meta name="twitter:description" content="Cama em tauari maciço, com duas gavetas sob o estrado e puxadores escavados na própria madeira. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro." />
+  <meta name="twitter:description" content="Bicama em tauari maciço, com cama auxiliar sob o estrado e puxadores escavados na própria madeira. Projeto realizado pelo Estúdio MABE, mobiliário em madeira maciça no Rio de Janeiro." />
   <meta name="twitter:image" content="https://www.estudiomabe.com.br/images/og/cama-tauari-gavea.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Poppins:wght@200;300&display=swap" rel="stylesheet" />
@@ -2920,12 +2930,15 @@
       <p style="margin-bottom:1.5rem">Adotamos medidas razoáveis de segurança para proteger seus dados contra acesso não autorizado.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">5. O que fica no seu navegador</h3>
-      <p class="sem-medicao" style="margin-bottom:1.5rem">O site guarda no seu próprio navegador, sem enviar a ninguém, apenas três informações: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro e, se o aviso de cookies estiver ativo, a sua resposta a ele. Elas são necessárias ao funcionamento e não dependem de consentimento. O site não grava cookies.</p>
-      <p class="so-com-medicao" style="margin-bottom:1.5rem">O site guarda no seu próprio navegador três informações: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro e a sua resposta ao aviso de cookies. Elas são necessárias ao funcionamento e não dependem de consentimento. O site só grava cookies se você aceitar o Google Analytics, que também registra as peças que você abre e adiciona à seleção, como explicado no item 6. Você também pode apagar ou bloquear cookies a qualquer momento nas configurações do seu navegador.</p>
+      <p class="sem-medicao" style="margin-bottom:1.5rem">O site guarda no seu próprio navegador, sem enviar a ninguém, apenas o necessário para funcionar: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro, a sua resposta ao aviso de cookies, se ele estiver ativo, e o pedido para não contar as suas visitas, se você fizer (item 6). Nada disso depende de consentimento. O site não grava cookies.</p>
+      <p class="so-com-medicao" style="margin-bottom:1.5rem">O site guarda no seu próprio navegador apenas o necessário para funcionar: as peças que você adicionou à sua seleção, a escolha entre tema claro e escuro, a sua resposta ao aviso de cookies e o pedido para não contar as suas visitas, se você fizer (item 6). Nada disso depende de consentimento. O site só grava cookies se você aceitar o Google Analytics, que também registra as peças que você abre e adiciona à seleção, como explicado no item 6. Você também pode apagar ou bloquear cookies a qualquer momento nas configurações do seu navegador.</p>
 
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin:2.5rem 0 0.75rem">6. Medição de audiência</h3>
-      <p class="sem-medicao" style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais. Não usamos o Google Analytics nem o Google Ads. Se um dia passarmos a usar, esta política será atualizada antes, e eles só serão ativados depois que você aceitar no aviso de cookies exibido ao entrar no site. Se recusar, o site continua funcionando igual.</p>
-      <p class="so-com-medicao" style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais.</p>
+      <p style="margin-bottom:1.5rem">Contamos as visitas com o Vercel Web Analytics: quantas pessoas entram, quais páginas veem, de onde chegaram (como Instagram ou Google), país e cidade, e o tipo de aparelho e de navegador. Ele não usa cookies e não identifica você: cada visita é reconhecida por um código descartado em 24 horas, e só vemos os totais.</p>
+      <p style="margin-bottom:1.5rem">Essa contagem se apoia no nosso legítimo interesse em saber como o site é encontrado e usado (art. 7º, IX, da LGPD). Os dados são tratados pela Vercel, nos Estados Unidos. Se preferir que as suas visitas não entrem na contagem, use o botão abaixo: a escolha fica guardada neste navegador.</p>
+      <!-- o rótulo do botão é trocado por marcarBotaoContagem() conforme a escolha guardada -->
+      <p style="margin-bottom:1.5rem"><button type="button" class="link-preferencias" id="botaoContagem" onclick="alternarContagem()">Não contar minhas visitas</button></p>
+      <p class="sem-medicao" style="margin-bottom:1.5rem">Não usamos o Google Analytics nem o Google Ads. Se um dia passarmos a usar, esta política será atualizada antes, e eles só serão ativados depois que você aceitar no aviso de cookies exibido ao entrar no site. Se recusar, o site continua funcionando igual.</p>
       <p class="so-com-medicao" style="margin-bottom:1.5rem">Se você aceitar no aviso de cookies exibido ao entrar no site, também usamos o Google Analytics, do Google, para entender como o site é usado. Ele grava cookies no seu navegador (_ga e outro que começa com _ga_, que duram até 2 anos) e registra as páginas visitadas, as peças que você abre e adiciona à seleção, de onde você chegou, o tipo de aparelho e de navegador e os cliques nos botões de contato, sem nome, telefone nem e-mail. O Google também recebe o seu endereço IP, que o Google Analytics usa para estimar a cidade de onde você acessa e para filtrar acessos automáticos, e depois descarta, sem ligá-lo ao seu cookie. Os dados de cada visita ficam guardados no Google Analytics por 14 meses; depois disso, restam só os totais. Não usamos esses dados para anúncios.</p>
       <p class="so-com-medicao" style="margin-bottom:1.5rem">Esses dados são tratados pela Google LLC nos Estados Unidos e em outros países onde o Google mantém servidores. Por isso, essa transferência internacional só acontece com o seu consentimento, dado no aviso de cookies (art. 33, VIII, da LGPD). Se recusar, nada é enviado ao Google Analytics, e o site continua funcionando igual. Você pode mudar a sua escolha a qualquer momento em Preferências de cookies, logo abaixo ou no rodapé da página inicial.</p>
       <p class="so-com-medicao" style="margin-bottom:1.5rem"><button type="button" class="link-preferencias" onclick="abrirPreferenciasCookies()">Preferências de cookies</button></p>
@@ -3250,8 +3263,8 @@ const trabalhos = [
   {
     slug: 'cama-tauari-gavea',
     titulo: 'Cama em tauari maciço, para Marcos Zisman',
-    servico: 'Cama em tauari maciço, com duas gavetas sob o estrado e puxadores escavados na própria madeira',
-    descricao: 'Numa cama encostada na parede, o espaço que mais vale é o que fica embaixo. Esta foi feita inteira em tauari maciço, sobre uma base fechada que transforma em duas gavetas largas o vão onde normalmente só mora poeira. As frentes dispensam ferragem à vista: um círculo escavado na própria madeira recebe o dedo, e o veio claro atravessa a peça sem nada que o interrompa. As quinas foram arredondadas à mão, porque esta é uma peça que o corpo encontra no escuro, antes dos olhos. O tauari chegou claro e assim ficou, com acabamento que protege sem esconder: contra o azul da parede e o taco espinha de peixe, é a madeira que serena o quarto.',
+    servico: 'Bicama em tauari maciço, com cama auxiliar sob o estrado e puxadores escavados na própria madeira',
+    descricao: 'Numa cama encostada na parede, o espaço que mais vale é o que fica embaixo. Esta foi feita inteira em tauari maciço, e sob o estrado guarda uma segunda cama, que sai quando o quarto precisa receber mais alguém e volta para baixo quando a visita vai embora. As frentes dispensam ferragem à vista: um círculo escavado na própria madeira recebe o dedo, e o veio claro atravessa a peça sem nada que o interrompa. As quinas foram arredondadas à mão, porque esta é uma peça que o corpo encontra no escuro, antes dos olhos. O tauari chegou claro e assim ficou, com acabamento que protege sem esconder: contra o azul da parede e o taco espinha de peixe, é a madeira que serena o quarto.',
     data: '2026-09-21',
     ficha: { 'Medidas': 'Comprimento 198 cm · largura 97 cm · altura 55 cm' },
     imgs: ['/images/trabalho-cama-tauari-gavea-1.webp',
@@ -4609,11 +4622,14 @@ function urlDaPeca(slug) {
   return (IDIOMA === 'en' ? '/en' : '') + '/peca/' + slug;
 }
 
-/* Frases montadas no codigo, com numero no meio */
+/* Frases montadas no codigo, com numero no meio ({n} e o primeiro, {m} o segundo) */
 const PADROES_EN = [
   [/^Todas as (\d+) peças em um único arquivo organizado por camadas e componentes, ideal para projetos de múltiplos ambientes\.$/,
    'All {n} pieces in a single file organised by layers and components, ideal for projects with several rooms.'],
-  [/^Blocos 3D de (\d+) peças$/, '3D blocks for {n} pieces']
+  [/^Blocos 3D de (\d+) peças$/, '3D blocks for {n} pieces'],
+  /* rotulos de leitor de tela das miniaturas da peca e dos pontos dos projetos */
+  [/^Foto (\d+) de (\d+)$/, 'Photo {n} of {m}'],
+  [/^Projeto (\d+) de (\d+)$/, 'Project {n} of {m}']
 ];
 
 function traduzir(texto) {
@@ -4640,7 +4656,7 @@ function traduzir(texto) {
 
   for (const [padrao, modelo] of PADROES_EN) {
     const achou = chave.match(padrao);
-    if (achou) return texto.replace(chave, modelo.replace('{n}', achou[1]));
+    if (achou) return texto.replace(chave, modelo.replace('{n}', achou[1]).replace('{m}', achou[2] || ''));
   }
   return null;
 }
@@ -4661,11 +4677,18 @@ function traduzirArvore(raiz) {
   nos.forEach(no => { const novo = traduzir(no.nodeValue); if (novo) no.nodeValue = novo; });
 
   if (raiz.querySelectorAll) {
-    raiz.querySelectorAll('[placeholder], [aria-label], [alt], [title]').forEach(el => {
+    const SELETOR = '[placeholder], [aria-label], [alt], [title]';
+    const elementos = [...raiz.querySelectorAll(SELETOR)];
+    /* o observador entrega cada botao novo como a propria raiz, e o
+       querySelectorAll nao inclui a raiz: sem isto, os rotulos das
+       miniaturas e dos pontos ficavam em portugues */
+    if (raiz.matches && raiz.matches(SELETOR)) elementos.push(raiz);
+    elementos.forEach(el => {
       ['placeholder', 'aria-label', 'alt', 'title'].forEach(atrib => {
         const valor = el.getAttribute(atrib);
         if (!valor) return;
-        const pronto = DICIONARIO.textos[valor.trim()];
+        /* traduzir() tambem cobre as frases com numero ("Foto 1 de 2") */
+        const pronto = traduzir(valor);
         if (pronto) el.setAttribute(atrib, pronto);
       });
     });
@@ -5253,9 +5276,30 @@ function abrirPreferenciasCookies() {
   if (primeiro) primeiro.focus();
 }
 
+/* Política, item 6: não contar as visitas deste navegador no Vercel Web
+   Analytics. A escolha vale na hora (beforeSend, no <head>) e nas
+   próximas visitas (o script nem carrega) */
+function marcarBotaoContagem() {
+  const botao = document.getElementById('botaoContagem');
+  if (botao) botao.textContent = mabeSemContagem() ? 'Voltar a contar minhas visitas' : 'Não contar minhas visitas';
+}
+function alternarContagem() {
+  const parar = !mabeSemContagem();
+  try {
+    if (parar) localStorage.setItem('mabe-sem-contagem', '1');
+    else localStorage.removeItem('mabe-sem-contagem');
+  } catch (e) {}
+  /* sem armazenamento (aba anônima bloqueada), a escolha não pega: avisa */
+  if (mabeSemContagem() !== parar) { showToast('Não foi possível guardar a escolha neste navegador.'); return; }
+  marcarBotaoContagem();
+  showToast(parar ? 'Pronto: suas visitas não serão mais contadas neste navegador.'
+                  : 'Pronto: suas visitas voltam a ser contadas neste navegador.');
+}
+
 /* Idioma e tema por ultimo: dependem de tudo o que foi definido acima */
 marcarIdiomaNoBotao();
 marcarBotaoTema();
+marcarBotaoContagem();
 /* a primeira visita sai com a página já no idioma certo e com a troca
    da entrada terminada, mesmo se o dicionário falhar (aí o site segue em
    português; o erro continua aparecendo no console) */
